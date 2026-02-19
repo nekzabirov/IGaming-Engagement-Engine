@@ -18,7 +18,12 @@ class SettleSpinUsecase(
     suspend operator fun invoke(command: Command): Result<Unit> = runCatching {
         val spin = playerSpinRepository.findBy(playerId = command.playerId, spinId = command.id, game = command.game)
             .getOrElse { error("Spin not found!, should be placed before settle") }
-            .let { it.copy(settleAmount = currencyAdapter.convertUnitsToSystemUnits(command.amount, it.spinCurrency)) }
+            .let {
+                it.copy(
+                    settleRealAmount = currencyAdapter.convertUnitsToSystemUnits(command.realAmount, it.spinCurrency),
+                    settleBonusAmount = currencyAdapter.convertUnitsToSystemUnits(command.bonusAmount, it.spinCurrency)
+                )
+            }
 
         playerSpinRepository.save(spin)
 
@@ -32,6 +37,7 @@ class SettleSpinUsecase(
 
         val game: String,
 
-        val amount: Long
+        val realAmount: Long,
+        val bonusAmount: Long,
     )
 }

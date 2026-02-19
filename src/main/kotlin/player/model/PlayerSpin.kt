@@ -14,8 +14,11 @@ data class PlayerSpin(
 
     val game: String,
 
-    val placeAmount: Long,
-    val settleAmount: Long,
+    val placeRealAmount: Long,
+    val settleRealAmount: Long,
+
+    val placeBonusAmount: Long,
+    val settleBonusAmount: Long,
 
     val createdAt: Instant,
 )

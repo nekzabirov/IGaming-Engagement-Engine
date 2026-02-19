@@ -26,9 +26,11 @@ class PlaceSpinUsecase(
 
             game = command.game,
 
-            placeAmount = currencyAdapter.convertUnitsToSystemUnits(command.amount, command.currency),
+            placeRealAmount = currencyAdapter.convertUnitsToSystemUnits(command.realAmount, command.currency),
+            placeBonusAmount = currencyAdapter.convertUnitsToSystemUnits(command.bonusAmount, command.currency),
 
-            settleAmount = 0L,
+            settleRealAmount = 0L,
+            settleBonusAmount = 0L,
 
             createdAt = Clock.System.now(),
         )
@@ -49,6 +51,7 @@ class PlaceSpinUsecase(
 
         val currency: Currency,
 
-        val amount: Long
+        val realAmount: Long,
+        val bonusAmount: Long,
     )
 }
