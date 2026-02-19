@@ -1,10 +1,10 @@
-package com.nekgambling.player.usecase
+package com.nekgambling.player.usecase.player
 
 import com.nekgambling.core.adapter.IEventAdapter
 import com.nekgambling.core.vo.Country
 import com.nekgambling.core.vo.Locale
-import com.nekgambling.player.event.PlayerRegisteredEvent
-import com.nekgambling.player.event.PlayerUpdatedEvent
+import com.nekgambling.player.event.player.PlayerRegisteredEvent
+import com.nekgambling.player.event.player.PlayerUpdatedEvent
 import com.nekgambling.player.model.PlayerDetails
 import com.nekgambling.player.repository.IPlayerDetailsRepository
 import java.util.Date
@@ -17,30 +17,30 @@ class UpdatePlayerUsecase(
 ) {
     suspend operator fun invoke(playerId: String, details: Details): Result<Unit> = runCatching {
         var isNewPlayer = false
-        var player: PlayerDetails = playerRepository.findById(playerId)
+        val player: PlayerDetails = playerRepository.findById(playerId)
             .getOrElse {
             isNewPlayer = true
-            PlayerDetails(
-                id = playerId,
-                username = details.username,
-                email = details.email,
-                phone = details.phone,
-                emailConfirmed = details.emailConfirmed ?: false,
-                phoneConfirmed = details.phoneConfirmed ?: false,
-                status = PlayerDetails.Status.ACTIVE,
-                firstName = details.firstName,
-                lastName = details.lastName,
-                middleName = details.middleName,
-                birthDate = details.birthDate,
-                country = details.country,
-                locale = details.locale,
-                personalNumber = details.personalNumber,
-                isVerified = details.isVerified ?: false,
-                gender = details.gender,
-                address = details.address,
-                affiliateTag = details.affiliateTag,
-                registeredAt = requireNotNull(details.registeredAt) { "registeredAt is required" },
-            )
+                PlayerDetails(
+                    id = playerId,
+                    username = details.username,
+                    email = details.email,
+                    phone = details.phone,
+                    emailConfirmed = details.emailConfirmed ?: false,
+                    phoneConfirmed = details.phoneConfirmed ?: false,
+                    status = PlayerDetails.Status.ACTIVE,
+                    firstName = details.firstName,
+                    lastName = details.lastName,
+                    middleName = details.middleName,
+                    birthDate = details.birthDate,
+                    country = details.country,
+                    locale = details.locale,
+                    personalNumber = details.personalNumber,
+                    isVerified = details.isVerified ?: false,
+                    gender = details.gender,
+                    address = details.address,
+                    affiliateTag = details.affiliateTag,
+                    registeredAt = requireNotNull(details.registeredAt) { "registeredAt is required" },
+                )
         }
 
         details.username?.let { player.updateUsername(it) }
@@ -61,7 +61,7 @@ class UpdatePlayerUsecase(
         details.address?.let { player.updateAddress(it) }
         details.affiliateTag?.let { player.updateAffiliateTag(it) }
 
-        player = playerRepository.save(player)
+        playerRepository.save(player)
 
         if (isNewPlayer)
             eventAdapter.publish(PlayerRegisteredEvent(playerId = playerId, details = player))

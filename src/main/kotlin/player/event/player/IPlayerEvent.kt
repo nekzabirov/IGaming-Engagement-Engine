@@ -1,4 +1,4 @@
-package com.nekgambling.player.event
+package com.nekgambling.player.event.player
 
 import com.nekgambling.core.adapter.IEventAdapter
 import com.nekgambling.player.model.PlayerDetails
