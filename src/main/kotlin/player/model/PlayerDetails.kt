@@ -2,8 +2,8 @@ package com.nekgambling.player.model
 
 import com.nekgambling.core.vo.Country
 import com.nekgambling.core.vo.Locale
+import kotlinx.datetime.Instant
 import java.util.Date
-import kotlin.time.Instant
 
 data class PlayerDetails(
     val id: String,
