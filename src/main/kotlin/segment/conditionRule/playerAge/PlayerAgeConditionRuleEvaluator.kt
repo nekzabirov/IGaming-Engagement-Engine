@@ -1,16 +1,16 @@
 package com.nekgambling.segment.condition.playerAge
 
 import com.nekgambling.player.query.FindPlayerDetailsQuery
-import com.nekgambling.segment.condition.IConditionEvaluator
+import com.nekgambling.segment.condition.IConditionRuleEvaluator
 import kotlinx.datetime.*
 import kotlin.reflect.KClass
 
-class PlayerAgeConditionEvaluator(private val findPlayerDetailsQuery: FindPlayerDetailsQuery) : IConditionEvaluator<PlayerAgeCondition> {
-    override val condition: KClass<PlayerAgeCondition> = PlayerAgeCondition::class
+class PlayerAgeConditionRuleEvaluator(private val findPlayerDetailsQuery: FindPlayerDetailsQuery) : IConditionRuleEvaluator<PlayerAgeConditionRule> {
+    override val condition: KClass<PlayerAgeConditionRule> = PlayerAgeConditionRule::class
 
     override suspend fun evaluate(
         playerId: String,
-        condition: PlayerAgeCondition
+        condition: PlayerAgeConditionRule
     ): Boolean {
         val playerDetails = findPlayerDetailsQuery.execute(playerId).getOrElse { return false }
 
