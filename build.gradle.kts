@@ -50,6 +50,13 @@ dependencies {
     // Redis
     implementation(libs.jedis)
 
+    // ClickHouse
+    implementation(libs.clickhouse.jdbc) {
+        artifact {
+            classifier = "all"
+        }
+    }
+
     // RabbitMQ
     implementation("com.rabbitmq:amqp-client:5.22.0")
 

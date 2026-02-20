@@ -14,6 +14,7 @@ rabbitmq = "1.3.6"
 kotlinx-datetime = "0.6.1"
 aws-sdk = "1.3.99"
 jedis = "5.2.0"
+clickhouse = "0.6.3"
 
 userEnglineClient = "1.0.0"
 walletClient = "1.0.0"
@@ -84,6 +85,9 @@ aws-s3 = { module = "aws.sdk.kotlin:s3", version.ref = "aws-sdk" }
 
 # Redis
 jedis = { module = "redis.clients:jedis", version.ref = "jedis" }
+
+# ClickHouse
+clickhouse-jdbc = { module = "com.clickhouse:clickhouse-jdbc", version.ref = "clickhouse" }
 
 userEnglineClient = { module = "com.nekgamebling:user-grpc-client", version.ref = "userEnglineClient" }
 walletClient = { module = "com.nekgamebling:wallet-grpc-client", version.ref = "walletClient" }

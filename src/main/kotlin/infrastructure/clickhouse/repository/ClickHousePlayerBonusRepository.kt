@@ -1,0 +1,50 @@
+package com.nekgambling.infrastructure.clickhouse.repository
+
+import com.nekgambling.domain.player.model.PlayerBonus
+import com.nekgambling.domain.player.repository.IPlayerBonusRepository
+import com.nekgambling.infrastructure.clickhouse.ClickHouseClient
+import java.sql.ResultSet
+import java.util.Optional
+
+class ClickHousePlayerBonusRepository(
+    private val client: ClickHouseClient,
+) : IPlayerBonusRepository {
+
+    override suspend fun save(playerBonus: PlayerBonus): PlayerBonus {
+        client.execute(
+            """
+            INSERT INTO player_bonus (id, identity, player_id, status, amount, payout_amount)
+            VALUES (?, ?, ?, ?, ?, ?)
+            """.trimIndent(),
+            listOf(
+                playerBonus.id,
+                playerBonus.identity,
+                playerBonus.playerId,
+                playerBonus.status.name,
+                playerBonus.amount,
+                playerBonus.payoutAmount,
+            )
+        )
+        return playerBonus
+    }
+
+    override suspend fun findById(id: String): Optional<PlayerBonus> {
+        val result = client.queryOne(
+            "SELECT * FROM player_bonus FINAL WHERE id = ?",
+            listOf(id),
+            ::mapRow,
+        )
+        return Optional.ofNullable(result)
+    }
+
+    private fun mapRow(rs: ResultSet): PlayerBonus {
+        return PlayerBonus(
+            id = rs.getString("id"),
+            identity = rs.getString("identity"),
+            playerId = rs.getString("player_id"),
+            status = PlayerBonus.Status.valueOf(rs.getString("status")),
+            amount = rs.getLong("amount"),
+            payoutAmount = rs.getLong("payout_amount"),
+        )
+    }
+}

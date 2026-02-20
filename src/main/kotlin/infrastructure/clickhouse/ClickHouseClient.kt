@@ -1,0 +1,75 @@
+package com.nekgambling.infrastructure.clickhouse
+
+import com.nekgambling.infrastructure.clickhouse.config.ClickHouseConfig
+import java.sql.Connection
+import java.sql.DriverManager
+import java.sql.ResultSet
+import java.util.Properties
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+
+class ClickHouseClient(private val config: ClickHouseConfig) {
+
+    private fun connection(): Connection {
+        val props = Properties().apply {
+            setProperty("user", config.username)
+            setProperty("password", config.password)
+        }
+        return DriverManager.getConnection(config.url, props)
+    }
+
+    suspend fun execute(sql: String, params: List<Any?> = emptyList()) {
+        withContext(Dispatchers.IO) {
+            connection().use { conn ->
+                conn.prepareStatement(sql).use { stmt ->
+                    params.forEachIndexed { index, value ->
+                        stmt.setObject(index + 1, value)
+                    }
+                    stmt.execute()
+                }
+            }
+        }
+    }
+
+    suspend fun <T> query(sql: String, params: List<Any?> = emptyList(), mapper: (ResultSet) -> T): List<T> {
+        return withContext(Dispatchers.IO) {
+            connection().use { conn ->
+                conn.prepareStatement(sql).use { stmt ->
+                    params.forEachIndexed { index, value ->
+                        stmt.setObject(index + 1, value)
+                    }
+                    stmt.executeQuery().use { rs ->
+                        val results = mutableListOf<T>()
+                        while (rs.next()) {
+                            results.add(mapper(rs))
+                        }
+                        results
+                    }
+                }
+            }
+        }
+    }
+
+    suspend fun <T> queryOne(sql: String, params: List<Any?> = emptyList(), mapper: (ResultSet) -> T): T? {
+        return query(sql, params, mapper).firstOrNull()
+    }
+
+    fun initTables() {
+        val sql = this::class.java.classLoader
+            .getResourceAsStream("clickhouse/init.sql")
+            ?.bufferedReader()
+            ?.readText()
+            ?: error("clickhouse/init.sql not found on classpath")
+
+        connection().use { conn ->
+            sql.split(";")
+                .map { it.trim() }
+                .filter { it.isNotEmpty() }
+                .forEach { statement ->
+                    conn.createStatement().use { stmt ->
+                        stmt.execute(statement)
+                    }
+                }
+        }
+    }
+}
