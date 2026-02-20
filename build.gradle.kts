@@ -21,6 +21,10 @@ kotlin {
 }
 
 dependencies {
+    // Ktor Server
+    implementation(libs.bundles.ktor.server)
+    implementation(libs.logback)
+
     // Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.7.3")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
