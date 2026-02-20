@@ -55,21 +55,25 @@ class ClickHouseClient(private val config: ClickHouseConfig) {
     }
 
     fun initTables() {
-        val sql = this::class.java.classLoader
-            .getResourceAsStream("clickhouse/init.sql")
-            ?.bufferedReader()
-            ?.readText()
-            ?: error("clickhouse/init.sql not found on classpath")
+        val sqlFiles = listOf("clickhouse/init.sql", "clickhouse/meterized_view.sql")
 
         connection().use { conn ->
-            sql.split(";")
-                .map { it.trim() }
-                .filter { it.isNotEmpty() }
-                .forEach { statement ->
-                    conn.createStatement().use { stmt ->
-                        stmt.execute(statement)
+            sqlFiles.forEach { file ->
+                val sql = this::class.java.classLoader
+                    .getResourceAsStream(file)
+                    ?.bufferedReader()
+                    ?.readText()
+                    ?: error("$file not found on classpath")
+
+                sql.split(";")
+                    .map { it.trim() }
+                    .filter { it.isNotEmpty() }
+                    .forEach { statement ->
+                        conn.createStatement().use { stmt ->
+                            stmt.execute(statement)
+                        }
                     }
-                }
+            }
         }
     }
 }

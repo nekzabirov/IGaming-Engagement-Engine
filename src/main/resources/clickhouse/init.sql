@@ -76,3 +76,13 @@ CREATE TABLE IF NOT EXISTS player_invoice (
     _version UInt64 DEFAULT toUnixTimestamp64Milli(now64(3))
 ) ENGINE = ReplacingMergeTree(_version)
 ORDER BY id;
+
+CREATE TABLE IF NOT EXISTS player_total_spin_info (
+    player_id String,
+    date Date,
+    placeAmount Int64,
+    settleAmount Int64,
+    realPlaceAmount Int64,
+    realSettleAmount Int64
+) ENGINE = SummingMergeTree((placeAmount, settleAmount, realPlaceAmount, realSettleAmount))
+    ORDER BY (player_id, date);
