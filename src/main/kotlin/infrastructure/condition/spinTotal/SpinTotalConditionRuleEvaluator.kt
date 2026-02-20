@@ -1,10 +1,10 @@
 package com.nekgambling.infrastructure.condition.spinTotal
 
+import com.nekgambling.application.reader.IPlayerSpinTotalReader
 import com.nekgambling.domain.condition.strategy.IConditionRuleEvaluator
-import com.nekgambling.infrastructure.clickhouse.reader.ClickHousePlayerSpinTotalReader
 import kotlin.reflect.KClass
 
-class SpinTotalConditionRuleEvaluator(private val playerSpinTotalReader: ClickHousePlayerSpinTotalReader) : IConditionRuleEvaluator<SpinTotalConditionRule> {
+class SpinTotalConditionRuleEvaluator(private val playerSpinTotalReader: IPlayerSpinTotalReader) : IConditionRuleEvaluator<SpinTotalConditionRule> {
     override val condition: KClass<SpinTotalConditionRule> = SpinTotalConditionRule::class
 
     override suspend fun evaluate(playerId: String, condition: SpinTotalConditionRule): Boolean {
