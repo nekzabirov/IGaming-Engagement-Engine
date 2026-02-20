@@ -1,6 +1,6 @@
 package com.nekgambling.segment.param
 
-sealed class NumberParamValue : IParamValue(null) {
+sealed class NumberParamValue : ParamValue(null) {
     abstract fun check(value: Number): Boolean
 
     override fun equals(other: Any?): Boolean {

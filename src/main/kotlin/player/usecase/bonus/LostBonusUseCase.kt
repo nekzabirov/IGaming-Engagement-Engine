@@ -5,7 +5,7 @@ import com.nekgambling.player.event.bonus.BonusLostEvent
 import com.nekgambling.player.model.PlayerBonus
 import com.nekgambling.player.repository.IPlayerBonusRepository
 
-class LostBonusUsecase(
+class LostBonusUseCase(
     private val playerBonusRepository: IPlayerBonusRepository,
     private val eventAdapter: IEventAdapter,
 ) {

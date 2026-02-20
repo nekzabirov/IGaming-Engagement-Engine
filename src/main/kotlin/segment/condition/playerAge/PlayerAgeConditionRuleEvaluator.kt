@@ -23,6 +23,6 @@ class PlayerAgeConditionRuleEvaluator(private val findPlayerDetailsQuery: FindPl
 
         val playerAge = birthLocalDate.until(today, DateTimeUnit.YEAR)
 
-        return condition.vale.check(playerAge)
+        return condition.value.check(playerAge)
     }
 }

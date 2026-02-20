@@ -7,7 +7,7 @@ import com.nekgambling.player.event.freespin.FreespinPlayedEvent
 import com.nekgambling.player.model.PlayerFreespin
 import com.nekgambling.player.repository.IPlayerFreespinRepository
 
-class FinishFreespinUsecase(
+class FinishFreespinUseCase(
     private val playerFreespinRepository: IPlayerFreespinRepository,
     private val eventAdapter: IEventAdapter,
     private val currencyAdapter: ICurrencyAdapter,

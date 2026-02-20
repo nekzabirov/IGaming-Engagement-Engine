@@ -7,7 +7,7 @@ import com.nekgambling.player.event.bonus.BonusIssuedEvent
 import com.nekgambling.player.model.PlayerBonus
 import com.nekgambling.player.repository.IPlayerBonusRepository
 
-class IssueBonusUsecase(
+class IssueBonusUseCase(
     private val playerBonusRepository: IPlayerBonusRepository,
     private val eventAdapter: IEventAdapter,
     private val currencyAdapter: ICurrencyAdapter,

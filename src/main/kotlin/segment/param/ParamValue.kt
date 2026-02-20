@@ -1,6 +1,6 @@
 package com.nekgambling.segment.param
 
-sealed class IParamValue(private val value: String?) {
+sealed class ParamValue(private val value: String?) {
     override fun equals(other: Any?): Boolean {
         return value == other.toString()
     }
@@ -10,4 +10,4 @@ sealed class IParamValue(private val value: String?) {
     }
 }
 
-data class StringParamValue(val value: String) : IParamValue(value)
+data class StringParamValue(val value: String) : ParamValue(value)

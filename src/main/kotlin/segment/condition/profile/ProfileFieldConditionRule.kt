@@ -1,12 +1,12 @@
 package com.nekgambling.segment.condition.profile
 
 import com.nekgambling.segment.condition.IConditionRule
-import com.nekgambling.segment.param.IParamValue
+import com.nekgambling.segment.param.ParamValue
 
 data class ProfileFieldConditionRule(
     val field: Field,
 
-    val value: IParamValue
+    val value: ParamValue
 ) : IConditionRule {
     enum class Field {
         USERNAME,

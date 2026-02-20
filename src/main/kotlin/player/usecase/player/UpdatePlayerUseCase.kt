@@ -11,7 +11,7 @@ import java.util.Date
 import kotlin.jvm.optionals.getOrElse
 import kotlin.time.Instant
 
-class UpdatePlayerUsecase(
+class UpdatePlayerUseCase(
     private val playerRepository: IPlayerDetailsRepository,
     private val eventAdapter: IEventAdapter,
 ) {

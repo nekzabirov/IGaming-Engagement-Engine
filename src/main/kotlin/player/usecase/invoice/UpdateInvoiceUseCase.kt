@@ -7,7 +7,7 @@ import com.nekgambling.player.model.PlayerInvoice
 import com.nekgambling.player.repository.IPlayerInvoiceRepository
 import kotlin.jvm.optionals.getOrElse
 
-class UpdateInvoiceUsecase(
+class UpdateInvoiceUseCase(
     private val invoiceRepository: IPlayerInvoiceRepository,
     private val eventAdapter: IEventAdapter,
     private val currencyAdapter: ICurrencyAdapter,

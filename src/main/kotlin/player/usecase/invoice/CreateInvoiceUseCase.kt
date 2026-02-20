@@ -8,7 +8,7 @@ import com.nekgambling.player.model.PlayerInvoice
 import com.nekgambling.player.repository.IPlayerInvoiceRepository
 import kotlin.time.Instant
 
-class CreateInvoiceUsecase(
+class CreateInvoiceUseCase(
     private val invoiceRepository: IPlayerInvoiceRepository,
     private val eventAdapter: IEventAdapter,
     private val currencyAdapter: ICurrencyAdapter,

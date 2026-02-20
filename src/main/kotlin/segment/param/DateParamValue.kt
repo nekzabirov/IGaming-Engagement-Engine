@@ -2,7 +2,7 @@ package com.nekgambling.segment.param
 
 import kotlinx.datetime.Instant
 
-sealed class IDateParamValue : IParamValue(null) {
+sealed class DateParamValue : ParamValue(null) {
     protected abstract fun check(date: Instant): Boolean
 
     override fun equals(other: Any?): Boolean {
@@ -16,17 +16,17 @@ sealed class IDateParamValue : IParamValue(null) {
     }
 }
 
-class DateBeforeParamValue(private val date: Instant) : IDateParamValue() {
+class DateBeforeParamValue(private val date: Instant) : DateParamValue() {
     override fun check(date: Instant): Boolean =
         this.date < date
 }
 
-class DateAfterParamValue(private val date: Instant) : IDateParamValue() {
+class DateAfterParamValue(private val date: Instant) : DateParamValue() {
     override fun check(date: Instant): Boolean =
         this.date >= date
 }
 
-class DateRangeParamValue(private val from: Instant, private val until: Instant) : IDateParamValue() {
+class DateRangeParamValue(private val from: Instant, private val until: Instant) : DateParamValue() {
     override fun check(date: Instant): Boolean =
         this.from <= date && until <= date
 }
