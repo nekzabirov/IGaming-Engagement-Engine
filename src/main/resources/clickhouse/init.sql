@@ -77,6 +77,18 @@ CREATE TABLE IF NOT EXISTS player_invoice (
 ) ENGINE = ReplacingMergeTree(_version)
 ORDER BY id;
 
+CREATE TABLE IF NOT EXISTS player_invoice_total (
+    player_id String,
+    date Date,
+    depositAmount Int64,
+    withdrawAmount Int64,
+    depositCount Int64,
+    withdrawCount Int64,
+    taxAmount Int64,
+    feesAmount Int64
+) ENGINE = SummingMergeTree((depositAmount, withdrawAmount, depositCount, withdrawCount, taxAmount, feesAmount))
+    ORDER BY (player_id, date);
+
 CREATE TABLE IF NOT EXISTS player_total_spin_info (
     player_id String,
     date Date,
