@@ -1,11 +1,11 @@
 package com.nekgambling.infrastructure.condition.profile
 
 import com.nekgambling.domain.player.model.PlayerDetails
-import com.nekgambling.application.query.player.FindPlayerDetailsQuery
+import com.nekgambling.domain.player.repository.IPlayerDetailsRepository
 import com.nekgambling.domain.condition.strategy.IConditionRuleEvaluator
 import kotlin.reflect.KClass
 
-class ProfileFieldConditionRuleEvaluator(private val findPlayerDetailsQuery: FindPlayerDetailsQuery) :
+class ProfileFieldConditionRuleEvaluator(private val playerDetailsRepository: IPlayerDetailsRepository) :
     IConditionRuleEvaluator<ProfileFieldConditionRule> {
 
     override val condition: KClass<ProfileFieldConditionRule> = ProfileFieldConditionRule::class
@@ -14,7 +14,7 @@ class ProfileFieldConditionRuleEvaluator(private val findPlayerDetailsQuery: Fin
         playerId: String,
         condition: ProfileFieldConditionRule
     ): Boolean {
-        val playerDetails = findPlayerDetailsQuery.execute(playerId).getOrElse { return false }
+        val playerDetails = playerDetailsRepository.findById(playerId).orElse(null) ?: return false
 
         return with(condition) {
             value == playerDetails.readValue(condition.field)
