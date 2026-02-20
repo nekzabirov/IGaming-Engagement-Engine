@@ -4,6 +4,7 @@ import com.nekgambling.domain.player.model.PlayerInvoice
 import com.nekgambling.domain.player.repository.IPlayerInvoiceRepository
 import com.nekgambling.domain.vo.Currency
 import com.nekgambling.infrastructure.clickhouse.ClickHouseClient
+import com.nekgambling.infrastructure.clickhouse.ClickHouseTable
 import kotlinx.datetime.Instant
 import java.sql.ResultSet
 import java.util.Optional
@@ -14,7 +15,7 @@ class ClickHousePlayerInvoiceRepository(
 
     override suspend fun findById(id: String): Optional<PlayerInvoice> {
         val result = client.queryOne(
-            "SELECT * FROM player_invoice FINAL WHERE id = ?",
+            "SELECT * FROM ${ClickHouseTable.PLAYER_INVOICE} FINAL WHERE id = ?",
             listOf(id),
             ::mapRow,
         )
@@ -24,7 +25,7 @@ class ClickHousePlayerInvoiceRepository(
     override suspend fun save(data: PlayerInvoice): PlayerInvoice {
         client.execute(
             """
-            INSERT INTO player_invoice (
+            INSERT INTO ${ClickHouseTable.PLAYER_INVOICE} (
                 id, player_id, type, status, transaction_currency,
                 amount, transaction_amount, tax_amount, fee_amount, created_at
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)

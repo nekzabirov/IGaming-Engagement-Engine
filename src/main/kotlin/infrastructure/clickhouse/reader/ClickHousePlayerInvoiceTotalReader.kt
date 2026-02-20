@@ -3,6 +3,7 @@ package com.nekgambling.infrastructure.clickhouse.reader
 import com.nekgambling.application.reader.IPlayerInvoiceTotalReader
 import com.nekgambling.domain.vo.Period
 import com.nekgambling.infrastructure.clickhouse.ClickHouseClient
+import com.nekgambling.infrastructure.clickhouse.ClickHouseTable
 
 class ClickHousePlayerInvoiceTotalReader(private val client: ClickHouseClient) : IPlayerInvoiceTotalReader {
 
@@ -16,7 +17,7 @@ class ClickHousePlayerInvoiceTotalReader(private val client: ClickHouseClient) :
                 sum(withdrawCount) AS withdrawCount,
                 sum(taxAmount) AS taxAmount,
                 sum(feesAmount) AS feesAmount
-            FROM player_invoice_total
+            FROM ${ClickHouseTable.PLAYER_INVOICE_TOTAL}
             WHERE player_id = ? AND date >= toDate(?) AND date <= toDate(?)
             """.trimIndent(),
             listOf(

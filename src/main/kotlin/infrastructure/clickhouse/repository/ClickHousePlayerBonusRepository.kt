@@ -3,6 +3,7 @@ package com.nekgambling.infrastructure.clickhouse.repository
 import com.nekgambling.domain.player.model.PlayerBonus
 import com.nekgambling.domain.player.repository.IPlayerBonusRepository
 import com.nekgambling.infrastructure.clickhouse.ClickHouseClient
+import com.nekgambling.infrastructure.clickhouse.ClickHouseTable
 import java.sql.ResultSet
 import java.util.Optional
 
@@ -13,7 +14,7 @@ class ClickHousePlayerBonusRepository(
     override suspend fun save(playerBonus: PlayerBonus): PlayerBonus {
         client.execute(
             """
-            INSERT INTO player_bonus (id, identity, player_id, status, amount, payout_amount)
+            INSERT INTO ${ClickHouseTable.PLAYER_BONUS} (id, identity, player_id, status, amount, payout_amount)
             VALUES (?, ?, ?, ?, ?, ?)
             """.trimIndent(),
             listOf(
@@ -30,7 +31,7 @@ class ClickHousePlayerBonusRepository(
 
     override suspend fun findById(id: String): Optional<PlayerBonus> {
         val result = client.queryOne(
-            "SELECT * FROM player_bonus FINAL WHERE id = ?",
+            "SELECT * FROM ${ClickHouseTable.PLAYER_BONUS} FINAL WHERE id = ?",
             listOf(id),
             ::mapRow,
         )

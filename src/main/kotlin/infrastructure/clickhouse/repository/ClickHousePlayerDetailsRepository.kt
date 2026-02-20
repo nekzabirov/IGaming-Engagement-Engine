@@ -5,6 +5,7 @@ import com.nekgambling.domain.player.repository.IPlayerDetailsRepository
 import com.nekgambling.domain.vo.Country
 import com.nekgambling.domain.vo.Locale
 import com.nekgambling.infrastructure.clickhouse.ClickHouseClient
+import com.nekgambling.infrastructure.clickhouse.ClickHouseTable
 import kotlinx.datetime.Instant
 import java.sql.Date
 import java.sql.ResultSet
@@ -17,7 +18,7 @@ class ClickHousePlayerDetailsRepository(
     override suspend fun save(data: PlayerDetails): PlayerDetails {
         client.execute(
             """
-            INSERT INTO player_details (
+            INSERT INTO ${ClickHouseTable.PLAYER_DETAILS} (
                 id, username, email, phone, email_confirmed, phone_confirmed,
                 status, first_name, last_name, middle_name, birth_date,
                 country, locale, personal_number, is_verified, gender,
@@ -51,7 +52,7 @@ class ClickHousePlayerDetailsRepository(
 
     override suspend fun findById(id: String): Optional<PlayerDetails> {
         val result = client.queryOne(
-            "SELECT * FROM player_details FINAL WHERE id = ?",
+            "SELECT * FROM ${ClickHouseTable.PLAYER_DETAILS} FINAL WHERE id = ?",
             listOf(id),
             ::mapRow,
         )

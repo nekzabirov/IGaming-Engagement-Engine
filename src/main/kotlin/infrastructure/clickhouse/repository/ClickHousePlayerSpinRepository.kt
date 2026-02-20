@@ -4,6 +4,7 @@ import com.nekgambling.domain.player.model.PlayerSpin
 import com.nekgambling.domain.player.repository.IPlayerSpinRepository
 import com.nekgambling.domain.vo.Currency
 import com.nekgambling.infrastructure.clickhouse.ClickHouseClient
+import com.nekgambling.infrastructure.clickhouse.ClickHouseTable
 import kotlinx.datetime.Instant
 import java.sql.ResultSet
 import java.util.Optional
@@ -15,7 +16,7 @@ class ClickHousePlayerSpinRepository(
     override suspend fun save(spin: PlayerSpin): PlayerSpin {
         client.execute(
             """
-            INSERT INTO player_spin (
+            INSERT INTO ${ClickHouseTable.PLAYER_SPIN} (
                 id, player_id, freespin_id, spin_currency, game,
                 place_real_amount, settle_real_amount,
                 place_bonus_amount, settle_bonus_amount, created_at
@@ -39,7 +40,7 @@ class ClickHousePlayerSpinRepository(
 
     override suspend fun findBy(playerId: String, spinId: String, game: String): Optional<PlayerSpin> {
         val result = client.queryOne(
-            "SELECT * FROM player_spin FINAL WHERE player_id = ? AND id = ? AND game = ?",
+            "SELECT * FROM ${ClickHouseTable.PLAYER_SPIN} FINAL WHERE player_id = ? AND id = ? AND game = ?",
             listOf(playerId, spinId, game),
             ::mapRow,
         )

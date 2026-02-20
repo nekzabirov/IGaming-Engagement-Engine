@@ -3,6 +3,7 @@ package com.nekgambling.infrastructure.clickhouse.reader
 import com.nekgambling.application.reader.IPlayerSpinTotalReader
 import com.nekgambling.domain.vo.Period
 import com.nekgambling.infrastructure.clickhouse.ClickHouseClient
+import com.nekgambling.infrastructure.clickhouse.ClickHouseTable
 
 class ClickHousePlayerSpinTotalReader(private val client: ClickHouseClient) : IPlayerSpinTotalReader {
 
@@ -14,7 +15,7 @@ class ClickHousePlayerSpinTotalReader(private val client: ClickHouseClient) : IP
                 sum(settleAmount) AS settleAmount,
                 sum(realPlaceAmount) AS realPlaceAmount,
                 sum(realSettleAmount) AS realSettleAmount
-            FROM player_total_spin_info
+            FROM ${ClickHouseTable.PLAYER_TOTAL_SPIN_INFO}
             WHERE player_id = ? AND date >= toDate(?) AND date <= toDate(?)
             """.trimIndent(),
             listOf(
