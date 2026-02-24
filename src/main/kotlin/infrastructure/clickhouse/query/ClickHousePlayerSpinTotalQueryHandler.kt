@@ -1,13 +1,18 @@
-package com.nekgambling.infrastructure.clickhouse.reader
+package com.nekgambling.infrastructure.clickhouse.query
 
-import com.nekgambling.application.reader.IPlayerSpinTotalReader
-import com.nekgambling.domain.vo.Period
+import com.nekgambling.application.query.IQueryHandler
+import com.nekgambling.application.query.player.GetPlayerSpinTotalQuery
 import com.nekgambling.infrastructure.clickhouse.ClickHouseClient
 import com.nekgambling.infrastructure.clickhouse.ClickHouseTable
+import kotlin.reflect.KClass
 
-class ClickHousePlayerSpinTotalReader(private val client: ClickHouseClient) : IPlayerSpinTotalReader {
+class ClickHousePlayerSpinTotalQueryHandler(
+    private val client: ClickHouseClient,
+) : IQueryHandler<GetPlayerSpinTotalQuery, GetPlayerSpinTotalQuery.Result> {
 
-    override suspend fun read(playerId: String, period: Period): IPlayerSpinTotalReader.Result {
+    override val queryType: KClass<GetPlayerSpinTotalQuery> = GetPlayerSpinTotalQuery::class
+
+    override suspend fun handle(query: GetPlayerSpinTotalQuery): GetPlayerSpinTotalQuery.Result {
         val result = client.queryOne(
             """
             SELECT
@@ -19,12 +24,12 @@ class ClickHousePlayerSpinTotalReader(private val client: ClickHouseClient) : IP
             WHERE player_id = ? AND date >= toDate(?) AND date <= toDate(?)
             """.trimIndent(),
             listOf(
-                playerId,
-                java.time.Instant.ofEpochMilli(period.first.toEpochMilliseconds()).atZone(java.time.ZoneOffset.UTC).toLocalDate().toString(),
-                java.time.Instant.ofEpochMilli(period.second.toEpochMilliseconds()).atZone(java.time.ZoneOffset.UTC).toLocalDate().toString(),
+                query.playerId,
+                java.time.Instant.ofEpochMilli(query.period.first.toEpochMilliseconds()).atZone(java.time.ZoneOffset.UTC).toLocalDate().toString(),
+                java.time.Instant.ofEpochMilli(query.period.second.toEpochMilliseconds()).atZone(java.time.ZoneOffset.UTC).toLocalDate().toString(),
             ),
         ) { rs ->
-            IPlayerSpinTotalReader.Result(
+            GetPlayerSpinTotalQuery.Result(
                 placeAmount = rs.getLong("placeAmount"),
                 settleAmount = rs.getLong("settleAmount"),
                 realPlaceAmount = rs.getLong("realPlaceAmount"),
@@ -32,12 +37,11 @@ class ClickHousePlayerSpinTotalReader(private val client: ClickHouseClient) : IP
             )
         }
 
-        return result ?: IPlayerSpinTotalReader.Result(
+        return result ?: GetPlayerSpinTotalQuery.Result(
             placeAmount = 0,
             settleAmount = 0,
             realPlaceAmount = 0,
             realSettleAmount = 0,
         )
     }
-
 }

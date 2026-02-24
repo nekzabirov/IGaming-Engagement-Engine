@@ -1,5 +1,6 @@
-package com.nekgambling.infrastructure.clickhouse.reader
+package com.nekgambling.infrastructure.clickhouse.query
 
+import com.nekgambling.application.query.player.GetPlayerBonusPayoutTotalQuery
 import com.nekgambling.application.usecase.player.bonus.IssueBonusUseCase
 import com.nekgambling.application.usecase.player.bonus.WageredBonusUseCase
 import com.nekgambling.application.usecase.player.freespin.FinishFreespinUseCase
@@ -14,11 +15,11 @@ import kotlinx.datetime.Clock
 import kotlin.test.*
 import kotlin.time.Duration.Companion.days
 
-class PlayerBonusPayoutTotalReaderTest : AbstractClickHouseTest() {
+class PlayerBonusPayoutTotalQueryHandlerTest : AbstractClickHouseTest() {
 
     private val bonusRepository = ClickHousePlayerBonusRepository(client)
     private val freespinRepository = ClickHousePlayerFreespinRepository(client)
-    private val reader = ClickHousePlayerBonusPayoutTotalReader(client)
+    private val handler = ClickHousePlayerBonusPayoutTotalQueryHandler(client)
 
     private fun todayPeriod(): Period = Pair(
         Clock.System.now().minus(1.days),
@@ -53,7 +54,7 @@ class PlayerBonusPayoutTotalReaderTest : AbstractClickHouseTest() {
 
     @Test
     fun `returns zero when no data exists`() = runTest {
-        val result = reader.read("player-1", todayPeriod())
+        val result = handler.handle(GetPlayerBonusPayoutTotalQuery("player-1", todayPeriod()))
         assertEquals(0L, result)
     }
 
@@ -62,7 +63,7 @@ class PlayerBonusPayoutTotalReaderTest : AbstractClickHouseTest() {
         issueBonusWithPayout("bonus-1", payoutAmount = 3000L)
         issueBonusWithPayout("bonus-2", payoutAmount = 2000L)
 
-        val result = reader.read("player-1", todayPeriod())
+        val result = handler.handle(GetPlayerBonusPayoutTotalQuery("player-1", todayPeriod()))
         assertEquals(5000L, result)
     }
 
@@ -70,7 +71,7 @@ class PlayerBonusPayoutTotalReaderTest : AbstractClickHouseTest() {
     fun `returns correct freespin payout total`() = runTest {
         issueFreespinWithPayout("fs-1", payoutAmount = 7500L)
 
-        val result = reader.read("player-1", todayPeriod())
+        val result = handler.handle(GetPlayerBonusPayoutTotalQuery("player-1", todayPeriod()))
         assertEquals(7500L, result)
     }
 
@@ -79,7 +80,7 @@ class PlayerBonusPayoutTotalReaderTest : AbstractClickHouseTest() {
         issueBonusWithPayout("bonus-1", payoutAmount = 3000L)
         issueFreespinWithPayout("fs-1", payoutAmount = 7500L)
 
-        val result = reader.read("player-1", todayPeriod())
+        val result = handler.handle(GetPlayerBonusPayoutTotalQuery("player-1", todayPeriod()))
         assertEquals(10500L, result)
     }
 
@@ -88,8 +89,8 @@ class PlayerBonusPayoutTotalReaderTest : AbstractClickHouseTest() {
         issueBonusWithPayout("bonus-1", playerId = "player-1", payoutAmount = 3000L)
         issueBonusWithPayout("bonus-2", playerId = "player-2", payoutAmount = 2000L)
 
-        assertEquals(3000L, reader.read("player-1", todayPeriod()))
-        assertEquals(2000L, reader.read("player-2", todayPeriod()))
+        assertEquals(3000L, handler.handle(GetPlayerBonusPayoutTotalQuery("player-1", todayPeriod())))
+        assertEquals(2000L, handler.handle(GetPlayerBonusPayoutTotalQuery("player-2", todayPeriod())))
     }
 
     @Test
@@ -99,7 +100,7 @@ class PlayerBonusPayoutTotalReaderTest : AbstractClickHouseTest() {
             IssueBonusUseCase.Command("bonus-1", "identity", "player-1", 5000L, Currency("USD"))
         )
 
-        val result = reader.read("player-1", todayPeriod())
+        val result = handler.handle(GetPlayerBonusPayoutTotalQuery("player-1", todayPeriod()))
         assertEquals(0L, result)
     }
 }

@@ -1,13 +1,18 @@
-package com.nekgambling.infrastructure.clickhouse.reader
+package com.nekgambling.infrastructure.clickhouse.query
 
-import com.nekgambling.application.reader.IPlayerInvoiceTotalReader
-import com.nekgambling.domain.vo.Period
+import com.nekgambling.application.query.IQueryHandler
+import com.nekgambling.application.query.player.GetPlayerInvoiceTotalQuery
 import com.nekgambling.infrastructure.clickhouse.ClickHouseClient
 import com.nekgambling.infrastructure.clickhouse.ClickHouseTable
+import kotlin.reflect.KClass
 
-class ClickHousePlayerInvoiceTotalReader(private val client: ClickHouseClient) : IPlayerInvoiceTotalReader {
+class ClickHousePlayerInvoiceTotalQueryHandler(
+    private val client: ClickHouseClient,
+) : IQueryHandler<GetPlayerInvoiceTotalQuery, GetPlayerInvoiceTotalQuery.Result> {
 
-    override suspend fun read(playerId: String, period: Period): IPlayerInvoiceTotalReader.Result {
+    override val queryType: KClass<GetPlayerInvoiceTotalQuery> = GetPlayerInvoiceTotalQuery::class
+
+    override suspend fun handle(query: GetPlayerInvoiceTotalQuery): GetPlayerInvoiceTotalQuery.Result {
         val result = client.queryOne(
             """
             SELECT
@@ -21,12 +26,12 @@ class ClickHousePlayerInvoiceTotalReader(private val client: ClickHouseClient) :
             WHERE player_id = ? AND date >= toDate(?) AND date <= toDate(?)
             """.trimIndent(),
             listOf(
-                playerId,
-                java.time.Instant.ofEpochMilli(period.first.toEpochMilliseconds()).atZone(java.time.ZoneOffset.UTC).toLocalDate().toString(),
-                java.time.Instant.ofEpochMilli(period.second.toEpochMilliseconds()).atZone(java.time.ZoneOffset.UTC).toLocalDate().toString(),
+                query.playerId,
+                java.time.Instant.ofEpochMilli(query.period.first.toEpochMilliseconds()).atZone(java.time.ZoneOffset.UTC).toLocalDate().toString(),
+                java.time.Instant.ofEpochMilli(query.period.second.toEpochMilliseconds()).atZone(java.time.ZoneOffset.UTC).toLocalDate().toString(),
             ),
         ) { rs ->
-            IPlayerInvoiceTotalReader.Result(
+            GetPlayerInvoiceTotalQuery.Result(
                 depositAmount = rs.getLong("depositAmount"),
                 withdrawAmount = rs.getLong("withdrawAmount"),
                 depositCount = rs.getInt("depositCount"),
@@ -36,7 +41,7 @@ class ClickHousePlayerInvoiceTotalReader(private val client: ClickHouseClient) :
             )
         }
 
-        return result ?: IPlayerInvoiceTotalReader.Result(
+        return result ?: GetPlayerInvoiceTotalQuery.Result(
             depositAmount = 0,
             withdrawAmount = 0,
             depositCount = 0,
@@ -45,5 +50,4 @@ class ClickHousePlayerInvoiceTotalReader(private val client: ClickHouseClient) :
             feesAmount = 0,
         )
     }
-
 }

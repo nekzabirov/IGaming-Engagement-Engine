@@ -1,15 +1,20 @@
-package com.nekgambling.infrastructure.clickhouse.reader
+package com.nekgambling.infrastructure.clickhouse.query
 
-import com.nekgambling.application.reader.IPlayerBonusPayoutTotalReader
-import com.nekgambling.domain.vo.Period
+import com.nekgambling.application.query.IQueryHandler
+import com.nekgambling.application.query.player.GetPlayerBonusPayoutTotalQuery
 import com.nekgambling.infrastructure.clickhouse.ClickHouseClient
 import com.nekgambling.infrastructure.clickhouse.ClickHouseTable
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import kotlin.reflect.KClass
 
-class ClickHousePlayerBonusPayoutTotalReader(private val client: ClickHouseClient) : IPlayerBonusPayoutTotalReader {
+class ClickHousePlayerBonusPayoutTotalQueryHandler(
+    private val client: ClickHouseClient,
+) : IQueryHandler<GetPlayerBonusPayoutTotalQuery, Long> {
 
-    override suspend fun read(playerId: String, period: Period): Long = coroutineScope {
+    override val queryType: KClass<GetPlayerBonusPayoutTotalQuery> = GetPlayerBonusPayoutTotalQuery::class
+
+    override suspend fun handle(query: GetPlayerBonusPayoutTotalQuery): Long = coroutineScope {
         val bonusPayoutDeferred = async {
             client.queryOne(
                 """
@@ -17,7 +22,7 @@ class ClickHousePlayerBonusPayoutTotalReader(private val client: ClickHouseClien
                 FROM ${ClickHouseTable.PLAYER_BONUS} FINAL
                 WHERE player_id = ?
                 """.trimIndent(),
-                listOf(playerId),
+                listOf(query.playerId),
             ) { rs -> rs.getLong("total") } ?: 0L
         }
 
@@ -28,11 +33,10 @@ class ClickHousePlayerBonusPayoutTotalReader(private val client: ClickHouseClien
                 FROM ${ClickHouseTable.PLAYER_FREESPIN} FINAL
                 WHERE player_id = ?
                 """.trimIndent(),
-                listOf(playerId),
+                listOf(query.playerId),
             ) { rs -> rs.getLong("total") } ?: 0L
         }
 
         bonusPayoutDeferred.await() + freespinPayoutDeferred.await()
     }
-
 }

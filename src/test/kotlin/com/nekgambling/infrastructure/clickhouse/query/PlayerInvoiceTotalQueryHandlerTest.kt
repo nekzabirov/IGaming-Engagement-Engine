@@ -1,5 +1,6 @@
-package com.nekgambling.infrastructure.clickhouse.reader
+package com.nekgambling.infrastructure.clickhouse.query
 
+import com.nekgambling.application.query.player.GetPlayerInvoiceTotalQuery
 import com.nekgambling.application.usecase.player.invoice.CreateInvoiceUseCase
 import com.nekgambling.domain.player.model.PlayerInvoice
 import com.nekgambling.domain.vo.Currency
@@ -11,10 +12,10 @@ import kotlinx.datetime.Clock
 import kotlin.test.*
 import kotlin.time.Duration.Companion.days
 
-class PlayerInvoiceTotalReaderTest : AbstractClickHouseTest() {
+class PlayerInvoiceTotalQueryHandlerTest : AbstractClickHouseTest() {
 
     private val invoiceRepository = ClickHousePlayerInvoiceRepository(client)
-    private val reader = ClickHousePlayerInvoiceTotalReader(client)
+    private val handler = ClickHousePlayerInvoiceTotalQueryHandler(client)
 
     private fun todayPeriod(): Period = Pair(
         Clock.System.now().minus(1.days),
@@ -41,7 +42,7 @@ class PlayerInvoiceTotalReaderTest : AbstractClickHouseTest() {
 
     @Test
     fun `returns zeros when no data exists`() = runTest {
-        val result = reader.read("player-1", todayPeriod())
+        val result = handler.handle(GetPlayerInvoiceTotalQuery("player-1", todayPeriod()))
         assertEquals(0L, result.depositAmount)
         assertEquals(0L, result.withdrawAmount)
         assertEquals(0, result.depositCount)
@@ -55,7 +56,7 @@ class PlayerInvoiceTotalReaderTest : AbstractClickHouseTest() {
         createInvoice("inv-1", type = PlayerInvoice.Type.DEPOSIT, amount = 10000L)
         createInvoice("inv-2", type = PlayerInvoice.Type.DEPOSIT, amount = 5000L)
 
-        val result = reader.read("player-1", todayPeriod())
+        val result = handler.handle(GetPlayerInvoiceTotalQuery("player-1", todayPeriod()))
         assertEquals(15000L, result.depositAmount)
         assertEquals(2, result.depositCount)
         assertEquals(0L, result.withdrawAmount)
@@ -66,7 +67,7 @@ class PlayerInvoiceTotalReaderTest : AbstractClickHouseTest() {
     fun `returns correct withdrawal totals`() = runTest {
         createInvoice("inv-1", type = PlayerInvoice.Type.PAYOUT, amount = 3000L)
 
-        val result = reader.read("player-1", todayPeriod())
+        val result = handler.handle(GetPlayerInvoiceTotalQuery("player-1", todayPeriod()))
         assertEquals(0L, result.depositAmount)
         assertEquals(0, result.depositCount)
         assertEquals(3000L, result.withdrawAmount)
@@ -79,7 +80,7 @@ class PlayerInvoiceTotalReaderTest : AbstractClickHouseTest() {
         createInvoice("inv-2", type = PlayerInvoice.Type.PAYOUT, amount = 3000L)
         createInvoice("inv-3", type = PlayerInvoice.Type.DEPOSIT, amount = 5000L)
 
-        val result = reader.read("player-1", todayPeriod())
+        val result = handler.handle(GetPlayerInvoiceTotalQuery("player-1", todayPeriod()))
         assertEquals(15000L, result.depositAmount)
         assertEquals(2, result.depositCount)
         assertEquals(3000L, result.withdrawAmount)
@@ -91,11 +92,11 @@ class PlayerInvoiceTotalReaderTest : AbstractClickHouseTest() {
         createInvoice("inv-1", playerId = "player-1", type = PlayerInvoice.Type.DEPOSIT, amount = 10000L)
         createInvoice("inv-2", playerId = "player-2", type = PlayerInvoice.Type.DEPOSIT, amount = 5000L)
 
-        val result1 = reader.read("player-1", todayPeriod())
+        val result1 = handler.handle(GetPlayerInvoiceTotalQuery("player-1", todayPeriod()))
         assertEquals(10000L, result1.depositAmount)
         assertEquals(1, result1.depositCount)
 
-        val result2 = reader.read("player-2", todayPeriod())
+        val result2 = handler.handle(GetPlayerInvoiceTotalQuery("player-2", todayPeriod()))
         assertEquals(5000L, result2.depositAmount)
         assertEquals(1, result2.depositCount)
     }
@@ -108,7 +109,7 @@ class PlayerInvoiceTotalReaderTest : AbstractClickHouseTest() {
             Clock.System.now().plus(30.days),
             Clock.System.now().plus(60.days),
         )
-        val result = reader.read("player-1", farFuture)
+        val result = handler.handle(GetPlayerInvoiceTotalQuery("player-1", farFuture))
         assertEquals(0L, result.depositAmount)
         assertEquals(0, result.depositCount)
         assertEquals(0L, result.withdrawAmount)

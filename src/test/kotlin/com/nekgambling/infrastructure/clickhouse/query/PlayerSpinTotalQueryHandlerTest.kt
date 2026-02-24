@@ -1,5 +1,6 @@
-package com.nekgambling.infrastructure.clickhouse.reader
+package com.nekgambling.infrastructure.clickhouse.query
 
+import com.nekgambling.application.query.player.GetPlayerSpinTotalQuery
 import com.nekgambling.application.usecase.player.spin.PlaceSpinUseCase
 import com.nekgambling.domain.vo.Currency
 import com.nekgambling.domain.vo.Period
@@ -10,10 +11,10 @@ import kotlinx.datetime.Clock
 import kotlin.test.*
 import kotlin.time.Duration.Companion.days
 
-class PlayerSpinTotalReaderTest : AbstractClickHouseTest() {
+class PlayerSpinTotalQueryHandlerTest : AbstractClickHouseTest() {
 
     private val spinRepository = ClickHousePlayerSpinRepository(client)
-    private val reader = ClickHousePlayerSpinTotalReader(client)
+    private val handler = ClickHousePlayerSpinTotalQueryHandler(client)
 
     private fun todayPeriod(): Period = Pair(
         Clock.System.now().minus(1.days),
@@ -44,7 +45,7 @@ class PlayerSpinTotalReaderTest : AbstractClickHouseTest() {
 
     @Test
     fun `returns zeros when no data exists`() = runTest {
-        val result = reader.read("player-1", todayPeriod())
+        val result = handler.handle(GetPlayerSpinTotalQuery("player-1", todayPeriod()))
         assertEquals(0L, result.placeAmount)
         assertEquals(0L, result.settleAmount)
         assertEquals(0L, result.realPlaceAmount)
@@ -56,7 +57,7 @@ class PlayerSpinTotalReaderTest : AbstractClickHouseTest() {
         placeSpin("spin-1", realAmount = 500L, bonusAmount = 100L)
         placeSpin("spin-2", realAmount = 300L, bonusAmount = 50L)
 
-        val result = reader.read("player-1", todayPeriod())
+        val result = handler.handle(GetPlayerSpinTotalQuery("player-1", todayPeriod()))
         // placeAmount = (500+100) + (300+50) = 950
         assertEquals(950L, result.placeAmount)
         assertEquals(0L, result.settleAmount)
@@ -70,7 +71,7 @@ class PlayerSpinTotalReaderTest : AbstractClickHouseTest() {
         placeSpin("spin-1", realAmount = 500L, bonusAmount = 100L)
         placeSpin("spin-2", realAmount = 200L, bonusAmount = 0L, freespinId = "fs-1")
 
-        val result = reader.read("player-1", todayPeriod())
+        val result = handler.handle(GetPlayerSpinTotalQuery("player-1", todayPeriod()))
         // placeAmount = (500+100) + (200+0) = 800
         assertEquals(800L, result.placeAmount)
         // realPlaceAmount = 500 only (freespin spin excluded)
@@ -82,11 +83,11 @@ class PlayerSpinTotalReaderTest : AbstractClickHouseTest() {
         placeSpin("spin-1", playerId = "player-1", realAmount = 500L, bonusAmount = 0L)
         placeSpin("spin-2", playerId = "player-2", realAmount = 300L, bonusAmount = 0L)
 
-        val result1 = reader.read("player-1", todayPeriod())
+        val result1 = handler.handle(GetPlayerSpinTotalQuery("player-1", todayPeriod()))
         assertEquals(500L, result1.placeAmount)
         assertEquals(500L, result1.realPlaceAmount)
 
-        val result2 = reader.read("player-2", todayPeriod())
+        val result2 = handler.handle(GetPlayerSpinTotalQuery("player-2", todayPeriod()))
         assertEquals(300L, result2.placeAmount)
         assertEquals(300L, result2.realPlaceAmount)
     }
@@ -99,7 +100,7 @@ class PlayerSpinTotalReaderTest : AbstractClickHouseTest() {
             Clock.System.now().plus(30.days),
             Clock.System.now().plus(60.days),
         )
-        val result = reader.read("player-1", farFuture)
+        val result = handler.handle(GetPlayerSpinTotalQuery("player-1", farFuture))
         assertEquals(0L, result.placeAmount)
         assertEquals(0L, result.settleAmount)
         assertEquals(0L, result.realPlaceAmount)

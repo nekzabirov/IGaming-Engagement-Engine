@@ -1,16 +1,17 @@
 package com.nekgambling.infrastructure.condition.invoiceTotal
 
-import com.nekgambling.application.reader.IPlayerInvoiceTotalReader
+import com.nekgambling.application.query.QueryBus
+import com.nekgambling.application.query.player.GetPlayerInvoiceTotalQuery
 import com.nekgambling.domain.condition.strategy.IConditionRuleEvaluator
 import kotlin.reflect.KClass
 
 class InvoiceTotalConditionRuleEvaluator(
-    private val playerInvoiceTotalReader: IPlayerInvoiceTotalReader
+    private val queryBus: QueryBus,
 ) : IConditionRuleEvaluator<InvoiceTotalConditionRule> {
     override val condition: KClass<InvoiceTotalConditionRule> = InvoiceTotalConditionRule::class
 
     override suspend fun evaluate(playerId: String, condition: InvoiceTotalConditionRule): Boolean {
-        val total = playerInvoiceTotalReader.read(playerId, condition.date.toPeriod())
+        val total = queryBus.execute(GetPlayerInvoiceTotalQuery(playerId, condition.date.toPeriod()))
 
         condition.depositCount?.let {
             if (!it.check(total.depositCount)) return false
