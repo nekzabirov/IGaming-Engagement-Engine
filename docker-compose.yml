@@ -1,0 +1,146 @@
+services:
+  # ============================================
+  # INFRASTRUCTURE
+  # ============================================
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: crm-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: crm_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - crm_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d crm_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:24-alpine
+    container_name: crm-clickhouse
+    restart: always
+    environment:
+      CLICKHOUSE_USER: default
+      CLICKHOUSE_PASSWORD: ""
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
+    ports:
+      - "8123:8123"   # HTTP
+      - "9009:9000"   # Native
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+    networks:
+      - crm_network
+    healthcheck:
+      test: ["CMD", "clickhouse-client", "--query", "SELECT 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: crm-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - crm_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: crm-rabbitmq
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - crm_network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_running"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ============================================
+  # APPLICATION
+  # ============================================
+
+  crm-engine:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: crm-engine
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      # PostgreSQL
+      - DB_URL=jdbc:postgresql://postgres:5432/crm_db
+      - DB_USERNAME=user
+      - DB_PASSWORD=password
+      # ClickHouse
+      - CLICKHOUSE_URL=jdbc:clickhouse://clickhouse:8123/default
+      - CLICKHOUSE_USERNAME=default
+      - CLICKHOUSE_PASSWORD=
+      # Redis
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      # RabbitMQ
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USERNAME=guest
+      - RABBITMQ_PASSWORD=guest
+      - RABBITMQ_EXCHANGE=crm.events
+      - RABBITMQ_EXCHANGE_TYPE=topic
+      # gRPC Clients
+      - GAME_CORE_GRPC_HOST=game-core
+      - GAME_CORE_GRPC_PORT=5050
+      - WALLET_SERVICE_GRPC_HOST=wallet-service
+      - WALLET_SERVICE_GRPC_PORT=50051
+      - USER_SERVICE_GRPC_HOST=user-service
+      - USER_SERVICE_GRPC_PORT=9090
+    depends_on:
+      postgres:
+        condition: service_healthy
+      clickhouse:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - crm_network
+
+volumes:
+  postgres_data:
+    name: crm_postgres_data
+  clickhouse_data:
+    name: crm_clickhouse_data
+  redis_data:
+    name: crm_redis_data
+  rabbitmq_data:
+    name: crm_rabbitmq_data
+
+networks:
+  crm_network:
+    name: crm_network
+    driver: bridge

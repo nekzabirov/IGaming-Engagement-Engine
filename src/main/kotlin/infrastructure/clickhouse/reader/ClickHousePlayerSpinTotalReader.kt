@@ -20,8 +20,8 @@ class ClickHousePlayerSpinTotalReader(private val client: ClickHouseClient) : IP
             """.trimIndent(),
             listOf(
                 playerId,
-                java.time.Instant.ofEpochMilli(period.first.toEpochMilliseconds()),
-                java.time.Instant.ofEpochMilli(period.second.toEpochMilliseconds()),
+                java.time.Instant.ofEpochMilli(period.first.toEpochMilliseconds()).atZone(java.time.ZoneOffset.UTC).toLocalDate().toString(),
+                java.time.Instant.ofEpochMilli(period.second.toEpochMilliseconds()).atZone(java.time.ZoneOffset.UTC).toLocalDate().toString(),
             ),
         ) { rs ->
             IPlayerSpinTotalReader.Result(

@@ -19,7 +19,7 @@ class UpdatePlayerUseCase(
         var isNewPlayer = false
         val player: PlayerDetails = playerRepository.findById(playerId)
             .getOrElse {
-            isNewPlayer = true
+                isNewPlayer = true
                 PlayerDetails(
                     id = playerId,
                     username = details.username,
@@ -41,7 +41,7 @@ class UpdatePlayerUseCase(
                     affiliateTag = details.affiliateTag,
                     registeredAt = requireNotNull(details.registeredAt) { "registeredAt is required" },
                 )
-        }
+            }
 
         details.username?.let { player.updateUsername(it) }
         details.email?.let { player.updateEmail(it) }

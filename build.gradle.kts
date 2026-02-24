@@ -5,6 +5,11 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.protobuf)
     `maven-publish`
+    application
+}
+
+application {
+    mainClass.set("com.nekgambling.ApplicationKt")
 }
 
 group = "com.nekgambling"
@@ -23,6 +28,7 @@ kotlin {
 dependencies {
     // Ktor Server
     implementation(libs.bundles.ktor.server)
+    implementation("io.ktor:ktor-server-config-yaml:${libs.versions.ktor.get()}")
     implementation(libs.logback)
 
     // Serialization
@@ -66,5 +72,10 @@ dependencies {
     implementation(libs.userEnglineClient)
 
     // Testing
-    testImplementation(libs.kotlin.test)
+    testImplementation(libs.bundles.testing)
+    testImplementation(libs.clickhouse.jdbc) {
+        artifact {
+            classifier = "all"
+        }
+    }
 }
