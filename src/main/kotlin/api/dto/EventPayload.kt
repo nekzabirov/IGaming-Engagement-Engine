@@ -63,3 +63,81 @@ enum class AccountStatus {
 enum class UserGender {
     MALE, FEMALE, F, M, UNKNOWN
 }
+
+@Serializable
+data class DepositApprovePayload(
+    @SerialName("acc_last_deposit_amount")
+    val amount: Double,
+
+    @SerialName("acc_last_deposit_date")
+    val date: Long,
+
+    @SerialName("acc_last_transaction_id")
+    val transactionId: String,
+
+    @SerialName("acc_last_deposit_payment_method")
+    val paymentMethod: String,
+
+    @SerialName("core_wallet_currency")
+    val currency: String,
+) : EventPayload
+
+@Serializable
+data class WithdrawPayload(
+    @SerialName("acc_last_withdrawal_amount")
+    val amount: Double,
+
+    @SerialName("acc_last_deposit_date")
+    val date: Long,
+
+    @SerialName("acc_last_transaction_id")
+    val transactionId: String,
+
+    @SerialName("acc_last_deposit_payment_method")
+    val paymentMethod: String,
+
+    @SerialName("core_wallet_currency")
+    val currency: String,
+) : EventPayload
+
+@Serializable
+data class CasinoBetWinPayload(
+    @SerialName("casino_last_bet_id")
+    val betId: String,
+
+    @SerialName("casino_last_bet_dt")
+    val betDate: Long,
+
+    @SerialName("casino_last_bet_amount")
+    val betAmount: Double,
+
+    @SerialName("casino_last_bet_amount_real")
+    val betAmountReal: Double,
+
+    @SerialName("casino_last_bet_amount_bonus")
+    val betAmountBonus: Double,
+
+    @SerialName("casino_last_win_amount")
+    val winAmount: Double,
+
+    @SerialName("casino_last_win_amount_real")
+    val winAmountReal: Double,
+
+    @SerialName("casino_last_win_amount_bonus")
+    val winAmountBonus: Double,
+
+    @SerialName("casino_last_bet_game_provider")
+    val gameProvider: String,
+
+    @SerialName("casino_last_bet_game_name")
+    val gameName: String,
+
+    @SerialName("casino_last_bet_game_type")
+    val gameType: String,
+
+    @SerialName("casino_last_bet_game_vendor")
+    val gameVendor: String,
+
+    @SerialName("core_wallet_currency")
+    val currency: String,
+) : EventPayload

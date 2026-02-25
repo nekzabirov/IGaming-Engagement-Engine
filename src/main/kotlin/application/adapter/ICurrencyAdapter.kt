@@ -6,4 +6,6 @@ interface ICurrencyAdapter {
 
     suspend fun convertUnitsToSystemUnits(amount: Long, currency: Currency): Long
 
+    suspend fun convertToUnits(amount: Double, currency: Currency): Long
+
 }

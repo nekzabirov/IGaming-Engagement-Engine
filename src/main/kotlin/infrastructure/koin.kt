@@ -1,8 +1,13 @@
 package com.nekgambling.infrastructure
 
+import com.nekgambling.api.command.ProcessInvoiceCommandHandler
+import com.nekgambling.api.command.ProcessPlayerCommandHandler
+import com.nekgambling.api.command.ProcessSpinCommandHandler
 import com.nekgambling.application.adapter.ICurrencyAdapter
 import com.nekgambling.application.adapter.IEventAdapter
 import com.nekgambling.application.adapter.ILockAdapter
+import com.nekgambling.api.command.CommandBus
+import com.nekgambling.api.command.ICommandHandler
 import com.nekgambling.application.query.IQueryHandler
 import com.nekgambling.application.query.QueryBus
 import com.nekgambling.application.usecase.player.bonus.IssueBonusUseCase
@@ -140,6 +145,16 @@ val infrastructureModule = module {
     single { ClickHousePlayerSpinTotalQueryHandler(get()) } bind IQueryHandler::class
 
     single { QueryBus(getAll()) }
+
+    // --- Command handlers ---
+
+    single { ProcessPlayerCommandHandler(get()) } bind ICommandHandler::class
+
+    single { ProcessInvoiceCommandHandler(get(), get(), get(), get()) } bind ICommandHandler::class
+
+    single { ProcessSpinCommandHandler(get(), get(), get(), get()) } bind ICommandHandler::class
+
+    single { CommandBus(getAll()) }
 
     // --- Condition rule evaluators ---
 
