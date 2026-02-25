@@ -1,3 +1,8 @@
 package com.nekgambling.domain.condition.util
 
-data class BoolParamValue(val value: Boolean) : ParamValue(if (value) "TRUE" else "FALSE")
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+@SerialName("bool")
+data class BoolParamValue(val value: Boolean) : ParamValue()

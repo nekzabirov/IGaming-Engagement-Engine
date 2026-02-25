@@ -3,7 +3,11 @@ package com.nekgambling.infrastructure.condition.invoiceTotal
 import com.nekgambling.domain.condition.model.IConditionRule
 import com.nekgambling.domain.condition.util.DateParamValue
 import com.nekgambling.domain.condition.util.NumberParamValue
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
+@SerialName("invoiceTotal")
 data class InvoiceTotalConditionRule(
     val depositCount: NumberParamValue? = null,
     val withdrawCount: NumberParamValue? = null,

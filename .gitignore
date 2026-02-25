@@ -58,3 +58,5 @@ Thumbs.db
 .env
 .env.*
 !.env.example
+/SmarticoReports_Platform_05022026/
+/SmarticoReports_Platform_05022026/

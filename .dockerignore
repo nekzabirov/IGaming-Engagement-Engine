@@ -1,0 +1,8 @@
+.gradle/
+.idea/
+*.iml
+.git/
+build/classes/
+build/generated/
+build/tmp/
+build/reports/

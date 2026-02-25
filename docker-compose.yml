@@ -8,8 +8,8 @@ services:
     container_name: crm-postgres
     restart: always
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
+      POSTGRES_USER: crm
+      POSTGRES_PASSWORD: crm_password
       POSTGRES_DB: crm_db
     ports:
       - "5432:5432"
@@ -18,7 +18,7 @@ services:
     networks:
       - crm_network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U user -d crm_db"]
+      test: ["CMD-SHELL", "pg_isready -U crm -d crm_db"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -28,18 +28,18 @@ services:
     container_name: crm-clickhouse
     restart: always
     environment:
-      CLICKHOUSE_USER: default
-      CLICKHOUSE_PASSWORD: ""
+      CLICKHOUSE_USER: crm
+      CLICKHOUSE_PASSWORD: crm_password
       CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
     ports:
       - "8123:8123"   # HTTP
-      - "9009:9000"   # Native
+      - "9000:9000"   # Native
     volumes:
       - clickhouse_data:/var/lib/clickhouse
     networks:
       - crm_network
     healthcheck:
-      test: ["CMD", "clickhouse-client", "--query", "SELECT 1"]
+      test: ["CMD", "clickhouse-client", "--user", "crm", "--password", "crm_password", "--query", "SELECT 1"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -95,12 +95,12 @@ services:
     environment:
       # PostgreSQL
       - DB_URL=jdbc:postgresql://postgres:5432/crm_db
-      - DB_USERNAME=user
-      - DB_PASSWORD=password
+      - DB_USERNAME=crm
+      - DB_PASSWORD=crm_password
       # ClickHouse
       - CLICKHOUSE_URL=jdbc:clickhouse://clickhouse:8123/default
-      - CLICKHOUSE_USERNAME=default
-      - CLICKHOUSE_PASSWORD=
+      - CLICKHOUSE_USERNAME=crm
+      - CLICKHOUSE_PASSWORD=crm_password
       # Redis
       - REDIS_HOST=redis
       - REDIS_PORT=6379

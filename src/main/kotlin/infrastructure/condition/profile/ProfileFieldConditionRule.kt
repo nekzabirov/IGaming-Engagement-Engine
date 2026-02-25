@@ -2,7 +2,11 @@ package com.nekgambling.infrastructure.condition.profile
 
 import com.nekgambling.domain.condition.model.IConditionRule
 import com.nekgambling.domain.condition.util.ParamValue
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
+@SerialName("profileField")
 data class ProfileFieldConditionRule(
     val field: Field,
 

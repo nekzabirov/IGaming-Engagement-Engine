@@ -99,7 +99,8 @@ ktor-server = [
     "ktor-server-cio",
     "ktor-server-content-negotiation",
     "ktor-server-status-pages",
-    "ktor-server-call-logging"
+    "ktor-server-call-logging",
+    "ktor-serialization-json"
 ]
 ktor-client = [
     "ktor-client-core",
