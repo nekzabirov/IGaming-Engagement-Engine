@@ -66,11 +66,6 @@ dependencies {
     // RabbitMQ
     implementation("com.rabbitmq:amqp-client:5.22.0")
 
-    // gRPC Clients
-    implementation(libs.gameClient)
-    implementation(libs.walletClient)
-    implementation(libs.userEnglineClient)
-
     // Testing
     testImplementation(libs.bundles.testing)
     testImplementation(libs.clickhouse.jdbc) {

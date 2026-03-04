@@ -89,10 +89,6 @@ jedis = { module = "redis.clients:jedis", version.ref = "jedis" }
 # ClickHouse
 clickhouse-jdbc = { module = "com.clickhouse:clickhouse-jdbc", version.ref = "clickhouse" }
 
-userEnglineClient = { module = "com.nekgamebling:user-grpc-client", version.ref = "userEnglineClient" }
-walletClient = { module = "com.nekgamebling:wallet-grpc-client", version.ref = "walletClient" }
-gameClient = { module = "com.nekgamebling:game-grpc-client", version.ref = "gameClient" }
-
 [bundles]
 ktor-server = [
     "ktor-server-core",
