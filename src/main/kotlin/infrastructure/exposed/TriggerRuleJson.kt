@@ -4,6 +4,8 @@ import com.nekgambling.domain.trigger.model.ITriggerRule
 import com.nekgambling.infrastructure.trigger.BonusTriggerRule
 import com.nekgambling.infrastructure.trigger.FreespinTriggerRule
 import com.nekgambling.infrastructure.trigger.InvoiceTriggerRule
+import com.nekgambling.infrastructure.trigger.SegmentEnterTriggerRule
+import com.nekgambling.infrastructure.trigger.SegmentExitTriggerRule
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
@@ -14,6 +16,8 @@ val triggerRuleSerializersModule = SerializersModule {
         subclass(InvoiceTriggerRule::class)
         subclass(BonusTriggerRule::class)
         subclass(FreespinTriggerRule::class)
+        subclass(SegmentEnterTriggerRule::class)
+        subclass(SegmentExitTriggerRule::class)
     }
 }
 

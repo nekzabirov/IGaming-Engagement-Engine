@@ -1,6 +1,6 @@
 package com.nekgambling.domain.journey.model
 
-sealed interface IJourneyNode {
+interface IJourneyNode {
     val prev: IJourneyNode?
 
     val next: IJourneyNode?

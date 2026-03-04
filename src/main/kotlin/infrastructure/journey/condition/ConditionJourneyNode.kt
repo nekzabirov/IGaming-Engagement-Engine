@@ -1,6 +1,7 @@
-package com.nekgambling.domain.journey.model
+package com.nekgambling.infrastructure.journey.condition
 
 import com.nekgambling.domain.condition.model.Condition
+import com.nekgambling.domain.journey.model.IJourneyNode
 
 data class ConditionJourneyNode(
     val condition: Condition,

@@ -14,6 +14,7 @@ globs: ["src/**/*.kt"]
 - Exposed repos: `Exposed<Entity>Repository`
 - Condition rules: `<Name>ConditionRule` with `@SerialName("<camelCase>")`
 - Condition evaluators: `<Name>ConditionRuleEvaluator`
+- Trigger rules: `<Name>TriggerRule` with `@SerialName("<camelCase>")`
 
 ## Monetary Values
 - Always use `Long` in minor units (cents) — never `Double` or `BigDecimal` for storage
@@ -33,6 +34,7 @@ globs: ["src/**/*.kt"]
 ## Serialization
 - Use `kotlinx.serialization` — not Jackson or Gson
 - Condition rules use polymorphic serialization registered in `ConditionRuleJson.kt`
+- Trigger rules use polymorphic serialization registered in `TriggerRuleJson.kt`
 
 ## Outbound Adapters (Infrastructure)
 - Every outbound adapter (repository impl, external client, message broker, etc.) must have its own `<Name>Config` data class in `infrastructure/<adapter>/config/`
