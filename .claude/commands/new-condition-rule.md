@@ -34,8 +34,8 @@ Create file: `src/main/kotlin/infrastructure/condition/<name>/<Name>ConditionRul
 package com.nekgambling.infrastructure.condition.<name>
 
 import com.nekgambling.domain.condition.model.IConditionRule
-import com.nekgambling.domain.condition.util.DateParamValue
-import com.nekgambling.domain.condition.util.NumberParamValue
+import com.nekgambling.domain.shared.param.DateParamValue
+import com.nekgambling.domain.shared.param.NumberParamValue
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

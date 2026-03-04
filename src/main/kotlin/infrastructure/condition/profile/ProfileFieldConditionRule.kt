@@ -1,7 +1,7 @@
 package com.nekgambling.infrastructure.condition.profile
 
 import com.nekgambling.domain.condition.model.IConditionRule
-import com.nekgambling.domain.condition.util.ParamValue
+import com.nekgambling.domain.vo.param.ParamValue
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

@@ -30,7 +30,7 @@ class IssueBonusUseCase(
 
         playerBonusRepository.save(bonus)
 
-        eventAdapter.publish(BonusIssuedEvent(bonus))
+        eventAdapter.publish(_root_ide_package_.com.nekgambling.application.event.player.bonus.BonusIssuedEvent(bonus))
     }
 
     data class Command(

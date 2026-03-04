@@ -5,4 +5,4 @@ import com.nekgambling.domain.player.model.PlayerDetails
 data class PlayerUpdatedEvent(
     override val playerId: String,
     override val details: PlayerDetails
-) : IPlayerEvent
+) : com.nekgambling.application.event.player.player.IPlayerEvent

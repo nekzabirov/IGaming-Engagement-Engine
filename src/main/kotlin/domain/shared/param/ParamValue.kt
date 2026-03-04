@@ -1,4 +1,4 @@
-package com.nekgambling.domain.condition.util
+package com.nekgambling.domain.vo.param
 
 import kotlinx.serialization.Serializable
 

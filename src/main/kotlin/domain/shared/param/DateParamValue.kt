@@ -1,4 +1,4 @@
-package com.nekgambling.domain.condition.util
+package com.nekgambling.domain.vo.param
 
 import com.nekgambling.domain.vo.Period
 import kotlinx.datetime.Clock

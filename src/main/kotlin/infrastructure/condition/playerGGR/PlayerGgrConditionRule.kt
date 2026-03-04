@@ -1,8 +1,8 @@
 package com.nekgambling.infrastructure.condition.playerGGR
 
 import com.nekgambling.domain.condition.model.IConditionRule
-import com.nekgambling.domain.condition.util.DateParamValue
-import com.nekgambling.domain.condition.util.NumberParamValue
+import com.nekgambling.domain.vo.param.DateParamValue
+import com.nekgambling.domain.vo.param.NumberParamValue
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

@@ -39,13 +39,15 @@ api/                → HTTP entry point + CommandBus dispatching
   dto/              → EventRequest, EventPayload (sealed interface with 4 payload types)
 application/        → Use cases, queries, port interfaces
   adapter/          → Port interfaces: IEventAdapter, ILockAdapter, ICurrencyAdapter
-  event/            → Domain event definitions (sealed interfaces per aggregate)
   query/            → QueryBus + 3 query types (bonus payout, invoice total, spin total)
   usecase/          → 13 player use cases + 2 segment use cases
 domain/             → Pure business logic
   condition/        → Condition model, IConditionRule, evaluator strategy pattern
+  event/            → Domain event definitions (sealed interfaces per aggregate)
+  journey/          → Journey node graph (IJourneyNode, ConditionJourneyNode)
   player/           → Player aggregates (Details, Bonus, Freespin, Invoice, Spin) + repository ports
   segment/          → Segment model + repository port
+  trigger/          → Trigger model (ITrigger) + processing strategy (ITriggerProcessStrategy)
   vo/               → Value objects: Currency, Country, Locale, Period
 infrastructure/     → All adapters and implementations
   koin.kt           → Single Koin module wiring everything (infrastructureModule)

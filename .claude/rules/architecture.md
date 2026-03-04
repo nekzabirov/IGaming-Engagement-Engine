@@ -22,7 +22,7 @@ globs: ["src/**/*.kt"]
 - Use cases are registered as `factory` in Koin (not `single`)
 
 ## Domain Events
-- Define event data classes in `application/event/` under the appropriate aggregate package
+- Define event data classes in `domain/event/` under the appropriate aggregate package
 - Every event must implement its aggregate's sealed interface (e.g., `IBonusEvent`, `ISpinEvent`)
 - Add routing key mapping in `infrastructure/rabbitmq/mapper/EventMapper.kt`
 
