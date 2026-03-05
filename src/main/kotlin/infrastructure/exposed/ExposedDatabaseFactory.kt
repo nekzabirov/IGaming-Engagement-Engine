@@ -2,6 +2,8 @@ package com.nekgambling.infrastructure.exposed
 
 import com.nekgambling.infrastructure.exposed.table.ConditionResultsTable
 import com.nekgambling.infrastructure.exposed.table.ConditionsTable
+import com.nekgambling.infrastructure.exposed.table.JourneyNodesTable
+import com.nekgambling.infrastructure.exposed.table.JourneysTable
 import com.nekgambling.infrastructure.exposed.table.SegmentResultsTable
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
@@ -29,6 +31,8 @@ object ExposedDatabaseFactory {
                     ConditionsTable,
                     ConditionResultsTable,
                     SegmentResultsTable,
+                    JourneyNodesTable,
+                    JourneysTable,
                 )
             }
         }

@@ -35,6 +35,8 @@ globs: ["src/**/*.kt"]
 - Use Exposed ORM for all PostgreSQL access
 - Tables defined in `infrastructure/exposed/table/`
 - Repositories in `infrastructure/exposed/repository/`
+- Journey persistence: `JourneyNodesTable` (single-table inheritance with `type` discriminator column, nullable params per node type, self-references for `next`/`onMismatch`) and `JourneysTable` (references head node)
+- `NumberParamValue` JSONB columns use polymorphic serialization via `numberParamValueJson` in `NumberParamValueJson.kt`
 
 ## Serialization
 - Use `kotlinx.serialization` — not Jackson or Gson
