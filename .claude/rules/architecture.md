@@ -32,8 +32,8 @@ globs: ["src/**/*.kt"]
 - PostgreSQL implementations: `Exposed<Entity>Repository` in `infrastructure/exposed/repository/`
 
 ## Journey Node Processing
-- `IJourneyNode` is an abstract class (not interface) with `prev`/`next` as constructor parameters and built-in circular dependency validation in `init`
-- `ITriggerJourneyNode` is an abstract class extending `IJourneyNode` — subclass data classes pass `prev`/`next` as private constructor params forwarded to super
+- `IJourneyNode` is an abstract class (not interface) with `next` as constructor parameter and built-in circular dependency validation in `init`
+- `ITriggerJourneyNode` is an abstract class extending `IJourneyNode` — subclass data classes pass `_next` as private constructor param forwarded to super
 - `JourneyNodeProcessResolver` resolves and delegates to `JourneyNodeProcess<N>` implementations via `nodeType: KClass` matching
 - `JourneyNodeProcess.process()` returns `JourneyNodeProcess.Response?` (contains `nextNode` + `output` map) — `null` means no match
 

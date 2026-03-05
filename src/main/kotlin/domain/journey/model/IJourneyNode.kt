@@ -1,7 +1,6 @@
 package com.nekgambling.domain.journey.model
 
 abstract class IJourneyNode(
-    val prev: IJourneyNode? = null,
     val next: IJourneyNode? = null,
 ) {
 
@@ -10,11 +9,6 @@ abstract class IJourneyNode(
         while (node != null) {
             require(node !== this) { "Circular dependency detected in journey node chain (next)" }
             node = node.next
-        }
-        node = prev
-        while (node != null) {
-            require(node !== this) { "Circular dependency detected in journey node chain (prev)" }
-            node = node.prev
         }
     }
 

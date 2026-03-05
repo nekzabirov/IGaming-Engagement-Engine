@@ -15,7 +15,7 @@ globs: ["src/**/*.kt"]
 - Condition rules: `<Name>ConditionRule` with `@SerialName("<camelCase>")`
 - Condition evaluators: `<Name>ConditionRuleEvaluator`
 - Trigger rules: `<Name>TriggerRule` with `@SerialName("<camelCase>")`
-- Trigger journey nodes: `<Name>TriggerJourneyNode` extending `ITriggerJourneyNode` (abstract class), with `_prev`/`_next` as `private val` constructor params forwarded to super
+- Trigger journey nodes: `<Name>TriggerJourneyNode` extending `ITriggerJourneyNode` (abstract class), with `_next` as `private val` constructor param forwarded to super
 - Journey node processors: `override val nodeType: KClass<N>` (not `node`) to avoid confusion with the `process(node)` parameter
 - Journey node params: `inputParams()` for required input keys, `outputParams()` for produced output keys
 - Condition branching: `onMatch` / `onMismatch` on `ConditionJourneyNode`

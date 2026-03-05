@@ -8,9 +8,7 @@ data class ConditionJourneyNode(
 
     val onMatch: IJourneyNode?,
     val onMismatch: IJourneyNode?,
-
-    private val _prev: IJourneyNode? = null,
-) : IJourneyNode(prev = _prev, next = onMatch) {
+) : IJourneyNode(next = onMatch) {
 
     init {
         var node = onMismatch

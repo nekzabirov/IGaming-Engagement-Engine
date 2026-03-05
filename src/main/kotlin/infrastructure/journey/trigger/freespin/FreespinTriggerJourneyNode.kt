@@ -12,9 +12,8 @@ data class FreespinTriggerJourneyNode(
     val freespinStatus: PlayerFreespin.Status? = null,
     val freespinPayoutRealAmount: NumberParamValue? = null,
 
-    private val _prev: IJourneyNode? = null,
     private val _next: IJourneyNode? = null,
-) : ITriggerJourneyNode(prev = _prev, next = _next) {
+) : ITriggerJourneyNode(next = _next) {
     override fun inputParams(): Set<String> = setOf("freespinId", "freespinIdentity", "gameId", "freespinCurrency", "freespinStatus")
 
     override fun outputParams(): Set<String> = setOf("freespinId", "freespinIdentity", "gameId", "freespinCurrency", "freespinStatus", "freespinPayoutRealAmount")

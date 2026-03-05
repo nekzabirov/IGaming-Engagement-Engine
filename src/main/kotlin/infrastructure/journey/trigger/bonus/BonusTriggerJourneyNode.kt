@@ -11,9 +11,8 @@ data class BonusTriggerJourneyNode(
     val bonusStatus: PlayerBonus.Status? = null,
     val bonusPayoutAmount: NumberParamValue? = null,
 
-    private val _prev: IJourneyNode? = null,
     private val _next: IJourneyNode? = null,
-) : ITriggerJourneyNode(prev = _prev, next = _next) {
+) : ITriggerJourneyNode(next = _next) {
     override fun inputParams(): Set<String> = setOf("bonusId", "bonusIdentity", "bonusStatus", "bonusPayoutAmount")
 
     override fun outputParams(): Set<String> = setOf("bonusId", "bonusIdentity", "bonusStatus", "bonusPayoutAmount")
