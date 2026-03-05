@@ -6,5 +6,10 @@ import kotlin.reflect.KClass
 interface JourneyNodeProcess<N: IJourneyNode> {
     val node: KClass<N>
 
-    suspend fun process(playerId: String, node: N, payload: Map<String, Any>) : IJourneyNode?
+    suspend fun process(playerId: String, node: N, payload: Map<String, Any>) : Response?
+
+    data class Response(
+        val nextNode: IJourneyNode?,
+        val output: Map<String, Any>,
+    )
 }

@@ -12,4 +12,8 @@ data class ConditionJourneyNode(
     override val prev: IJourneyNode?,
 ) : IJourneyNode {
     override val next: IJourneyNode? = matchNode
+
+    override fun requireParams(): Set<String> = emptySet()
+
+    override fun outputParams(): Set<String> = emptySet()
 }

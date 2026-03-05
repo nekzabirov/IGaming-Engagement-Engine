@@ -15,6 +15,7 @@ globs: ["src/**/*.kt"]
 - Condition rules: `<Name>ConditionRule` with `@SerialName("<camelCase>")`
 - Condition evaluators: `<Name>ConditionRuleEvaluator`
 - Trigger rules: `<Name>TriggerRule` with `@SerialName("<camelCase>")`
+- Trigger journey nodes: `<Name>TriggerJourneyNode` implementing `ITriggerJourneyNode`
 
 ## Monetary Values
 - Always use `Long` in minor units (cents) — never `Double` or `BigDecimal` for storage

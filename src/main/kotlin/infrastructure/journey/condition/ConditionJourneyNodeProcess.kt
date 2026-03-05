@@ -10,12 +10,14 @@ class ConditionJourneyNodeProcess(
 ) : JourneyNodeProcess<ConditionJourneyNode> {
     override val node: KClass<ConditionJourneyNode> = ConditionJourneyNode::class
 
-    override suspend fun process(playerId: String, node: ConditionJourneyNode, payload: Map<String, Any>): IJourneyNode? {
+    override suspend fun process(playerId: String, node: ConditionJourneyNode, payload: Map<String, Any>): JourneyNodeProcess.Response? {
         val result = conditionRepository
             .findResultBy(playerId, node.condition.id)
             .orElse(null)
             ?: return null
 
-        return if (result.passed) node.matchNode else node.notMatchNode
+        val next = if (result.passed) node.matchNode else node.notMatchNode
+
+        return JourneyNodeProcess.Response(nextNode = next, emptyMap())
     }
 }

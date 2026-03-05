@@ -44,7 +44,7 @@ application/        → Use cases, queries, port interfaces
 domain/             → Pure business logic
   condition/        → Condition model, IConditionRule, evaluator strategy pattern
   event/            → Domain event definitions (sealed interfaces per aggregate)
-  journey/          → Journey node graph (IJourneyNode, ConditionJourneyNode)
+  journey/          → Journey node graph (IJourneyNode), node processing strategy (JourneyNodeProcess)
   player/           → Player aggregates (Details, Bonus, Freespin, Invoice, Spin) + repository ports
   segment/          → Segment model + repository port
   trigger/          → Trigger model (ITrigger) + processing strategy (ITriggerProcessStrategy)
@@ -53,6 +53,7 @@ infrastructure/     → All adapters and implementations
   koin.kt           → Single Koin module wiring everything (infrastructureModule)
   clickhouse/       → ClickHouseClient (raw JDBC), repositories, query handlers, table constants
   condition/        → 5 condition rule evaluator implementations
+  journey/          → Journey node implementations (condition/, trigger/) + node processors
   exposed/          → PostgreSQL via Exposed ORM (conditions, segments, results)
   rabbitmq/         → RabbitMQEventAdapter + event mappers (topic exchange: crm.events)
   redis/            → RedisLockAdapter (distributed lock with Lua script release)
