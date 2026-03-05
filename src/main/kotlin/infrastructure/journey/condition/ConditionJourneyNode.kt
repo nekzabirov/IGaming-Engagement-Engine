@@ -4,11 +4,12 @@ import com.nekgambling.domain.condition.model.Condition
 import com.nekgambling.domain.journey.model.IJourneyNode
 
 data class ConditionJourneyNode(
+    private val _id: Long = Long.MIN_VALUE,
     val condition: Condition,
 
     val onMatch: IJourneyNode?,
     val onMismatch: IJourneyNode?,
-) : IJourneyNode(next = onMatch) {
+) : IJourneyNode(id = _id, next = onMatch) {
 
     init {
         var node = onMismatch

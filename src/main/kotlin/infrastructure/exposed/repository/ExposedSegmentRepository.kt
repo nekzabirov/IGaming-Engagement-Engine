@@ -11,7 +11,7 @@ class ExposedSegmentRepository(
     private val database: Database,
 ) : ISegmentRepository {
 
-    override suspend fun save(result: SegmentResult): SegmentResult = dbQuery {
+    override suspend fun save(result: SegmentResult): SegmentResult = newSuspendedTransaction(db = database) {
         SegmentResultsTable.upsert {
             it[playerId] = result.playerId
             it[segmentId] = result.segment.id
@@ -20,7 +20,4 @@ class ExposedSegmentRepository(
         }
         result
     }
-
-    private suspend fun <T> dbQuery(block: () -> T): T =
-        newSuspendedTransaction(db = database) { block() }
 }

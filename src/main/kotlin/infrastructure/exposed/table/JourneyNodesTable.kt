@@ -8,6 +8,8 @@ import org.jetbrains.exposed.sql.json.jsonb
 object JourneyNodesTable : LongIdTable("journey_nodes") {
     val type = varchar("type", 255)
 
+    val journeyId = reference("journey_id", JourneysTable)
+
     val next = optReference("next_id", JourneyNodesTable)
 
     // ConditionJourneyNode

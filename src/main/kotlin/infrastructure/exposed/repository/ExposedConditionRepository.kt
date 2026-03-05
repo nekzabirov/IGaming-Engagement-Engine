@@ -13,7 +13,7 @@ class ExposedConditionRepository(
     private val database: Database,
 ) : IConditionRepository {
 
-    override suspend fun save(condition: Condition): Condition = dbQuery {
+    override suspend fun save(condition: Condition): Condition = newSuspendedTransaction(db = database) {
         if (condition.id == Long.MIN_VALUE) {
             val generatedId = ConditionsTable.insertAndGetId {
                 it[rule] = condition.rule
@@ -28,7 +28,7 @@ class ExposedConditionRepository(
         }
     }
 
-    override suspend fun save(conditionResult: ConditionResult): ConditionResult = dbQuery {
+    override suspend fun save(conditionResult: ConditionResult): ConditionResult = newSuspendedTransaction(db = database) {
         ConditionResultsTable.upsert {
             it[playerId] = conditionResult.playerId
             it[condition] = conditionResult.condition.id
@@ -38,7 +38,7 @@ class ExposedConditionRepository(
         conditionResult
     }
 
-    override suspend fun findResultBy(playerId: String, conditionId: Long): Optional<ConditionResult> = dbQuery {
+    override suspend fun findResultBy(playerId: String, conditionId: Long): Optional<ConditionResult> = newSuspendedTransaction(db = database) {
         ConditionResultsTable
             .join(ConditionsTable, JoinType.INNER, ConditionResultsTable.condition, ConditionsTable.id)
             .selectAll()
@@ -60,7 +60,4 @@ class ExposedConditionRepository(
             }
             .let { Optional.ofNullable(it) }
     }
-
-    private suspend fun <T> dbQuery(block: () -> T): T =
-        newSuspendedTransaction(db = database) { block() }
 }

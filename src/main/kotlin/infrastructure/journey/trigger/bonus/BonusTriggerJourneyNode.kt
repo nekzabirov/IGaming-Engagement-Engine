@@ -6,13 +6,14 @@ import com.nekgambling.domain.vo.param.NumberParamValue
 import com.nekgambling.infrastructure.journey.trigger.ITriggerJourneyNode
 
 data class BonusTriggerJourneyNode(
+    private val _id: Long = Long.MIN_VALUE,
     val bonusId: String? = null,
     val bonusIdentity: String? = null,
     val bonusStatus: PlayerBonus.Status? = null,
     val bonusPayoutAmount: NumberParamValue? = null,
 
     private val _next: IJourneyNode? = null,
-) : ITriggerJourneyNode(next = _next) {
+) : ITriggerJourneyNode(id = _id, next = _next) {
     override fun inputParams(): Set<String> = setOf("bonusId", "bonusIdentity", "bonusStatus", "bonusPayoutAmount")
 
     override fun outputParams(): Set<String> = setOf("bonusId", "bonusIdentity", "bonusStatus", "bonusPayoutAmount")

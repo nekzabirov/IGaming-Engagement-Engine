@@ -1,6 +1,7 @@
 package com.nekgambling.domain.journey.model
 
 abstract class IJourneyNode(
+    val id: Long = Long.MIN_VALUE,
     val next: IJourneyNode? = null,
 ) {
 
