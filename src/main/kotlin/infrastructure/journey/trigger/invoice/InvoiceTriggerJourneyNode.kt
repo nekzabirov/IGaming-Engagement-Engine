@@ -12,9 +12,9 @@ data class InvoiceTriggerJourneyNode(
     val invoiceCurrency: Currency? = null,
     val invoiceAmount: NumberParamValue? = null,
 
-    override val prev: IJourneyNode? = null,
-    override val next: IJourneyNode? = null,
-) : ITriggerJourneyNode {
+    private val _prev: IJourneyNode? = null,
+    private val _next: IJourneyNode? = null,
+) : ITriggerJourneyNode(prev = _prev, next = _next) {
     override fun inputParams(): Set<String> = setOf("invoiceType", "invoiceStatus", "invoiceCurrency", "invoiceAmount", "invoiceTransactionAmount", "invoiceTaxAmount", "invoiceFeeAmount")
 
     override fun outputParams(): Set<String> = setOf("invoiceCurrency", "invoiceAmount", "invoiceTransactionAmount", "invoiceTaxAmount", "invoiceFeeAmount")

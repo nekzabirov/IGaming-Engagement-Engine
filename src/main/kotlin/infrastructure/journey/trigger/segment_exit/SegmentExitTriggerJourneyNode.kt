@@ -6,9 +6,9 @@ import com.nekgambling.infrastructure.journey.trigger.ITriggerJourneyNode
 data class SegmentExitTriggerJourneyNode(
     val segmentIdentity: String? = null,
 
-    override val prev: IJourneyNode? = null,
-    override val next: IJourneyNode? = null,
-) : ITriggerJourneyNode {
+    private val _prev: IJourneyNode? = null,
+    private val _next: IJourneyNode? = null,
+) : ITriggerJourneyNode(prev = _prev, next = _next) {
     override fun inputParams(): Set<String> = setOf("segmentIdentity")
 
     override fun outputParams(): Set<String> = setOf("segmentIdentity")

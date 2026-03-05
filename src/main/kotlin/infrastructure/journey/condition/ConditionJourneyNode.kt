@@ -9,9 +9,16 @@ data class ConditionJourneyNode(
     val onMatch: IJourneyNode?,
     val onMismatch: IJourneyNode?,
 
-    override val prev: IJourneyNode?,
-) : IJourneyNode {
-    override val next: IJourneyNode? = onMatch
+    private val _prev: IJourneyNode? = null,
+) : IJourneyNode(prev = _prev, next = onMatch) {
+
+    init {
+        var node = onMismatch
+        while (node != null) {
+            require(node !== this) { "Circular dependency detected in journey node chain (onMismatch)" }
+            node = node.next
+        }
+    }
 
     override fun inputParams(): Set<String> = emptySet()
 
