@@ -31,6 +31,10 @@ globs: ["src/**/*.kt"]
 - ClickHouse implementations: `ClickHouse<Entity>Repository` in `infrastructure/clickhouse/repository/`
 - PostgreSQL implementations: `Exposed<Entity>Repository` in `infrastructure/exposed/repository/`
 
+## Journey Node Processing
+- `JourneyNodeProcessResolver` resolves and delegates to `JourneyNodeProcess<N>` implementations via `nodeType: KClass` matching
+- `JourneyNodeProcess.process()` returns `JourneyNodeProcess.Response?` (contains `nextNode` + `output` map) — `null` means no match
+
 ## Dependency Injection
 - All wiring in single `infrastructureModule` in `infrastructure/koin.kt`
 - Multi-binding pattern: `bind Interface::class` + `getAll()` for CommandBus, QueryBus, and ConditionRuleEvaluatorResolver

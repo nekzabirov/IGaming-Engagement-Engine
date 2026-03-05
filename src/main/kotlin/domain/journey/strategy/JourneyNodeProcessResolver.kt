@@ -6,7 +6,7 @@ class JourneyNodeProcessResolver(
     private val processors: List<JourneyNodeProcess<*>>
 ) {
 
-    suspend fun process(playerId: String, node: IJourneyNode, payload: Map<String, Any>): IJourneyNode? {
+    suspend fun process(playerId: String, node: IJourneyNode, payload: Map<String, Any>): JourneyNodeProcess.Response? {
         val processor = processors.find { it.nodeType.isInstance(node) }
             ?: error("Cannot find processor for journey node ${node::class.simpleName}")
 
@@ -19,6 +19,6 @@ class JourneyNodeProcessResolver(
         playerId: String,
         node: IJourneyNode,
         payload: Map<String, Any>
-    ): IJourneyNode? = processor.process(playerId, node as N, payload)
+    ): JourneyNodeProcess.Response? = processor.process(playerId, node as N, payload)
 
 }
