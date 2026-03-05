@@ -16,6 +16,10 @@ globs: ["src/**/*.kt"]
 - Condition evaluators: `<Name>ConditionRuleEvaluator`
 - Trigger rules: `<Name>TriggerRule` with `@SerialName("<camelCase>")`
 - Trigger journey nodes: `<Name>TriggerJourneyNode` implementing `ITriggerJourneyNode`
+- Journey node processors: `override val nodeType: KClass<N>` (not `node`) to avoid confusion with the `process(node)` parameter
+- Journey node params: `inputParams()` for required input keys, `outputParams()` for produced output keys
+- Condition branching: `onMatch` / `onMismatch` on `ConditionJourneyNode`
+- Journey payload keys: Always prefix with entity name to avoid collisions (e.g., `bonusId`, `bonusStatus`, `freespinId`, `invoiceType`, `invoiceAmount`)
 
 ## Monetary Values
 - Always use `Long` in minor units (cents) — never `Double` or `BigDecimal` for storage

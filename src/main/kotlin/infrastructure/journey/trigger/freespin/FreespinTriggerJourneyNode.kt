@@ -6,16 +6,16 @@ import com.nekgambling.domain.vo.param.NumberParamValue
 import com.nekgambling.infrastructure.journey.trigger.ITriggerJourneyNode
 
 data class FreespinTriggerJourneyNode(
-    val id: String? = null,
-    val identity: String? = null,
-    val game: String? = null,
-    val status: PlayerFreespin.Status? = null,
-    val payoutRealAmount: NumberParamValue? = null,
+    val freespinId: String? = null,
+    val freespinIdentity: String? = null,
+    val gameId: String? = null,
+    val freespinStatus: PlayerFreespin.Status? = null,
+    val freespinPayoutRealAmount: NumberParamValue? = null,
 
     override val prev: IJourneyNode? = null,
     override val next: IJourneyNode? = null,
 ) : ITriggerJourneyNode {
-    override fun requireParams(): Set<String> = setOf("id", "identity", "game", "currency", "status")
+    override fun inputParams(): Set<String> = setOf("freespinId", "freespinIdentity", "gameId", "freespinCurrency", "freespinStatus")
 
-    override fun outputParams(): Set<String> = setOf("id", "identity", "game", "currency", "status", "payoutRealAmount")
+    override fun outputParams(): Set<String> = setOf("freespinId", "freespinIdentity", "gameId", "freespinCurrency", "freespinStatus", "freespinPayoutRealAmount")
 }

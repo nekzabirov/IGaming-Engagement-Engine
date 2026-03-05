@@ -6,7 +6,7 @@ import com.nekgambling.infrastructure.journey.trigger.segment_enter.SegmentEnter
 import kotlin.reflect.KClass
 
 class SegmentEnterTriggerJourneyNodeProcess : ITriggerJourneyNodeProcess<SegmentEnterTriggerJourneyNode> {
-    override val node: KClass<SegmentEnterTriggerJourneyNode> = SegmentEnterTriggerJourneyNode::class
+    override val nodeType: KClass<SegmentEnterTriggerJourneyNode> = SegmentEnterTriggerJourneyNode::class
 
     override suspend fun process(
         playerId: String,
@@ -15,7 +15,7 @@ class SegmentEnterTriggerJourneyNodeProcess : ITriggerJourneyNodeProcess<Segment
     ): JourneyNodeProcess.Response? {
         val segmentIdentity = payload["segmentIdentity"] as? String ?: error("Missing required payload param: segmentIdentity")
 
-        val matched = node.identity == null || segmentIdentity == node.identity
+        val matched = node.segmentIdentity == null || segmentIdentity == node.segmentIdentity
 
         if (!matched) return null
 

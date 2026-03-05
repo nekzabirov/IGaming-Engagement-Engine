@@ -7,7 +7,7 @@ class JourneyNodeProcessResolver(
 ) {
 
     suspend fun process(playerId: String, node: IJourneyNode, payload: Map<String, Any>): IJourneyNode? {
-        val processor = processors.find { it.node.isInstance(node) }
+        val processor = processors.find { it.nodeType.isInstance(node) }
             ?: error("Cannot find processor for journey node ${node::class.simpleName}")
 
         return processUnchecked(processor, playerId, node, payload)

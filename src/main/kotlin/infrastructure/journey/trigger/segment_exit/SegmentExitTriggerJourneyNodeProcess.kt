@@ -6,7 +6,7 @@ import com.nekgambling.infrastructure.journey.trigger.segment_exit.SegmentExitTr
 import kotlin.reflect.KClass
 
 class SegmentExitTriggerJourneyNodeProcess : ITriggerJourneyNodeProcess<SegmentExitTriggerJourneyNode> {
-    override val node: KClass<SegmentExitTriggerJourneyNode> = SegmentExitTriggerJourneyNode::class
+    override val nodeType: KClass<SegmentExitTriggerJourneyNode> = SegmentExitTriggerJourneyNode::class
 
     override suspend fun process(
         playerId: String,
@@ -15,7 +15,7 @@ class SegmentExitTriggerJourneyNodeProcess : ITriggerJourneyNodeProcess<SegmentE
     ): JourneyNodeProcess.Response? {
         val segmentIdentity = payload["segmentIdentity"] as? String ?: error("Missing required payload param: segmentIdentity")
 
-        val matched = node.identity == null || segmentIdentity == node.identity
+        val matched = node.segmentIdentity == null || segmentIdentity == node.segmentIdentity
 
         if (!matched) return null
 

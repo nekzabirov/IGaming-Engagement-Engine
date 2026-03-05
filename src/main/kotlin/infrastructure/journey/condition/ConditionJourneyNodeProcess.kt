@@ -8,7 +8,7 @@ import kotlin.reflect.KClass
 class ConditionJourneyNodeProcess(
     private val conditionRepository: IConditionRepository,
 ) : JourneyNodeProcess<ConditionJourneyNode> {
-    override val node: KClass<ConditionJourneyNode> = ConditionJourneyNode::class
+    override val nodeType: KClass<ConditionJourneyNode> = ConditionJourneyNode::class
 
     override suspend fun process(playerId: String, node: ConditionJourneyNode, payload: Map<String, Any>): JourneyNodeProcess.Response? {
         val result = conditionRepository
@@ -16,7 +16,7 @@ class ConditionJourneyNodeProcess(
             .orElse(null)
             ?: return null
 
-        val next = if (result.passed) node.matchNode else node.notMatchNode
+        val next = if (result.passed) node.onMatch else node.onMismatch
 
         return JourneyNodeProcess.Response(nextNode = next, emptyMap())
     }

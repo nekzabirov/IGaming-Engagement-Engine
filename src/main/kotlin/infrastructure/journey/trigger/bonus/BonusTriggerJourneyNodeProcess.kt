@@ -7,33 +7,33 @@ import com.nekgambling.infrastructure.journey.trigger.ITriggerJourneyNodeProcess
 import kotlin.reflect.KClass
 
 class BonusTriggerJourneyNodeProcess : ITriggerJourneyNodeProcess<BonusTriggerJourneyNode> {
-    override val node: KClass<BonusTriggerJourneyNode> = BonusTriggerJourneyNode::class
+    override val nodeType: KClass<BonusTriggerJourneyNode> = BonusTriggerJourneyNode::class
 
     override suspend fun process(
         playerId: String,
         node: BonusTriggerJourneyNode,
         payload: Map<String, Any>,
     ): JourneyNodeProcess.Response? {
-        val id = payload["id"] as? String ?: error("Missing required payload param: id")
-        val identity = payload["identity"] as? String ?: error("Missing required payload param: identity")
-        val statusStr = payload["status"] as? String ?: error("Missing required payload param: status")
+        val bonusId = payload["bonusId"] as? String ?: error("Missing required payload param: bonusId")
+        val bonusIdentity = payload["bonusIdentity"] as? String ?: error("Missing required payload param: bonusIdentity")
+        val statusStr = payload["bonusStatus"] as? String ?: error("Missing required payload param: bonusStatus")
         val status = runCatching { PlayerBonus.Status.valueOf(statusStr) }.getOrElse { error("Invalid bonus status: $statusStr") }
-        val payoutAmount = (payload["payoutAmount"] as? Number)?.toLong() ?: error("Missing required payload param: payoutAmount")
+        val payoutAmount = (payload["bonusPayoutAmount"] as? Number)?.toLong() ?: error("Missing required payload param: bonusPayoutAmount")
 
-        val matched = (node.id == null || id == node.id)
-                && (node.identity == null || identity == node.identity)
-                && (node.status == null || status == node.status)
-                && (node.payoutAmount == null || node.payoutAmount.check(payoutAmount))
+        val matched = (node.bonusId == null || bonusId == node.bonusId)
+                && (node.bonusIdentity == null || bonusIdentity == node.bonusIdentity)
+                && (node.bonusStatus == null || status == node.bonusStatus)
+                && (node.bonusPayoutAmount == null || node.bonusPayoutAmount.check(payoutAmount))
 
         if (!matched) return null
 
         return JourneyNodeProcess.Response(
             nextNode = node.next,
             output = mapOf(
-                "id" to id,
-                "identity" to identity,
-                "status" to statusStr,
-                "payoutAmount" to payoutAmount.toString(),
+                "bonusId" to bonusId,
+                "bonusIdentity" to bonusIdentity,
+                "bonusStatus" to statusStr,
+                "bonusPayoutAmount" to payoutAmount.toString(),
             ),
         )
     }

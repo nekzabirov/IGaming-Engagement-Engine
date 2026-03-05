@@ -5,7 +5,7 @@ interface IJourneyNode {
 
     val next: IJourneyNode?
 
-    fun requireParams(): Set<String>
+    fun inputParams(): Set<String>
 
     fun outputParams(): Set<String>
 }

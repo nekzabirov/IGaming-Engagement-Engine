@@ -7,39 +7,39 @@ import com.nekgambling.infrastructure.journey.trigger.ITriggerJourneyNodeProcess
 import kotlin.reflect.KClass
 
 class InvoiceTriggerJourneyNodeProcess : ITriggerJourneyNodeProcess<InvoiceTriggerJourneyNode> {
-    override val node: KClass<InvoiceTriggerJourneyNode> = InvoiceTriggerJourneyNode::class
+    override val nodeType: KClass<InvoiceTriggerJourneyNode> = InvoiceTriggerJourneyNode::class
 
     override suspend fun process(
         playerId: String,
         node: InvoiceTriggerJourneyNode,
         payload: Map<String, Any>,
     ): JourneyNodeProcess.Response? {
-        val typeStr = payload["type"] as? String ?: error("Missing required payload param: type")
+        val typeStr = payload["invoiceType"] as? String ?: error("Missing required payload param: invoiceType")
         val type = runCatching { PlayerInvoice.Type.valueOf(typeStr) }.getOrElse { error("Invalid invoice type: $typeStr") }
-        val statusStr = payload["status"] as? String ?: error("Missing required payload param: status")
+        val statusStr = payload["invoiceStatus"] as? String ?: error("Missing required payload param: invoiceStatus")
         val status = runCatching { PlayerInvoice.Status.valueOf(statusStr) }.getOrElse { error("Invalid invoice status: $statusStr") }
-        val currencyStr = payload["currency"] as? String ?: error("Missing required payload param: currency")
-        val transactionCurrency = Currency(currencyStr)
-        val amount = (payload["amount"] as? Number)?.toLong() ?: error("Missing required payload param: amount")
-        val transactionAmount = (payload["transactionAmount"] as? Number)?.toLong() ?: error("Missing required payload param: transactionAmount")
-        val taxAmount = (payload["taxAmount"] as? Number)?.toLong() ?: error("Missing required payload param: taxAmount")
-        val feeAmount = (payload["feeAmount"] as? Number)?.toLong() ?: error("Missing required payload param: feeAmount")
+        val currencyStr = payload["invoiceCurrency"] as? String ?: error("Missing required payload param: invoiceCurrency")
+        val invoiceCurrency = Currency(currencyStr)
+        val amount = (payload["invoiceAmount"] as? Number)?.toLong() ?: error("Missing required payload param: invoiceAmount")
+        val transactionAmount = (payload["invoiceTransactionAmount"] as? Number)?.toLong() ?: error("Missing required payload param: invoiceTransactionAmount")
+        val taxAmount = (payload["invoiceTaxAmount"] as? Number)?.toLong() ?: error("Missing required payload param: invoiceTaxAmount")
+        val feeAmount = (payload["invoiceFeeAmount"] as? Number)?.toLong() ?: error("Missing required payload param: invoiceFeeAmount")
 
-        val matched = type == node.type
-                && status == node.status
-                && (node.currency == null || transactionCurrency == node.currency)
-                && (node.amount == null || node.amount.check(amount))
+        val matched = type == node.invoiceType
+                && status == node.invoiceStatus
+                && (node.invoiceCurrency == null || invoiceCurrency == node.invoiceCurrency)
+                && (node.invoiceAmount == null || node.invoiceAmount.check(amount))
 
         if (!matched) return null
 
         return JourneyNodeProcess.Response(
             nextNode = node.next,
             output = mapOf(
-                "currency" to currencyStr,
-                "amount" to amount.toString(),
-                "transactionAmount" to transactionAmount.toString(),
-                "taxAmount" to taxAmount.toString(),
-                "fees" to feeAmount.toString(),
+                "invoiceCurrency" to currencyStr,
+                "invoiceAmount" to amount.toString(),
+                "invoiceTransactionAmount" to transactionAmount.toString(),
+                "invoiceTaxAmount" to taxAmount.toString(),
+                "invoiceFeeAmount" to feeAmount.toString(),
             ),
         )
     }

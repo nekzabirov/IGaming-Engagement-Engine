@@ -6,14 +6,14 @@ import com.nekgambling.domain.journey.model.IJourneyNode
 data class ConditionJourneyNode(
     val condition: Condition,
 
-    val matchNode: IJourneyNode?,
-    val notMatchNode: IJourneyNode?,
+    val onMatch: IJourneyNode?,
+    val onMismatch: IJourneyNode?,
 
     override val prev: IJourneyNode?,
 ) : IJourneyNode {
-    override val next: IJourneyNode? = matchNode
+    override val next: IJourneyNode? = onMatch
 
-    override fun requireParams(): Set<String> = emptySet()
+    override fun inputParams(): Set<String> = emptySet()
 
     override fun outputParams(): Set<String> = emptySet()
 }

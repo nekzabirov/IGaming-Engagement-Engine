@@ -7,15 +7,15 @@ import com.nekgambling.domain.vo.param.NumberParamValue
 import com.nekgambling.infrastructure.journey.trigger.ITriggerJourneyNode
 
 data class InvoiceTriggerJourneyNode(
-    val type: PlayerInvoice.Type,
-    val status: PlayerInvoice.Status,
-    val currency: Currency? = null,
-    val amount: NumberParamValue? = null,
+    val invoiceType: PlayerInvoice.Type,
+    val invoiceStatus: PlayerInvoice.Status,
+    val invoiceCurrency: Currency? = null,
+    val invoiceAmount: NumberParamValue? = null,
 
     override val prev: IJourneyNode? = null,
     override val next: IJourneyNode? = null,
 ) : ITriggerJourneyNode {
-    override fun requireParams(): Set<String> = setOf("type", "status", "currency", "amount", "transactionAmount", "taxAmount", "feeAmount")
+    override fun inputParams(): Set<String> = setOf("invoiceType", "invoiceStatus", "invoiceCurrency", "invoiceAmount", "invoiceTransactionAmount", "invoiceTaxAmount", "invoiceFeeAmount")
 
-    override fun outputParams(): Set<String> = setOf("currency", "amount", "transactionAmount", "taxAmount", "fees")
+    override fun outputParams(): Set<String> = setOf("invoiceCurrency", "invoiceAmount", "invoiceTransactionAmount", "invoiceTaxAmount", "invoiceFeeAmount")
 }
