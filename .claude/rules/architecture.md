@@ -36,6 +36,7 @@ globs: ["src/**/*.kt"]
 - `ITriggerJourneyNode` is an abstract class extending `IJourneyNode` — subclass data classes pass `_id` and `_next` as private constructor params forwarded to super
 - `JourneyNodeProcessResolver` resolves and delegates to `JourneyNodeProcess<N>` implementations via `nodeType: KClass` matching
 - `JourneyNodeProcess.process()` returns `JourneyNodeProcess.Response?` (contains `nextNode` + `output` map) — `null` means no match
+- `Journey` exposes a `tail` property that traverses the `next` chain from `head` to return the last node
 
 ## Dependency Injection
 - All wiring in single `infrastructureModule` in `infrastructure/koin.kt`

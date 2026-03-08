@@ -2,6 +2,7 @@ package com.nekgambling.infrastructure.exposed
 
 import com.nekgambling.infrastructure.exposed.table.ConditionResultsTable
 import com.nekgambling.infrastructure.exposed.table.ConditionsTable
+import com.nekgambling.infrastructure.exposed.table.JourneyInstantsTable
 import com.nekgambling.infrastructure.exposed.table.JourneyNodesTable
 import com.nekgambling.infrastructure.exposed.table.JourneysTable
 import com.nekgambling.infrastructure.exposed.table.SegmentResultsTable
@@ -33,6 +34,7 @@ object ExposedDatabaseFactory {
                     SegmentResultsTable,
                     JourneyNodesTable,
                     JourneysTable,
+                    JourneyInstantsTable,
                 )
             }
         }

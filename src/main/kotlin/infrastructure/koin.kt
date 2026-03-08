@@ -33,12 +33,14 @@ import com.nekgambling.domain.player.repository.IPlayerFreespinRepository
 import com.nekgambling.domain.player.repository.IPlayerInvoiceRepository
 import com.nekgambling.domain.player.repository.IPlayerSpinRepository
 import com.nekgambling.domain.condition.repository.IConditionRepository
+import com.nekgambling.domain.journey.repository.IJourneyInstantRepository
 import com.nekgambling.domain.journey.repository.IJourneyRepository
 import com.nekgambling.domain.segment.repository.ISegmentRepository
 import com.nekgambling.infrastructure.currency.UnitsCurrencyAdapter
 import com.nekgambling.infrastructure.exposed.ExposedConfig
 import com.nekgambling.infrastructure.exposed.ExposedDatabaseFactory
 import com.nekgambling.infrastructure.exposed.repository.ExposedConditionRepository
+import com.nekgambling.infrastructure.exposed.repository.ExposedJourneyInstantRepository
 import com.nekgambling.infrastructure.exposed.repository.ExposedJourneyRepository
 import com.nekgambling.infrastructure.exposed.repository.ExposedSegmentRepository
 import com.nekgambling.infrastructure.clickhouse.ClickHouseClient
@@ -139,6 +141,8 @@ val infrastructureModule = module {
     single { ExposedSegmentRepository(get()) } bind ISegmentRepository::class
 
     single { ExposedJourneyRepository(get()) } bind IJourneyRepository::class
+
+    single { ExposedJourneyInstantRepository(get()) } bind IJourneyInstantRepository::class
 
     // --- Query handlers ---
 
