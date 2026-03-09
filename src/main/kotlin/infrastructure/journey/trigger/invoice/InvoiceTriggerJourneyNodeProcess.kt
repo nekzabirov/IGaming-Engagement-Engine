@@ -14,6 +14,9 @@ class InvoiceTriggerJourneyNodeProcess : ITriggerJourneyNodeProcess<InvoiceTrigg
         node: InvoiceTriggerJourneyNode,
         payload: Map<String, Any>,
     ): JourneyNodeProcess.Response? {
+        val triggerName = payload["triggerName"] as? String ?: return null
+        if (triggerName != InvoiceTriggerJourneyNode.TRIGGER_NAME) return null
+
         val typeStr = payload["invoiceType"] as? String ?: error("Missing required payload param: invoiceType")
         val type = runCatching { PlayerInvoice.Type.valueOf(typeStr) }.getOrElse { error("Invalid invoice type: $typeStr") }
         val statusStr = payload["invoiceStatus"] as? String ?: error("Missing required payload param: invoiceStatus")

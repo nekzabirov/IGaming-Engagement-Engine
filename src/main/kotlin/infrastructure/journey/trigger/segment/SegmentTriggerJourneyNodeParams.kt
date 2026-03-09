@@ -7,7 +7,7 @@ object SegmentTriggerJourneyNodeNomenclature : JourneyNodeNomenclature<SegmentTr
     override val nodeType: KClass<SegmentTriggerJourneyNode> = SegmentTriggerJourneyNode::class
 
     override fun inputParams(): Set<String> =
-        setOf("segment")
+        setOf("triggerName", "segment")
 
     override fun outputParams(): Set<String> =
         emptySet()

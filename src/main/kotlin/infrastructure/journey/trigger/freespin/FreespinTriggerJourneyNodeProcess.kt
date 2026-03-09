@@ -13,6 +13,9 @@ class FreespinTriggerJourneyNodeProcess : ITriggerJourneyNodeProcess<FreespinTri
         node: FreespinTriggerJourneyNode,
         payload: Map<String, Any>,
     ): JourneyNodeProcess.Response? {
+        val triggerName = payload["triggerName"] as? String ?: return null
+        if (triggerName != FreespinTriggerJourneyNode.TRIGGER_NAME) return null
+
         val freespinId = payload["freespinId"] as? String ?: error("Missing required payload param: freespinId")
         val freespinIdentity = payload["freespinIdentity"] as? String ?: error("Missing required payload param: freespinIdentity")
         val gameId = payload["gameId"] as? String ?: error("Missing required payload param: gameId")

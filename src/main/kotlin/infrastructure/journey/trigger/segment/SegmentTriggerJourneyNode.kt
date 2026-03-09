@@ -13,4 +13,7 @@ data class SegmentTriggerJourneyNode(
 
     enum class Type { ENTER, EXIT }
 
+    companion object {
+        const val TRIGGER_NAME = "segment"
+    }
 }

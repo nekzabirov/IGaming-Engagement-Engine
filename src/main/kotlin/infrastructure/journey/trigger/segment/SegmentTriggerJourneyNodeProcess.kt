@@ -12,6 +12,9 @@ class SegmentTriggerJourneyNodeProcess : ITriggerJourneyNodeProcess<SegmentTrigg
         node: SegmentTriggerJourneyNode,
         payload: Map<String, Any>,
     ): JourneyNodeProcess.Response? {
+        val triggerName = payload["triggerName"] as? String ?: return null
+        if (triggerName != SegmentTriggerJourneyNode.TRIGGER_NAME) return null
+
         val segmentIdentity = payload["segment"] as? String ?: error("Missing required payload param: segment")
 
         val matched = node.segment == null || segmentIdentity == node.segment

@@ -7,7 +7,7 @@ object InvoiceTriggerJourneyNodeNomenclature : JourneyNodeNomenclature<InvoiceTr
     override val nodeType: KClass<InvoiceTriggerJourneyNode> = InvoiceTriggerJourneyNode::class
 
     override fun inputParams(): Set<String> =
-        setOf("invoiceType", "invoiceStatus", "invoiceCurrency", "invoiceAmount", "invoiceTransactionAmount", "invoiceTaxAmount", "invoiceFeeAmount")
+        setOf("triggerName", "invoiceType", "invoiceStatus", "invoiceCurrency", "invoiceAmount", "invoiceTransactionAmount", "invoiceTaxAmount", "invoiceFeeAmount")
 
     override fun outputParams(): Set<String> =
         setOf("invoice:currency", "invoice:amount", "invoice:transactionAmount", "invoice:taxAmount", "invoice:feeAmount")

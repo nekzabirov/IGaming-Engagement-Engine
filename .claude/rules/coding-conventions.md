@@ -14,7 +14,7 @@ globs: ["src/**/*.kt"]
 - Exposed repos: `Exposed<Entity>Repository`
 - Player definitions: `<Name>PlayerDefinition` with `@SerialName("<camelCase>")`
 - Player definition evaluators: `<Name>PlayerDefinitionEvaluator` (or `<Name>Evaluator`)
-- Trigger journey nodes: `<Name>TriggerJourneyNode` extending `ITriggerJourneyNode` (abstract class), with `override val id` and `override val next` constructor params
+- Trigger journey nodes: `<Name>TriggerJourneyNode` extending `ITriggerJourneyNode` (abstract class), with `override val id` and `override val next` constructor params, and a `companion object { const val TRIGGER_NAME = "<name>" }` for trigger name matching
 - Journey node processors: `override val nodeType: KClass<N>` (not `node`) to avoid confusion with the `process(node)` parameter
 - Journey node nomenclatures: `<NodeType>Nomenclature` objects (e.g., `BonusTriggerJourneyNodeNomenclature`, `PlayerJourneyNodeNomenclature`), placed alongside their node class, registered in Koin with `bind JourneyNodeNomenclature::class`
 - Player journey branching: `matchNode` / `notMatchNode` on `PlayerJourneyNode`
@@ -24,6 +24,7 @@ globs: ["src/**/*.kt"]
 - Issue action journey nodes: `Issue<Entity>ActionJourneyNode` in `infrastructure/journey/action/issue/<entity>/` package (e.g., `IssueFreespinActionJourneyNode`)
 - Extractor journey nodes: `<Name>Extractor` extending `IExtractorJourneyNode`, in `infrastructure/journey/extractor/<name>/` package
 - Trigger node output keys: Use `domain:field` colon-separated prefix format (e.g., `bonus:id`, `invoice:amount`, `freespin:currency`). Input payload keys from upstream events remain camelCase (e.g., `bonusId`, `invoiceAmount`)
+- Trigger node input params: All trigger nomenclatures must include `"triggerName"` in `inputParams()`. Process implementations must check `payload["triggerName"]` matches the node's `TRIGGER_NAME` constant at the top, returning `null` if missing or mismatched
 
 ## Package Imports
 - Domain models: `com.nekgambling.domain.model.player.*` (NOT `domain.player.model`)

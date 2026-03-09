@@ -44,6 +44,7 @@ globs: ["src/**/*.kt"]
 - `IJourneyNode` is an abstract class (not interface) with `open val id: Long = Long.MIN_VALUE` and `open val next` as constructor parameters, plus built-in circular dependency validation in `init`
 - `IJourneyNode` does **not** define `inputParams`/`outputParams` — param knowledge is externalized to `JourneyNodeNomenclature<N>` strategy implementations
 - `ITriggerJourneyNode` is an abstract class extending `IJourneyNode` with `override val id` and `override val next` — subclass data classes use `override val` for these params directly
+- Each trigger node has a `companion object { const val TRIGGER_NAME = "..." }` (e.g., `"bonus"`, `"freespin"`, `"invoice"`, `"segment"`) and its process checks `payload["triggerName"]` against `TRIGGER_NAME`, returning `null` (no match) if missing or mismatched
 - `PlayerJourneyNode` evaluates `IPlayerDefinition` rules with `matchNode`/`notMatchNode` branching
 - `JourneyNodeProcess.process()` returns `JourneyNodeProcess.Response?` (contains `nextNode` + `output` map) — `null` means no match
 - `JourneyNodeNomenclature<N>` strategy interface (in `domain/strategy/`) declares `inputParams(node)` and `outputParams(node)` per node type, with implementations in `infrastructure/journey/` alongside each node class

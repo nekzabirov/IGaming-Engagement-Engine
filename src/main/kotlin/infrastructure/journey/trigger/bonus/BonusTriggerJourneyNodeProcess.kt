@@ -13,6 +13,9 @@ class BonusTriggerJourneyNodeProcess : ITriggerJourneyNodeProcess<BonusTriggerJo
         node: BonusTriggerJourneyNode,
         payload: Map<String, Any>,
     ): JourneyNodeProcess.Response? {
+        val triggerName = payload["triggerName"] as? String ?: return null
+        if (triggerName != BonusTriggerJourneyNode.TRIGGER_NAME) return null
+
         val bonusId = payload["bonusId"] as? String ?: error("Missing required payload param: bonusId")
         val bonusIdentity = payload["bonusIdentity"] as? String ?: error("Missing required payload param: bonusIdentity")
         val statusStr = payload["bonusStatus"] as? String ?: error("Missing required payload param: bonusStatus")

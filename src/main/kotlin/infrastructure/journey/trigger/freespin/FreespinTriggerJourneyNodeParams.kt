@@ -7,7 +7,7 @@ object FreespinTriggerJourneyNodeNomenclature : JourneyNodeNomenclature<Freespin
     override val nodeType: KClass<FreespinTriggerJourneyNode> = FreespinTriggerJourneyNode::class
 
     override fun inputParams(): Set<String> =
-        setOf("freespinId", "freespinIdentity", "gameId", "freespinCurrency", "freespinStatus")
+        setOf("triggerName", "freespinId", "freespinIdentity", "gameId", "freespinCurrency", "freespinStatus")
 
     override fun outputParams(): Set<String> =
         setOf("freespin:id", "freespin:identity", "freespin:gameId", "freespin:currency", "freespin:status", "freespin:payoutRealAmount")

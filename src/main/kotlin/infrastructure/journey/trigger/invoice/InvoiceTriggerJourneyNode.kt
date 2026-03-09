@@ -14,4 +14,8 @@ data class InvoiceTriggerJourneyNode(
     val invoiceAmount: NumberParamValue? = null,
 
     override val next: IJourneyNode? = null,
-) : ITriggerJourneyNode(id = id, next = next)
+) : ITriggerJourneyNode(id = id, next = next) {
+    companion object {
+        const val TRIGGER_NAME = "invoice"
+    }
+}

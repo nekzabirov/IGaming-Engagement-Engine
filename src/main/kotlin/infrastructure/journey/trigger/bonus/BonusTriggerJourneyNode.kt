@@ -13,4 +13,8 @@ data class BonusTriggerJourneyNode(
     val bonusPayoutAmount: NumberParamValue? = null,
 
     override val next: IJourneyNode? = null,
-) : ITriggerJourneyNode(id = id, next = next)
+) : ITriggerJourneyNode(id = id, next = next) {
+    companion object {
+        const val TRIGGER_NAME = "bonus"
+    }
+}

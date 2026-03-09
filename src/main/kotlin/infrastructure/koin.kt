@@ -8,6 +8,7 @@ import com.nekgambling.application.adapter.IEventAdapter
 import com.nekgambling.application.adapter.ILockAdapter
 import com.nekgambling.api.command.CommandBus
 import com.nekgambling.api.command.ICommandHandler
+import com.nekgambling.application.resolver.JourneyNodeProcessResolver
 import com.nekgambling.application.query.IQueryHandler
 import com.nekgambling.application.query.QueryBus
 import com.nekgambling.domain.repository.IJourneyInstantRepository
@@ -185,6 +186,8 @@ val infrastructureModule = module {
     single<JourneyNodeNomenclature<*>> { PlacePayloadActionJourneyNodeNomenclature } bind JourneyNodeNomenclature::class
 
     single { PlacePayloadActionJourneyNodeProcess() } bind JourneyNodeProcess::class
+
+    single { JourneyNodeProcessResolver(getAll()) }
 
     // --- Player definition evaluators ---
 
