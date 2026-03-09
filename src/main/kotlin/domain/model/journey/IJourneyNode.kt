@@ -13,7 +13,4 @@ abstract class IJourneyNode(
         }
     }
 
-    abstract fun inputParams(): Set<String>
-
-    abstract fun outputParams(): Set<String>
 }

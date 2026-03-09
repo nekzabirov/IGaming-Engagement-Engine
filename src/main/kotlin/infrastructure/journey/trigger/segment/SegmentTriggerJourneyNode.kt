@@ -13,7 +13,4 @@ data class SegmentTriggerJourneyNode(
 
     enum class Type { ENTER, EXIT }
 
-    override fun inputParams(): Set<String> = setOf("segment")
-
-    override fun outputParams(): Set<String> = emptySet()
 }

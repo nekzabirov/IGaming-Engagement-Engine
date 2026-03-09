@@ -9,8 +9,4 @@ data class PlayerJourneyNode(
     val rule: IPlayerDefinition,
     val matchNode: IJourneyNode? = null,
     val notMatchNode: IJourneyNode? = null,
-) : IJourneyNode(id = id, next = matchNode) {
-    override fun inputParams(): Set<String> = emptySet()
-
-    override fun outputParams(): Set<String> = emptySet()
-}
+) : IJourneyNode(id = id, next = matchNode)

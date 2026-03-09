@@ -10,12 +10,8 @@ abstract class IAmountExtractor(
 ) : IExtractorJourneyNode(id, next) {
 
     companion object {
-        private const val OUTPUT_KEY = "amount"
+        const val OUTPUT_KEY = "amount"
     }
-
-    override fun inputParams(): Set<String> = emptySet()
-
-    override fun outputParams(): Set<String> = setOf(OUTPUT_KEY)
 
     protected abstract fun calculate(amount: Long): Long
 

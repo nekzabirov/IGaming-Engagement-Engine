@@ -36,7 +36,14 @@ import com.nekgambling.infrastructure.external.rabbitmq.RabbitMQEventAdapter
 import com.nekgambling.infrastructure.external.rabbitmq.config.RabbitMQConfig
 import com.nekgambling.infrastructure.external.redis.RedisLockAdapter
 import com.nekgambling.infrastructure.external.redis.config.RedisConfig
+import com.nekgambling.domain.strategy.JourneyNodeParams
+import com.nekgambling.infrastructure.journey.extractor.amount.PercentageAmountExtractorParams
 import com.nekgambling.infrastructure.journey.player.IPlayerDefinitionEvaluator
+import com.nekgambling.infrastructure.journey.player.PlayerJourneyNodeParams
+import com.nekgambling.infrastructure.journey.trigger.bonus.BonusTriggerJourneyNodeParams
+import com.nekgambling.infrastructure.journey.trigger.freespin.FreespinTriggerJourneyNodeParams
+import com.nekgambling.infrastructure.journey.trigger.invoice.InvoiceTriggerJourneyNodeParams
+import com.nekgambling.infrastructure.journey.trigger.segment.SegmentTriggerJourneyNodeParams
 import com.nekgambling.infrastructure.journey.player.invoiceTotal.InvoiceTotalPlayerDefinitionEvaluator
 import com.nekgambling.infrastructure.journey.player.playerAge.PlayerAgeDefinitionEvaluator
 import com.nekgambling.infrastructure.journey.player.playerGGR.PlayerGgrPlayerEvaluator
@@ -139,6 +146,20 @@ val infrastructureModule = module {
     single { ProcessSpinCommandHandler(get(), get(), get()) } bind ICommandHandler::class
 
     single { CommandBus(getAll()) }
+
+    // --- Journey node params ---
+
+    single<JourneyNodeParams<*>> { BonusTriggerJourneyNodeParams } bind JourneyNodeParams::class
+
+    single<JourneyNodeParams<*>> { FreespinTriggerJourneyNodeParams } bind JourneyNodeParams::class
+
+    single<JourneyNodeParams<*>> { InvoiceTriggerJourneyNodeParams } bind JourneyNodeParams::class
+
+    single<JourneyNodeParams<*>> { SegmentTriggerJourneyNodeParams } bind JourneyNodeParams::class
+
+    single<JourneyNodeParams<*>> { PercentageAmountExtractorParams } bind JourneyNodeParams::class
+
+    single<JourneyNodeParams<*>> { PlayerJourneyNodeParams } bind JourneyNodeParams::class
 
     // --- Player definition evaluators ---
 

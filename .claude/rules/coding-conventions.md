@@ -15,7 +15,7 @@ globs: ["src/**/*.kt"]
 - Player definition evaluators: `<Name>PlayerDefinitionEvaluator` (or `<Name>Evaluator`)
 - Trigger journey nodes: `<Name>TriggerJourneyNode` extending `ITriggerJourneyNode` (abstract class), with `override val id` and `override val next` constructor params
 - Journey node processors: `override val nodeType: KClass<N>` (not `node`) to avoid confusion with the `process(node)` parameter
-- Journey node params: `inputParams()` for required input keys, `outputParams()` for produced output keys
+- Journey node params: `JourneyNodeParams<N>` strategy implementations named `<NodeType>Params` (e.g., `BonusTriggerJourneyNodeParams`), placed alongside their node class, registered in Koin with `bind JourneyNodeParams::class`
 - Player journey branching: `matchNode` / `notMatchNode` on `PlayerJourneyNode`
 - Journey payload keys: Always prefix with entity name to avoid collisions (e.g., `bonusId`, `bonusStatus`, `freespinId`, `invoiceType`, `invoiceAmount`)
 

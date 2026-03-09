@@ -34,13 +34,15 @@ globs: ["src/**/*.kt"]
 
 ## Journey Node Processing
 - `IJourneyNode` is an abstract class (not interface) with `open val id: Long = Long.MIN_VALUE` and `open val next` as constructor parameters, plus built-in circular dependency validation in `init`
+- `IJourneyNode` does **not** define `inputParams`/`outputParams` — param knowledge is externalized to `JourneyNodeParams<N>` strategy implementations
 - `ITriggerJourneyNode` is an abstract class extending `IJourneyNode` with `override val id` and `override val next` — subclass data classes use `override val` for these params directly
 - `PlayerJourneyNode` evaluates `IPlayerDefinition` rules with `matchNode`/`notMatchNode` branching
 - `JourneyNodeProcess.process()` returns `JourneyNodeProcess.Response?` (contains `nextNode` + `output` map) — `null` means no match
+- `JourneyNodeParams<N>` strategy interface (in `domain/strategy/`) declares `inputParams(node)` and `outputParams(node)` per node type, with implementations in `infrastructure/journey/` alongside each node class
 - `Journey` exposes a `tail` property that traverses the `next` chain from `head` to return the last node
 - `JourneyInstant` tracks player progress through a journey (current node + payload)
 
 ## Dependency Injection
 - All wiring in single `infrastructureModule` in `infrastructure/koin.kt`
-- Multi-binding pattern: `bind Interface::class` + `getAll()` for CommandBus, QueryBus, and player definition evaluators
+- Multi-binding pattern: `bind Interface::class` + `getAll()` for CommandBus, QueryBus, JourneyNodeParams, and player definition evaluators
 - All bindings are `single` scoped
