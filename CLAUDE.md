@@ -58,6 +58,8 @@ infrastructure/           → All adapters and implementations
   external/currency/      → UnitsCurrencyAdapter (amount * 100 conversion)
   journey/player/         → PlayerJourneyNode + 5 player definition evaluators
   journey/trigger/        → Trigger journey nodes (bonus, freespin, invoice, segment)
+  journey/action/         → Action journey nodes (IActionJourneyNode base) + processors
+  journey/action/push/    → Push action nodes (email, SMS, in-app) with template + placeholders
 ```
 
 ## Key Patterns
@@ -70,11 +72,12 @@ infrastructure/           → All adapters and implementations
 - **QueryBus**: Dispatches `IQuery<R>` to matching `IQueryHandler` by `queryType: KClass`. Query handlers read from ClickHouse materialized views.
 
 ### Journey Node Architecture
-`IJourneyNode` is an abstract class with `id`, `next`, `inputParams()`, and `outputParams()`. Two node categories:
+`IJourneyNode` is an abstract class with `id`, `next`, `inputParams()`, and `outputParams()`. Three node categories:
 - **PlayerJourneyNode**: Evaluates player definitions (`IPlayerDefinition`) with match/mismatch branching
 - **ITriggerJourneyNode**: Matches incoming event payload against node criteria (bonus, freespin, invoice, segment triggers)
+- **IActionJourneyNode**: Executes side-effect actions (e.g., push notifications). Subcategory `IPushActionJourneyNode` (sealed class with `templateId` + `placeHolders`) has three concrete types: `EMailPushActionJourneyNode`, `SmsPushActionJourneyNode`, `InAppPushActionJourneyNode`
 
-`JourneyNodeProcess<N>` strategy interface processes nodes. `IPlayerDefinitionEvaluator<T>` implementations evaluate player conditions. Five definition types: `playerAge`, `profileField`, `spinTotal`, `invoiceTotal`, `playerGgr`.
+`JourneyNodeProcess<N>` strategy interface processes nodes. `IActionJourneyNodeProcess<T>` is the abstract base for action processors; `IPushActionJourneyNodeProcess` handles all push subtypes. `IPlayerDefinitionEvaluator<T>` implementations evaluate player conditions. Five definition types: `playerAge`, `profileField`, `spinTotal`, `invoiceTotal`, `playerGgr`.
 
 ### Dual Database Design
 - **ClickHouse** (analytics): Player activity data in `ReplacingMergeTree` tables with `_version` for upserts. Two `SummingMergeTree` tables (`player_invoice_total`, `player_total_spin_info`) fed by materialized views for pre-aggregated queries.

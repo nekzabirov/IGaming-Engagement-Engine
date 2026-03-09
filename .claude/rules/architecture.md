@@ -40,6 +40,9 @@ globs: ["src/**/*.kt"]
 - `JourneyNodeProcess.process()` returns `JourneyNodeProcess.Response?` (contains `nextNode` + `output` map) — `null` means no match
 - `JourneyNodeNomenclature<N>` strategy interface (in `domain/strategy/`) declares `inputParams(node)` and `outputParams(node)` per node type, with implementations in `infrastructure/journey/` alongside each node class
 - `Journey` exposes a `tail` property that traverses the `next` chain from `head` to return the last node
+- `IActionJourneyNode` is an abstract class extending `IJourneyNode` for side-effect action nodes (push notifications, etc.)
+- `IPushActionJourneyNode` is a sealed class extending `IActionJourneyNode` with `templateId` and `placeHolders` — concrete subtypes: `EMailPushActionJourneyNode`, `SmsPushActionJourneyNode`, `InAppPushActionJourneyNode`
+- `IActionJourneyNodeProcess<T>` is the abstract base for action node processors, extending `JourneyNodeProcess<T>`; `IPushActionJourneyNodeProcess` processes all push subtypes via sealed class matching
 - `JourneyInstant` tracks player progress through a journey (current node + payload)
 
 ## Dependency Injection

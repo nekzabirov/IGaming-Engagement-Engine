@@ -38,6 +38,7 @@ import com.nekgambling.infrastructure.external.redis.RedisLockAdapter
 import com.nekgambling.infrastructure.external.redis.config.RedisConfig
 import com.nekgambling.domain.strategy.JourneyNodeNomenclature
 import com.nekgambling.infrastructure.journey.extractor.amount.PercentageAmountExtractorParams
+import com.nekgambling.infrastructure.journey.extractor.playerProfile.PlayerProfileExtractorParams
 import com.nekgambling.infrastructure.journey.player.IPlayerDefinitionEvaluator
 import com.nekgambling.infrastructure.journey.player.PlayerJourneyNodeNomenclature
 import com.nekgambling.infrastructure.journey.trigger.bonus.BonusTriggerJourneyNodeNomenclature
@@ -158,6 +159,8 @@ val infrastructureModule = module {
     single<JourneyNodeNomenclature<*>> { SegmentTriggerJourneyNodeNomenclature } bind JourneyNodeNomenclature::class
 
     single<JourneyNodeNomenclature<*>> { PercentageAmountExtractorParams } bind JourneyNodeNomenclature::class
+
+    single<JourneyNodeNomenclature<*>> { PlayerProfileExtractorParams } bind JourneyNodeNomenclature::class
 
     single<JourneyNodeNomenclature<*>> { PlayerJourneyNodeNomenclature } bind JourneyNodeNomenclature::class
 

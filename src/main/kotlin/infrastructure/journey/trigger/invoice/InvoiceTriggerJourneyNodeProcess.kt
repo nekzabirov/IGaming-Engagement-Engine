@@ -35,11 +35,11 @@ class InvoiceTriggerJourneyNodeProcess : ITriggerJourneyNodeProcess<InvoiceTrigg
         return JourneyNodeProcess.Response(
             nextNode = node.next,
             output = mapOf(
-                "invoiceCurrency" to currencyStr,
-                "invoiceAmount" to amount.toString(),
-                "invoiceTransactionAmount" to transactionAmount.toString(),
-                "invoiceTaxAmount" to taxAmount.toString(),
-                "invoiceFeeAmount" to feeAmount.toString(),
+                "invoice:currency" to currencyStr,
+                "invoice:amount" to amount.toString(),
+                "invoice:transactionAmount" to transactionAmount.toString(),
+                "invoice:taxAmount" to taxAmount.toString(),
+                "invoice:feeAmount" to feeAmount.toString(),
             ),
         )
     }

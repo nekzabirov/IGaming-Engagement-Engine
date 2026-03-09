@@ -7,6 +7,6 @@ abstract class IExtractorJourneyNode(
     override val next: IJourneyNode? = null,
 ) : IJourneyNode(id = id, next = next) {
 
-    abstract fun extract(inputs: Map<String, Any>): Pair<String, Any>
+    abstract suspend fun extract(playerId: String, inputs: Map<String, Any>):  Map<String, Any>
 
 }

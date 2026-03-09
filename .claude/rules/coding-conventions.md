@@ -17,7 +17,10 @@ globs: ["src/**/*.kt"]
 - Journey node processors: `override val nodeType: KClass<N>` (not `node`) to avoid confusion with the `process(node)` parameter
 - Journey node params: `JourneyNodeNomenclature<N>` strategy implementations named `<NodeType>Params` (e.g., `BonusTriggerJourneyNodeNomenclature`), placed alongside their node class, registered in Koin with `bind JourneyNodeNomenclature::class`
 - Player journey branching: `matchNode` / `notMatchNode` on `PlayerJourneyNode`
-- Journey payload keys: Always prefix with entity name to avoid collisions (e.g., `bonusId`, `bonusStatus`, `freespinId`, `invoiceType`, `invoiceAmount`)
+- Action journey nodes: `<Name>ActionJourneyNode` extending `IActionJourneyNode` (abstract class), with `id` and `next` constructor params
+- Push action journey nodes: `<Channel>PushActionJourneyNode` extending `IPushActionJourneyNode` (sealed class with `templateId` + `placeHolders`), e.g., `EMailPushActionJourneyNode`, `SmsPushActionJourneyNode`, `InAppPushActionJourneyNode`
+- Action node processors: `<Name>ActionJourneyNodeProcess` extending `IActionJourneyNodeProcess<T>`, placed in same package as their node class
+- Trigger node output keys: Use `domain:field` colon-separated prefix format (e.g., `bonus:id`, `invoice:amount`, `freespin:currency`). Input payload keys from upstream events remain camelCase (e.g., `bonusId`, `invoiceAmount`)
 
 ## Monetary Values
 - Always use `Long` in minor units (cents) — never `Double` or `BigDecimal` for storage

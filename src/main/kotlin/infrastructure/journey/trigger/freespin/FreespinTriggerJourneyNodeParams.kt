@@ -10,5 +10,5 @@ object FreespinTriggerJourneyNodeNomenclature : JourneyNodeNomenclature<Freespin
         setOf("freespinId", "freespinIdentity", "gameId", "freespinCurrency", "freespinStatus")
 
     override fun outputParams(): Set<String> =
-        setOf("freespinId", "freespinIdentity", "gameId", "freespinCurrency", "freespinStatus", "freespinPayoutRealAmount")
+        setOf("freespin:id", "freespin:identity", "freespin:gameId", "freespin:currency", "freespin:status", "freespin:payoutRealAmount")
 }

@@ -10,5 +10,5 @@ object BonusTriggerJourneyNodeNomenclature : JourneyNodeNomenclature<BonusTrigge
         setOf("bonusId", "bonusIdentity", "bonusStatus", "bonusPayoutAmount")
 
     override fun outputParams(): Set<String> =
-        setOf("bonusId", "bonusIdentity", "bonusStatus", "bonusPayoutAmount")
+        setOf("bonus:id", "bonus:identity", "bonus:status", "bonus:payoutAmount")
 }

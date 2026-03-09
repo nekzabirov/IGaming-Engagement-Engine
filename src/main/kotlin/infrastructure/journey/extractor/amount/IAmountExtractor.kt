@@ -15,7 +15,7 @@ abstract class IAmountExtractor(
 
     protected abstract fun calculate(amount: Long): Long
 
-    override fun extract(inputs: Map<String, Any>): Pair<String, Any> {
+    override suspend fun extract(playerId: String, inputs: Map<String, Any>):  Map<String, Any> {
         require(inputs.containsKey(inputKey)) {
             "Parameters are not defined for $inputKey"
         }
@@ -24,7 +24,7 @@ abstract class IAmountExtractor(
 
         require(param is Long) { "Parameter $inputKey is not a long" }
 
-        return Pair(OUTPUT_KEY, calculate(param))
+        return mapOf(OUTPUT_KEY to calculate(param))
     }
 
 }

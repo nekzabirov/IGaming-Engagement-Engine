@@ -32,12 +32,12 @@ class FreespinTriggerJourneyNodeProcess : ITriggerJourneyNodeProcess<FreespinTri
         return JourneyNodeProcess.Response(
             nextNode = node.next,
             output = buildMap {
-                put("freespinId", freespinId)
-                put("freespinIdentity", freespinIdentity)
-                put("gameId", gameId)
-                put("freespinCurrency", freespinCurrency)
-                put("freespinStatus", statusStr)
-                payoutRealAmount?.let { put("freespinPayoutRealAmount", it.toString()) }
+                put("freespin:id", freespinId)
+                put("freespin:identity", freespinIdentity)
+                put("freespin:gameId", gameId)
+                put("freespin:currency", freespinCurrency)
+                put("freespin:status", statusStr)
+                payoutRealAmount?.let { put("freespin:payoutRealAmount", it.toString()) }
             },
         )
     }

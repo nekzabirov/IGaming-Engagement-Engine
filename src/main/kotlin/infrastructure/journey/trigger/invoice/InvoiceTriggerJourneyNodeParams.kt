@@ -10,5 +10,5 @@ object InvoiceTriggerJourneyNodeNomenclature : JourneyNodeNomenclature<InvoiceTr
         setOf("invoiceType", "invoiceStatus", "invoiceCurrency", "invoiceAmount", "invoiceTransactionAmount", "invoiceTaxAmount", "invoiceFeeAmount")
 
     override fun outputParams(): Set<String> =
-        setOf("invoiceCurrency", "invoiceAmount", "invoiceTransactionAmount", "invoiceTaxAmount", "invoiceFeeAmount")
+        setOf("invoice:currency", "invoice:amount", "invoice:transactionAmount", "invoice:taxAmount", "invoice:feeAmount")
 }

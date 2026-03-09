@@ -29,10 +29,10 @@ class BonusTriggerJourneyNodeProcess : ITriggerJourneyNodeProcess<BonusTriggerJo
         return JourneyNodeProcess.Response(
             nextNode = node.next,
             output = mapOf(
-                "bonusId" to bonusId,
-                "bonusIdentity" to bonusIdentity,
-                "bonusStatus" to statusStr,
-                "bonusPayoutAmount" to payoutAmount.toString(),
+                "bonus:id" to bonusId,
+                "bonus:identity" to bonusIdentity,
+                "bonus:status" to statusStr,
+                "bonus:payoutAmount" to payoutAmount.toString(),
             ),
         )
     }
