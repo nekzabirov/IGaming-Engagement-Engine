@@ -37,6 +37,7 @@ object JourneyNodesTable : LongIdTable("journey_nodes") {
     val invoiceCurrency = varchar("invoice_currency", 10).nullable()
     val invoiceAmount = jsonb<NumberParamValue>("invoice_amount", numberParamValueJson).nullable()
 
-    // SegmentEnterTriggerJourneyNode / SegmentExitTriggerJourneyNode
+    // SegmentTriggerJourneyNode
+    val segmentType = varchar("segment_type", 50).nullable()
     val segmentIdentity = varchar("segment_identity", 255).nullable()
 }

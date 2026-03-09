@@ -57,7 +57,7 @@ infrastructure/           → All adapters and implementations
   external/redis/         → RedisLockAdapter (distributed lock with Lua script release)
   external/currency/      → UnitsCurrencyAdapter (amount * 100 conversion)
   journey/player/         → PlayerJourneyNode + 5 player definition evaluators
-  journey/trigger/        → Trigger journey nodes (bonus, freespin, invoice, segment_enter, segment_exit)
+  journey/trigger/        → Trigger journey nodes (bonus, freespin, invoice, segment)
 ```
 
 ## Key Patterns

@@ -10,8 +10,7 @@ import com.nekgambling.infrastructure.journey.player.PlayerJourneyNode
 import com.nekgambling.infrastructure.journey.trigger.bonus.BonusTriggerJourneyNode
 import com.nekgambling.infrastructure.journey.trigger.freespin.FreespinTriggerJourneyNode
 import com.nekgambling.infrastructure.journey.trigger.invoice.InvoiceTriggerJourneyNode
-import com.nekgambling.infrastructure.journey.trigger.segment_enter.SegmentEnterTriggerJourneyNode
-import com.nekgambling.infrastructure.journey.trigger.segment_exit.SegmentExitTriggerJourneyNode
+import com.nekgambling.infrastructure.journey.trigger.segment.SegmentTriggerJourneyNode
 import org.jetbrains.exposed.dao.LongEntity
 import org.jetbrains.exposed.dao.LongEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -46,7 +45,8 @@ class JourneyNodeEntity(id: EntityID<Long>) : LongEntity(id) {
     var invoiceCurrency by JourneyNodesTable.invoiceCurrency
     var invoiceAmount by JourneyNodesTable.invoiceAmount
 
-    // SegmentEnterTriggerJourneyNode / SegmentExitTriggerJourneyNode
+    // SegmentTriggerJourneyNode
+    var segmentType by JourneyNodesTable.segmentType
     var segmentIdentity by JourneyNodesTable.segmentIdentity
 
     fun toDomain(cache: MutableMap<Long, IJourneyNode> = mutableMapOf()): IJourneyNode {
@@ -93,15 +93,10 @@ class JourneyNodeEntity(id: EntityID<Long>) : LongEntity(id) {
                 _next = nextDomain,
             )
 
-            SegmentEnterTriggerJourneyNode::class.simpleName -> SegmentEnterTriggerJourneyNode(
+            SegmentTriggerJourneyNode::class.simpleName -> SegmentTriggerJourneyNode(
                 _id = id.value,
-                segmentIdentity = segmentIdentity,
-                _next = nextDomain,
-            )
-
-            SegmentExitTriggerJourneyNode::class.simpleName -> SegmentExitTriggerJourneyNode(
-                _id = id.value,
-                segmentIdentity = segmentIdentity,
+                type = SegmentTriggerJourneyNode.Type.valueOf(segmentType!!),
+                segment = segmentIdentity,
                 _next = nextDomain,
             )
 
