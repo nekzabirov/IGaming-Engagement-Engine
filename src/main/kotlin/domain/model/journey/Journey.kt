@@ -9,7 +9,7 @@ data class Journey(
         get() {
             var node = head
             while (node.next != null) {
-                node = node.next
+                node = node.next!!
             }
             return node
         }

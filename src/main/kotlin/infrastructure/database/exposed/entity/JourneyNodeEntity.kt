@@ -66,38 +66,38 @@ class JourneyNodeEntity(id: EntityID<Long>) : LongEntity(id) {
             }
 
             BonusTriggerJourneyNode::class.simpleName -> BonusTriggerJourneyNode(
-                _id = id.value,
+                id = id.value,
                 bonusId = bonusId,
                 bonusIdentity = bonusIdentity,
                 bonusStatus = bonusStatus?.let { PlayerBonus.Status.valueOf(it) },
                 bonusPayoutAmount = bonusPayoutAmount,
-                _next = nextDomain,
+                next = nextDomain,
             )
 
             FreespinTriggerJourneyNode::class.simpleName -> FreespinTriggerJourneyNode(
-                _id = id.value,
+                id = id.value,
                 freespinId = freespinId,
                 freespinIdentity = freespinIdentity,
                 gameId = gameId,
                 freespinStatus = freespinStatus?.let { PlayerFreespin.Status.valueOf(it) },
                 freespinPayoutRealAmount = freespinPayoutRealAmount,
-                _next = nextDomain,
+                next = nextDomain,
             )
 
             InvoiceTriggerJourneyNode::class.simpleName -> InvoiceTriggerJourneyNode(
-                _id = id.value,
+                id = id.value,
                 invoiceType = PlayerInvoice.Type.valueOf(invoiceType!!),
                 invoiceStatus = PlayerInvoice.Status.valueOf(invoiceStatus!!),
                 invoiceCurrency = invoiceCurrency?.let { Currency(it) },
                 invoiceAmount = invoiceAmount,
-                _next = nextDomain,
+                next = nextDomain,
             )
 
             SegmentTriggerJourneyNode::class.simpleName -> SegmentTriggerJourneyNode(
-                _id = id.value,
+                id = id.value,
                 type = SegmentTriggerJourneyNode.Type.valueOf(segmentType!!),
                 segment = segmentIdentity,
-                _next = nextDomain,
+                next = nextDomain,
             )
 
             else -> error("Unknown journey node type: $type")

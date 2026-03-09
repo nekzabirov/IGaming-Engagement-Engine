@@ -13,7 +13,7 @@ globs: ["src/**/*.kt"]
 - Exposed repos: `Exposed<Entity>Repository`
 - Player definitions: `<Name>PlayerDefinition` with `@SerialName("<camelCase>")`
 - Player definition evaluators: `<Name>PlayerDefinitionEvaluator` (or `<Name>Evaluator`)
-- Trigger journey nodes: `<Name>TriggerJourneyNode` extending `ITriggerJourneyNode` (abstract class), with `_next` as `private val` constructor param forwarded to super
+- Trigger journey nodes: `<Name>TriggerJourneyNode` extending `ITriggerJourneyNode` (abstract class), with `override val id` and `override val next` constructor params
 - Journey node processors: `override val nodeType: KClass<N>` (not `node`) to avoid confusion with the `process(node)` parameter
 - Journey node params: `inputParams()` for required input keys, `outputParams()` for produced output keys
 - Player journey branching: `matchNode` / `notMatchNode` on `PlayerJourneyNode`

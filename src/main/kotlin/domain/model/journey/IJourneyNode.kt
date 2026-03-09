@@ -2,7 +2,7 @@ package com.nekgambling.domain.model.journey
 
 abstract class IJourneyNode(
     open val id: Long = Long.MIN_VALUE,
-    val next: IJourneyNode? = null,
+    open val next: IJourneyNode? = null,
 ) {
 
     init {

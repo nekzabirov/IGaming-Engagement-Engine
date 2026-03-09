@@ -33,8 +33,8 @@ globs: ["src/**/*.kt"]
 - PostgreSQL implementations: `Exposed<Entity>Repository` in `infrastructure/database/exposed/repository/`
 
 ## Journey Node Processing
-- `IJourneyNode` is an abstract class (not interface) with `id: Long = Long.MIN_VALUE` and `next` as constructor parameters, plus built-in circular dependency validation in `init`
-- `ITriggerJourneyNode` is an abstract class extending `IJourneyNode` — subclass data classes pass `_id` and `_next` as private constructor params forwarded to super
+- `IJourneyNode` is an abstract class (not interface) with `open val id: Long = Long.MIN_VALUE` and `open val next` as constructor parameters, plus built-in circular dependency validation in `init`
+- `ITriggerJourneyNode` is an abstract class extending `IJourneyNode` with `override val id` and `override val next` — subclass data classes use `override val` for these params directly
 - `PlayerJourneyNode` evaluates `IPlayerDefinition` rules with `matchNode`/`notMatchNode` branching
 - `JourneyNodeProcess.process()` returns `JourneyNodeProcess.Response?` (contains `nextNode` + `output` map) — `null` means no match
 - `Journey` exposes a `tail` property that traverses the `next` chain from `head` to return the last node

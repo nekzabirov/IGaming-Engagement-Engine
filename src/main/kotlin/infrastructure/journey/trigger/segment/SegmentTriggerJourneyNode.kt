@@ -4,12 +4,12 @@ import com.nekgambling.domain.model.journey.IJourneyNode
 import com.nekgambling.infrastructure.journey.trigger.ITriggerJourneyNode
 
 data class SegmentTriggerJourneyNode(
-    private val _id: Long = Long.MIN_VALUE,
+    override val id: Long = Long.MIN_VALUE,
     val type: Type,
     val segment: String? = null,
 
-    private val _next: IJourneyNode? = null,
-) : ITriggerJourneyNode(id = _id, next = _next) {
+    override val next: IJourneyNode? = null,
+) : ITriggerJourneyNode(id = id, next = next) {
 
     enum class Type { ENTER, EXIT }
 
