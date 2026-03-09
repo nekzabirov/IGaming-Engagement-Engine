@@ -1,8 +1,7 @@
 package com.nekgambling.infrastructure.journey.trigger.segment_enter
 
-import com.nekgambling.domain.journey.strategy.JourneyNodeProcess
+import com.nekgambling.domain.strategy.JourneyNodeProcess
 import com.nekgambling.infrastructure.journey.trigger.ITriggerJourneyNodeProcess
-import com.nekgambling.infrastructure.journey.trigger.segment_enter.SegmentEnterTriggerJourneyNode
 import kotlin.reflect.KClass
 
 class SegmentEnterTriggerJourneyNodeProcess : ITriggerJourneyNodeProcess<SegmentEnterTriggerJourneyNode> {

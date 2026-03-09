@@ -1,17 +1,20 @@
 package com.nekgambling.api.command
 
 import com.nekgambling.application.adapter.ICurrencyAdapter
-import com.nekgambling.application.usecase.player.spin.PlaceSpinUseCase
-import com.nekgambling.application.usecase.player.spin.SettleSpinUseCase
-import com.nekgambling.domain.player.repository.IPlayerSpinRepository
+import com.nekgambling.application.adapter.IEventAdapter
+import com.nekgambling.application.event.player.spin.SpinClosedEvent
+import com.nekgambling.application.event.player.spin.SpinOpenedEvent
+import com.nekgambling.domain.model.player.PlayerSpin
+import com.nekgambling.domain.repository.player.IPlayerSpinRepository
 import com.nekgambling.domain.vo.Currency
+import kotlinx.datetime.Clock
+import kotlin.jvm.optionals.getOrElse
 import kotlin.reflect.KClass
 
 class ProcessSpinCommandHandler(
     private val spinRepository: IPlayerSpinRepository,
     private val currencyAdapter: ICurrencyAdapter,
-    private val placeSpinUseCase: PlaceSpinUseCase,
-    private val settleSpinUseCase: SettleSpinUseCase,
+    private val eventAdapter: IEventAdapter,
 ) : ICommandHandler<ProcessSpinCommand, Unit> {
 
     override val commandType: KClass<ProcessSpinCommand> = ProcessSpinCommand::class
@@ -27,26 +30,42 @@ class ProcessSpinCommandHandler(
         ).isPresent
 
         if (!exists) {
-            placeSpinUseCase(
-                PlaceSpinUseCase.Command(
-                    id = command.id,
-                    playerId = command.playerId,
-                    game = game,
-                    currency = currency,
-                    realAmount = currencyAdapter.convertToUnits(command.placeRealAmount, currency),
-                    bonusAmount = currencyAdapter.convertToUnits(command.placeBonusAmount, currency),
-                )
-            ).getOrThrow()
-        }
-
-        settleSpinUseCase(
-            SettleSpinUseCase.Command(
+            val spin = PlayerSpin(
                 id = command.id,
                 playerId = command.playerId,
+                spinCurrency = currency,
                 game = game,
-                realAmount = currencyAdapter.convertToUnits(command.settleRealAmount, currency),
-                bonusAmount = currencyAdapter.convertToUnits(command.settleBonusAmount, currency),
+                placeRealAmount = currencyAdapter.convertUnitsToSystemUnits(
+                    currencyAdapter.convertToUnits(command.placeRealAmount, currency), currency
+                ),
+                placeBonusAmount = currencyAdapter.convertUnitsToSystemUnits(
+                    currencyAdapter.convertToUnits(command.placeBonusAmount, currency), currency
+                ),
+                settleRealAmount = 0L,
+                settleBonusAmount = 0L,
+                createdAt = Clock.System.now(),
             )
-        ).getOrThrow()
+
+            spinRepository.save(spin)
+            eventAdapter.publish(SpinOpenedEvent(spin))
+        }
+
+        val spin = spinRepository.findBy(
+            playerId = command.playerId,
+            spinId = command.id,
+            game = game,
+        ).getOrElse { error("Spin not found, should be placed before settle") }
+
+        val settledSpin = spin.copy(
+            settleRealAmount = currencyAdapter.convertUnitsToSystemUnits(
+                currencyAdapter.convertToUnits(command.settleRealAmount, currency), spin.spinCurrency
+            ),
+            settleBonusAmount = currencyAdapter.convertUnitsToSystemUnits(
+                currencyAdapter.convertToUnits(command.settleBonusAmount, currency), spin.spinCurrency
+            ),
+        )
+
+        spinRepository.save(settledSpin)
+        eventAdapter.publish(SpinClosedEvent(settledSpin))
     }
 }

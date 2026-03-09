@@ -9,36 +9,38 @@ globs: ["src/**/*.kt"]
 - Domain layer (`domain/`) must NEVER depend on infrastructure or application layers
 - Application layer (`application/`) may depend on domain but NEVER on infrastructure
 - Infrastructure layer (`infrastructure/`) implements domain ports (repository interfaces, adapters)
-- API layer (`api/`) handles HTTP concerns only — delegates to CommandBus immediately
+- API layer (`api/`) handles HTTP concerns and contains command handlers with business logic
 
 ## CQRS
 - Commands modify state and go through `CommandBus` → `ICommandHandler`
 - Queries read state and go through `QueryBus` → `IQueryHandler`
 - Never mix reads and writes in the same handler
 
-## Use Cases
-- Each use case is a single `operator fun invoke(...)` returning `Result<Unit>`
-- Use cases must publish domain events via `IEventAdapter` after persistence
-- Use cases are registered as `factory` in Koin (not `single`)
+## Command Handlers
+- Command handlers contain the full business logic (no separate use case layer)
+- Command handlers persist to ClickHouse and publish domain events via `IEventAdapter`
+- Command handlers check for existing records before creating (idempotency)
 
 ## Domain Events
-- Define event data classes in `domain/event/` under the appropriate aggregate package
+- Define event data classes in `application/event/` under the appropriate aggregate package
 - Every event must implement its aggregate's sealed interface (e.g., `IBonusEvent`, `ISpinEvent`)
-- Add routing key mapping in `infrastructure/rabbitmq/mapper/EventMapper.kt`
+- Add routing key mapping in `infrastructure/external/rabbitmq/mapper/EventMapper.kt`
 
 ## Repositories
-- Domain ports: `I<Entity>Repository` in `domain/<aggregate>/repository/`
-- ClickHouse implementations: `ClickHouse<Entity>Repository` in `infrastructure/clickhouse/repository/`
-- PostgreSQL implementations: `Exposed<Entity>Repository` in `infrastructure/exposed/repository/`
+- Domain ports: `I<Entity>Repository` in `domain/repository/player/`
+- Journey ports: `IJourneyRepository`, `IJourneyInstantRepository` in `domain/repository/`
+- ClickHouse implementations: `ClickHouse<Entity>Repository` in `infrastructure/database/clickhouse/repository/`
+- PostgreSQL implementations: `Exposed<Entity>Repository` in `infrastructure/database/exposed/repository/`
 
 ## Journey Node Processing
 - `IJourneyNode` is an abstract class (not interface) with `id: Long = Long.MIN_VALUE` and `next` as constructor parameters, plus built-in circular dependency validation in `init`
 - `ITriggerJourneyNode` is an abstract class extending `IJourneyNode` — subclass data classes pass `_id` and `_next` as private constructor params forwarded to super
-- `JourneyNodeProcessResolver` resolves and delegates to `JourneyNodeProcess<N>` implementations via `nodeType: KClass` matching
+- `PlayerJourneyNode` evaluates `IPlayerDefinition` rules with `matchNode`/`notMatchNode` branching
 - `JourneyNodeProcess.process()` returns `JourneyNodeProcess.Response?` (contains `nextNode` + `output` map) — `null` means no match
 - `Journey` exposes a `tail` property that traverses the `next` chain from `head` to return the last node
+- `JourneyInstant` tracks player progress through a journey (current node + payload)
 
 ## Dependency Injection
 - All wiring in single `infrastructureModule` in `infrastructure/koin.kt`
-- Multi-binding pattern: `bind Interface::class` + `getAll()` for CommandBus, QueryBus, and ConditionRuleEvaluatorResolver
-- Infrastructure clients and repositories are `single` scoped; use cases are `factory` scoped
+- Multi-binding pattern: `bind Interface::class` + `getAll()` for CommandBus, QueryBus, and player definition evaluators
+- All bindings are `single` scoped

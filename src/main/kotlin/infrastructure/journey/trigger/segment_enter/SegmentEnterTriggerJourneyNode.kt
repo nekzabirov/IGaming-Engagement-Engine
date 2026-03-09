@@ -1,6 +1,6 @@
 package com.nekgambling.infrastructure.journey.trigger.segment_enter
 
-import com.nekgambling.domain.journey.model.IJourneyNode
+import com.nekgambling.domain.model.journey.IJourneyNode
 import com.nekgambling.infrastructure.journey.trigger.ITriggerJourneyNode
 
 data class SegmentEnterTriggerJourneyNode(

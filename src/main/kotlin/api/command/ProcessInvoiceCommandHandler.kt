@@ -1,20 +1,20 @@
 package com.nekgambling.api.command
 
 import com.nekgambling.application.adapter.ICurrencyAdapter
-
-import com.nekgambling.application.usecase.player.invoice.CreateInvoiceUseCase
-import com.nekgambling.application.usecase.player.invoice.UpdateInvoiceUseCase
-import com.nekgambling.domain.player.model.PlayerInvoice
-import com.nekgambling.domain.player.repository.IPlayerInvoiceRepository
+import com.nekgambling.application.adapter.IEventAdapter
+import com.nekgambling.application.event.player.invoice.InvoiceCreatedEvent
+import com.nekgambling.application.event.player.invoice.InvoiceUpdatedEvent
+import com.nekgambling.domain.model.player.PlayerInvoice
+import com.nekgambling.domain.repository.player.IPlayerInvoiceRepository
 import com.nekgambling.domain.vo.Currency
 import kotlinx.datetime.Instant
+import kotlin.jvm.optionals.getOrElse
 import kotlin.reflect.KClass
 
 class ProcessInvoiceCommandHandler(
     private val invoiceRepository: IPlayerInvoiceRepository,
     private val currencyAdapter: ICurrencyAdapter,
-    private val createInvoiceUseCase: CreateInvoiceUseCase,
-    private val updateInvoiceUseCase: UpdateInvoiceUseCase,
+    private val eventAdapter: IEventAdapter,
 ) : ICommandHandler<ProcessInvoiceCommand, Unit> {
 
     override val commandType: KClass<ProcessInvoiceCommand> = ProcessInvoiceCommand::class
@@ -26,27 +26,42 @@ class ProcessInvoiceCommandHandler(
         val exists = invoiceRepository.findById(command.transactionId).isPresent
 
         if (!exists) {
-            createInvoiceUseCase(
+            val invoice = PlayerInvoice(
+                id = command.transactionId,
                 playerId = command.playerId,
-                transaction = CreateInvoiceUseCase.Transaction(
-                    id = command.transactionId,
-                    type = command.type.toDomain(),
-                    currency = currency,
-                    amount = amount,
-                    createdAt = Instant.fromEpochMilliseconds(command.date),
-                )
-            ).getOrThrow()
+                type = command.type.toDomain(),
+                status = PlayerInvoice.Status.IN_PROGRESS,
+                transactionCurrency = currency,
+                amount = currencyAdapter.convertUnitsToSystemUnits(amount, currency),
+                transactionAmount = 0L,
+                taxAmount = 0L,
+                feeAmount = 0L,
+                createdAt = Instant.fromEpochMilliseconds(command.date),
+            )
+
+            invoiceRepository.save(invoice)
+            eventAdapter.publish(InvoiceCreatedEvent(invoice))
         }
 
-        updateInvoiceUseCase(
-            invoiceId = command.transactionId,
-            details = UpdateInvoiceUseCase.Details(
-                status = command.status.toDomain(),
-                transactionAmount = currencyAdapter.convertToUnits(command.transactionAmount, currency),
-                taxAmount = currencyAdapter.convertToUnits(command.taxAmount, currency),
-                feeAmount = currencyAdapter.convertToUnits(command.feeAmount, currency),
-            )
-        ).getOrThrow()
+        val invoice = invoiceRepository.findById(command.transactionId).getOrElse {
+            error("Invoice with id ${command.transactionId} does not exist")
+        }
+
+        invoice.apply {
+            updateStatus(command.status.toDomain())
+            updateTransactionAmount(currencyAdapter.convertUnitsToSystemUnits(
+                currencyAdapter.convertToUnits(command.transactionAmount, currency), transactionCurrency
+            ))
+            updateTaxAmount(currencyAdapter.convertUnitsToSystemUnits(
+                currencyAdapter.convertToUnits(command.taxAmount, currency), transactionCurrency
+            ))
+            updateFeeAmount(currencyAdapter.convertUnitsToSystemUnits(
+                currencyAdapter.convertToUnits(command.feeAmount, currency), transactionCurrency
+            ))
+        }
+
+        invoiceRepository.save(invoice)
+        eventAdapter.publish(InvoiceUpdatedEvent(invoice))
     }
 
     private fun ProcessInvoiceCommand.Type.toDomain(): PlayerInvoice.Type = when (this) {

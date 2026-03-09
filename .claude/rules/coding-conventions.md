@@ -1,5 +1,5 @@
 ---
-description: Kotlin coding conventions for crm-engine
+description: Coding conventions for crm-engine development
 globs: ["src/**/*.kt"]
 ---
 
@@ -8,17 +8,15 @@ globs: ["src/**/*.kt"]
 ## Naming
 - Commands: `Process<Entity>Command`
 - Command handlers: `Process<Entity>CommandHandler`
-- Use cases: `<Verb><Entity>UseCase` (e.g., `IssueBonusUseCase`, `PlaceSpinUseCase`)
 - Domain repositories: `I<Entity>Repository`
 - ClickHouse repos: `ClickHouse<Entity>Repository`
 - Exposed repos: `Exposed<Entity>Repository`
-- Condition rules: `<Name>ConditionRule` with `@SerialName("<camelCase>")`
-- Condition evaluators: `<Name>ConditionRuleEvaluator`
-- Trigger rules: `<Name>TriggerRule` with `@SerialName("<camelCase>")`
+- Player definitions: `<Name>PlayerDefinition` with `@SerialName("<camelCase>")`
+- Player definition evaluators: `<Name>PlayerDefinitionEvaluator` (or `<Name>Evaluator`)
 - Trigger journey nodes: `<Name>TriggerJourneyNode` extending `ITriggerJourneyNode` (abstract class), with `_next` as `private val` constructor param forwarded to super
 - Journey node processors: `override val nodeType: KClass<N>` (not `node`) to avoid confusion with the `process(node)` parameter
 - Journey node params: `inputParams()` for required input keys, `outputParams()` for produced output keys
-- Condition branching: `onMatch` / `onMismatch` on `ConditionJourneyNode`
+- Player journey branching: `matchNode` / `notMatchNode` on `PlayerJourneyNode`
 - Journey payload keys: Always prefix with entity name to avoid collisions (e.g., `bonusId`, `bonusStatus`, `freespinId`, `invoiceType`, `invoiceAmount`)
 
 ## Monetary Values
@@ -33,18 +31,18 @@ globs: ["src/**/*.kt"]
 
 ## PostgreSQL
 - Use Exposed ORM for all PostgreSQL access
-- Tables defined in `infrastructure/exposed/table/`
-- Repositories in `infrastructure/exposed/repository/`
+- Tables defined in `infrastructure/database/exposed/table/`
+- Repositories in `infrastructure/database/exposed/repository/`
 - Journey persistence: `JourneyNodesTable` (single-table inheritance with `type` discriminator column, nullable params per node type, self-references for `next`/`onMismatch`) and `JourneysTable` (references head node)
 - `NumberParamValue` JSONB columns use polymorphic serialization via `numberParamValueJson` in `NumberParamValueJson.kt`
+- `IPlayerDefinition` JSONB columns use polymorphic serialization via `conditionRuleJson` in `PlayerDefinitionJson.kt`
 
 ## Serialization
 - Use `kotlinx.serialization` — not Jackson or Gson
-- Condition rules use polymorphic serialization registered in `ConditionRuleJson.kt`
-- Trigger rules use polymorphic serialization registered in `TriggerRuleJson.kt`
+- Player definitions use polymorphic serialization registered in `PlayerDefinitionJson.kt`
 
 ## Outbound Adapters (Infrastructure)
-- Every outbound adapter (repository impl, external client, message broker, etc.) must have its own `<Name>Config` data class in `infrastructure/<adapter>/config/`
+- Every outbound adapter (repository impl, external client, message broker, etc.) must have its own `<Name>Config` data class in its config/ subpackage
 - Config classes read environment variables and are passed into the adapter via constructor injection
 - Port interfaces in `application/adapter/` must never read env vars directly — config is always injected from infrastructure
 - Register config as `single` in Koin, inject into the adapter: `single { SomeConfig(env("VAR")) }` → `single { SomeAdapter(get()) }`
@@ -52,3 +50,8 @@ globs: ["src/**/*.kt"]
 ## Concurrency
 - Use Redis distributed locks via `ILockAdapter.withLock()` for operations that must be atomic per player+entity
 - ClickHouse operations dispatch on `Dispatchers.IO`
+
+# currentDate
+Today's date is 2026-03-09.
+
+      IMPORTANT: this context may or may not be relevant to your tasks. You should not respond to this context unless it is highly relevant to your task.

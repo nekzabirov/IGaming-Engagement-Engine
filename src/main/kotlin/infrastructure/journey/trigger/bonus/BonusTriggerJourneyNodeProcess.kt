@@ -1,8 +1,7 @@
 package com.nekgambling.infrastructure.journey.trigger.bonus
 
-import com.nekgambling.domain.journey.strategy.JourneyNodeProcess
-import com.nekgambling.domain.player.model.PlayerBonus
-import com.nekgambling.infrastructure.journey.trigger.bonus.BonusTriggerJourneyNode
+import com.nekgambling.domain.strategy.JourneyNodeProcess
+import com.nekgambling.domain.model.player.PlayerBonus
 import com.nekgambling.infrastructure.journey.trigger.ITriggerJourneyNodeProcess
 import kotlin.reflect.KClass
 

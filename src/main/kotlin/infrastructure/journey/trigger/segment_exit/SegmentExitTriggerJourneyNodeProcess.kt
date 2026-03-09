@@ -1,8 +1,7 @@
 package com.nekgambling.infrastructure.journey.trigger.segment_exit
 
-import com.nekgambling.domain.journey.strategy.JourneyNodeProcess
+import com.nekgambling.domain.strategy.JourneyNodeProcess
 import com.nekgambling.infrastructure.journey.trigger.ITriggerJourneyNodeProcess
-import com.nekgambling.infrastructure.journey.trigger.segment_exit.SegmentExitTriggerJourneyNode
 import kotlin.reflect.KClass
 
 class SegmentExitTriggerJourneyNodeProcess : ITriggerJourneyNodeProcess<SegmentExitTriggerJourneyNode> {

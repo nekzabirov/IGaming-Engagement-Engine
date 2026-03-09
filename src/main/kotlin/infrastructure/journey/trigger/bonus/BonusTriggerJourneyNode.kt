@@ -1,7 +1,7 @@
 package com.nekgambling.infrastructure.journey.trigger.bonus
 
-import com.nekgambling.domain.journey.model.IJourneyNode
-import com.nekgambling.domain.player.model.PlayerBonus
+import com.nekgambling.domain.model.journey.IJourneyNode
+import com.nekgambling.domain.model.player.PlayerBonus
 import com.nekgambling.domain.vo.param.NumberParamValue
 import com.nekgambling.infrastructure.journey.trigger.ITriggerJourneyNode
 

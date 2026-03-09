@@ -1,7 +1,7 @@
 package com.nekgambling.infrastructure.journey.trigger.invoice
 
-import com.nekgambling.domain.journey.model.IJourneyNode
-import com.nekgambling.domain.player.model.PlayerInvoice
+import com.nekgambling.domain.model.journey.IJourneyNode
+import com.nekgambling.domain.model.player.PlayerInvoice
 import com.nekgambling.domain.vo.Currency
 import com.nekgambling.domain.vo.param.NumberParamValue
 import com.nekgambling.infrastructure.journey.trigger.ITriggerJourneyNode

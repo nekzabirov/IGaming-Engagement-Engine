@@ -2,7 +2,9 @@ package com.nekgambling.infrastructure.clickhouse
 
 import com.nekgambling.application.adapter.ICurrencyAdapter
 import com.nekgambling.application.adapter.IEventAdapter
-import com.nekgambling.infrastructure.clickhouse.config.ClickHouseConfig
+import com.nekgambling.infrastructure.database.clickhouse.ClickHouseClient
+import com.nekgambling.infrastructure.database.clickhouse.ClickHouseTable
+import com.nekgambling.infrastructure.database.clickhouse.config.ClickHouseConfig
 import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.just

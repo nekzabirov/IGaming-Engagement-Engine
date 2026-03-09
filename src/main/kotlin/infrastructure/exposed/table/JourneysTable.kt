@@ -1,8 +1,0 @@
-package com.nekgambling.infrastructure.exposed.table
-
-import org.jetbrains.exposed.dao.id.LongIdTable
-
-object JourneysTable : LongIdTable("journeys") {
-    val identity = varchar("identity", 255)
-    val head = reference("head_id", JourneyNodesTable)
-}

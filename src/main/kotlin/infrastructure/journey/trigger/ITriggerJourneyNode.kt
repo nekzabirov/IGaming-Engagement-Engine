@@ -1,6 +1,6 @@
 package com.nekgambling.infrastructure.journey.trigger
 
-import com.nekgambling.domain.journey.model.IJourneyNode
+import com.nekgambling.domain.model.journey.IJourneyNode
 
 abstract class ITriggerJourneyNode(
     id: Long = Long.MIN_VALUE,

@@ -10,58 +10,38 @@ import com.nekgambling.api.command.CommandBus
 import com.nekgambling.api.command.ICommandHandler
 import com.nekgambling.application.query.IQueryHandler
 import com.nekgambling.application.query.QueryBus
-import com.nekgambling.application.usecase.player.bonus.IssueBonusUseCase
-import com.nekgambling.application.usecase.player.bonus.LostBonusUseCase
-import com.nekgambling.application.usecase.player.bonus.StartWageringBonusUseCase
-import com.nekgambling.application.usecase.player.bonus.WageredBonusUseCase
-import com.nekgambling.application.usecase.player.freespin.ActivateFreespinUseCase
-import com.nekgambling.application.usecase.player.freespin.CancelFreespinUseCase
-import com.nekgambling.application.usecase.player.freespin.FinishFreespinUseCase
-import com.nekgambling.application.usecase.player.freespin.IssueFreespinUseCase
-import com.nekgambling.application.usecase.player.invoice.CreateInvoiceUseCase
-import com.nekgambling.application.usecase.player.invoice.UpdateInvoiceUseCase
-import com.nekgambling.application.usecase.player.player.UpdatePlayerUseCase
-import com.nekgambling.application.usecase.player.spin.PlaceSpinUseCase
-import com.nekgambling.application.usecase.player.spin.SettleSpinUseCase
-import com.nekgambling.application.usecase.segment.ProcessConditionUsecase
-import com.nekgambling.application.usecase.segment.ProcessSegmentUsecase
-import com.nekgambling.domain.condition.strategy.ConditionRuleEvaluatorResolver
-import com.nekgambling.domain.condition.strategy.IConditionRuleEvaluator
-import com.nekgambling.domain.player.repository.IPlayerBonusRepository
-import com.nekgambling.domain.player.repository.IPlayerDetailsRepository
-import com.nekgambling.domain.player.repository.IPlayerFreespinRepository
-import com.nekgambling.domain.player.repository.IPlayerInvoiceRepository
-import com.nekgambling.domain.player.repository.IPlayerSpinRepository
-import com.nekgambling.domain.condition.repository.IConditionRepository
-import com.nekgambling.domain.journey.repository.IJourneyInstantRepository
-import com.nekgambling.domain.journey.repository.IJourneyRepository
-import com.nekgambling.domain.segment.repository.ISegmentRepository
-import com.nekgambling.infrastructure.currency.UnitsCurrencyAdapter
-import com.nekgambling.infrastructure.exposed.ExposedConfig
-import com.nekgambling.infrastructure.exposed.ExposedDatabaseFactory
-import com.nekgambling.infrastructure.exposed.repository.ExposedConditionRepository
-import com.nekgambling.infrastructure.exposed.repository.ExposedJourneyInstantRepository
-import com.nekgambling.infrastructure.exposed.repository.ExposedJourneyRepository
-import com.nekgambling.infrastructure.exposed.repository.ExposedSegmentRepository
-import com.nekgambling.infrastructure.clickhouse.ClickHouseClient
-import com.nekgambling.infrastructure.clickhouse.config.ClickHouseConfig
-import com.nekgambling.infrastructure.clickhouse.query.ClickHousePlayerBonusPayoutTotalQueryHandler
-import com.nekgambling.infrastructure.clickhouse.query.ClickHousePlayerInvoiceTotalQueryHandler
-import com.nekgambling.infrastructure.clickhouse.query.ClickHousePlayerSpinTotalQueryHandler
-import com.nekgambling.infrastructure.clickhouse.repository.ClickHousePlayerBonusRepository
-import com.nekgambling.infrastructure.clickhouse.repository.ClickHousePlayerDetailsRepository
-import com.nekgambling.infrastructure.clickhouse.repository.ClickHousePlayerFreespinRepository
-import com.nekgambling.infrastructure.clickhouse.repository.ClickHousePlayerInvoiceRepository
-import com.nekgambling.infrastructure.clickhouse.repository.ClickHousePlayerSpinRepository
-import com.nekgambling.infrastructure.condition.invoiceTotal.InvoiceTotalConditionRuleEvaluator
-import com.nekgambling.infrastructure.condition.playerAge.PlayerAgeConditionRuleEvaluator
-import com.nekgambling.infrastructure.condition.playerGGR.PlayerGgrConditionRuleEvaluator
-import com.nekgambling.infrastructure.condition.profile.ProfileFieldConditionRuleEvaluator
-import com.nekgambling.infrastructure.condition.spinTotal.SpinTotalConditionRuleEvaluator
-import com.nekgambling.infrastructure.rabbitmq.RabbitMQEventAdapter
-import com.nekgambling.infrastructure.rabbitmq.config.RabbitMQConfig
-import com.nekgambling.infrastructure.redis.RedisLockAdapter
-import com.nekgambling.infrastructure.redis.config.RedisConfig
+import com.nekgambling.domain.repository.IJourneyInstantRepository
+import com.nekgambling.domain.repository.IJourneyRepository
+import com.nekgambling.domain.repository.player.IPlayerBonusRepository
+import com.nekgambling.domain.repository.player.IPlayerDetailsRepository
+import com.nekgambling.domain.repository.player.IPlayerFreespinRepository
+import com.nekgambling.domain.repository.player.IPlayerInvoiceRepository
+import com.nekgambling.domain.repository.player.IPlayerSpinRepository
+import com.nekgambling.infrastructure.database.clickhouse.ClickHouseClient
+import com.nekgambling.infrastructure.database.clickhouse.config.ClickHouseConfig
+import com.nekgambling.infrastructure.database.clickhouse.query.ClickHousePlayerBonusPayoutTotalQueryHandler
+import com.nekgambling.infrastructure.database.clickhouse.query.ClickHousePlayerInvoiceTotalQueryHandler
+import com.nekgambling.infrastructure.database.clickhouse.query.ClickHousePlayerSpinTotalQueryHandler
+import com.nekgambling.infrastructure.database.clickhouse.repository.ClickHousePlayerBonusRepository
+import com.nekgambling.infrastructure.database.clickhouse.repository.ClickHousePlayerDetailsRepository
+import com.nekgambling.infrastructure.database.clickhouse.repository.ClickHousePlayerFreespinRepository
+import com.nekgambling.infrastructure.database.clickhouse.repository.ClickHousePlayerInvoiceRepository
+import com.nekgambling.infrastructure.database.clickhouse.repository.ClickHousePlayerSpinRepository
+import com.nekgambling.infrastructure.database.exposed.ExposedConfig
+import com.nekgambling.infrastructure.database.exposed.ExposedDatabaseFactory
+import com.nekgambling.infrastructure.database.exposed.repository.ExposedJourneyInstantRepository
+import com.nekgambling.infrastructure.database.exposed.repository.ExposedJourneyRepository
+import com.nekgambling.infrastructure.external.currency.UnitsCurrencyAdapter
+import com.nekgambling.infrastructure.external.rabbitmq.RabbitMQEventAdapter
+import com.nekgambling.infrastructure.external.rabbitmq.config.RabbitMQConfig
+import com.nekgambling.infrastructure.external.redis.RedisLockAdapter
+import com.nekgambling.infrastructure.external.redis.config.RedisConfig
+import com.nekgambling.infrastructure.journey.player.IPlayerDefinitionEvaluator
+import com.nekgambling.infrastructure.journey.player.invoiceTotal.InvoiceTotalPlayerDefinitionEvaluator
+import com.nekgambling.infrastructure.journey.player.playerAge.PlayerAgeDefinitionEvaluator
+import com.nekgambling.infrastructure.journey.player.playerGGR.PlayerGgrPlayerEvaluator
+import com.nekgambling.infrastructure.journey.player.profile.ProfileFieldPlayerDefinitionEvaluator
+import com.nekgambling.infrastructure.journey.player.spinTotal.SpinTotalPlayerDefinitionEvaluator
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
@@ -136,10 +116,6 @@ val infrastructureModule = module {
 
     single { ClickHousePlayerSpinRepository(get()) } bind IPlayerSpinRepository::class
 
-    single { ExposedConditionRepository(get()) } bind IConditionRepository::class
-
-    single { ExposedSegmentRepository(get()) } bind ISegmentRepository::class
-
     single { ExposedJourneyRepository(get()) } bind IJourneyRepository::class
 
     single { ExposedJourneyInstantRepository(get()) } bind IJourneyInstantRepository::class
@@ -156,57 +132,23 @@ val infrastructureModule = module {
 
     // --- Command handlers ---
 
-    single { ProcessPlayerCommandHandler(get()) } bind ICommandHandler::class
+    single { ProcessPlayerCommandHandler(get(), get()) } bind ICommandHandler::class
 
-    single { ProcessInvoiceCommandHandler(get(), get(), get(), get()) } bind ICommandHandler::class
+    single { ProcessInvoiceCommandHandler(get(), get(), get()) } bind ICommandHandler::class
 
-    single { ProcessSpinCommandHandler(get(), get(), get(), get()) } bind ICommandHandler::class
+    single { ProcessSpinCommandHandler(get(), get(), get()) } bind ICommandHandler::class
 
     single { CommandBus(getAll()) }
 
-    // --- Condition rule evaluators ---
+    // --- Player definition evaluators ---
 
-    single { PlayerAgeConditionRuleEvaluator(get()) } bind IConditionRuleEvaluator::class
+    single { PlayerAgeDefinitionEvaluator(get()) } bind IPlayerDefinitionEvaluator::class
 
-    single { ProfileFieldConditionRuleEvaluator(get()) } bind IConditionRuleEvaluator::class
+    single { ProfileFieldPlayerDefinitionEvaluator(get()) } bind IPlayerDefinitionEvaluator::class
 
-    single { SpinTotalConditionRuleEvaluator(get()) } bind IConditionRuleEvaluator::class
+    single { SpinTotalPlayerDefinitionEvaluator(get()) } bind IPlayerDefinitionEvaluator::class
 
-    single { InvoiceTotalConditionRuleEvaluator(get()) } bind IConditionRuleEvaluator::class
+    single { InvoiceTotalPlayerDefinitionEvaluator(get()) } bind IPlayerDefinitionEvaluator::class
 
-    single { PlayerGgrConditionRuleEvaluator(get()) } bind IConditionRuleEvaluator::class
-
-    single { ConditionRuleEvaluatorResolver(getAll()) }
-
-    // --- Use cases ---
-
-    factory { IssueBonusUseCase(get(), get(), get()) }
-
-    factory { LostBonusUseCase(get(), get()) }
-
-    factory { StartWageringBonusUseCase(get(), get()) }
-
-    factory { WageredBonusUseCase(get(), get(), get()) }
-
-    factory { IssueFreespinUseCase(get(), get()) }
-
-    factory { ActivateFreespinUseCase(get(), get()) }
-
-    factory { CancelFreespinUseCase(get(), get()) }
-
-    factory { FinishFreespinUseCase(get(), get(), get()) }
-
-    factory { CreateInvoiceUseCase(get(), get(), get()) }
-
-    factory { UpdateInvoiceUseCase(get(), get(), get()) }
-
-    factory { PlaceSpinUseCase(get(), get(), get()) }
-
-    factory { SettleSpinUseCase(get(), get(), get()) }
-
-    factory { UpdatePlayerUseCase(get(), get()) }
-
-    factory { ProcessConditionUsecase(get(), get(), get(), get()) }
-
-    factory { ProcessSegmentUsecase(get(), get(), get(), get()) }
+    single { PlayerGgrPlayerEvaluator(get()) } bind IPlayerDefinitionEvaluator::class
 }

@@ -1,8 +1,7 @@
 package com.nekgambling.infrastructure.journey.trigger.freespin
 
-import com.nekgambling.domain.journey.strategy.JourneyNodeProcess
-import com.nekgambling.domain.player.model.PlayerFreespin
-import com.nekgambling.infrastructure.journey.trigger.freespin.FreespinTriggerJourneyNode
+import com.nekgambling.domain.strategy.JourneyNodeProcess
+import com.nekgambling.domain.model.player.PlayerFreespin
 import com.nekgambling.infrastructure.journey.trigger.ITriggerJourneyNodeProcess
 import kotlin.reflect.KClass
 
