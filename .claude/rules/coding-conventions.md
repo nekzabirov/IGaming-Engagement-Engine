@@ -19,7 +19,8 @@ globs: ["src/**/*.kt"]
 - Player journey branching: `matchNode` / `notMatchNode` on `PlayerJourneyNode`
 - Action journey nodes: `<Name>ActionJourneyNode` extending `IActionJourneyNode` (abstract class), with `id` and `next` constructor params
 - Push action journey nodes: `<Channel>PushActionJourneyNode` extending `IPushActionJourneyNode` (sealed class with `templateId` + `placeHolders`), e.g., `EMailPushActionJourneyNode`, `SmsPushActionJourneyNode`, `InAppPushActionJourneyNode`
-- Action node processors: `<Name>ActionJourneyNodeProcess` extending `IActionJourneyNodeProcess<T>`, placed in same package as their node class
+- Action node processors: `<Name>ActionJourneyNodeProcess` extending `ActionJourneyNodeProcess<T>`, placed in same package as their node class
+- Issue action journey nodes: `Issue<Entity>ActionJourneyNode` in `infrastructure/journey/action/issue/<entity>/` package (e.g., `IssueFreespinActionJourneyNode`)
 - Trigger node output keys: Use `domain:field` colon-separated prefix format (e.g., `bonus:id`, `invoice:amount`, `freespin:currency`). Input payload keys from upstream events remain camelCase (e.g., `bonusId`, `invoiceAmount`)
 
 ## Monetary Values

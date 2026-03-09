@@ -10,6 +10,8 @@ import com.nekgambling.infrastructure.journey.player.PlayerJourneyNode
 import com.nekgambling.infrastructure.journey.trigger.bonus.BonusTriggerJourneyNode
 import com.nekgambling.infrastructure.journey.trigger.freespin.FreespinTriggerJourneyNode
 import com.nekgambling.infrastructure.journey.trigger.invoice.InvoiceTriggerJourneyNode
+import com.nekgambling.infrastructure.journey.action.issue.freespin.IssueFreespinActionJourneyNode
+import com.nekgambling.infrastructure.journey.action.payload.PlacePayloadActionJourneyNode
 import com.nekgambling.infrastructure.journey.trigger.segment.SegmentTriggerJourneyNode
 import org.jetbrains.exposed.dao.LongEntity
 import org.jetbrains.exposed.dao.LongEntityClass
@@ -48,6 +50,13 @@ class JourneyNodeEntity(id: EntityID<Long>) : LongEntity(id) {
     // SegmentTriggerJourneyNode
     var segmentType by JourneyNodesTable.segmentType
     var segmentIdentity by JourneyNodesTable.segmentIdentity
+
+    // IssueFreespinActionJourneyNode
+    var issueFreespinIdentity by JourneyNodesTable.issueFreespinIdentity
+
+    // PlacePayloadActionJourneyNode
+    var placePayloadKey by JourneyNodesTable.placePayloadKey
+    var placePayloadValue by JourneyNodesTable.placePayloadValue
 
     fun toDomain(cache: MutableMap<Long, IJourneyNode> = mutableMapOf()): IJourneyNode {
         cache[id.value]?.let { return it }
@@ -97,6 +106,19 @@ class JourneyNodeEntity(id: EntityID<Long>) : LongEntity(id) {
                 id = id.value,
                 type = SegmentTriggerJourneyNode.Type.valueOf(segmentType!!),
                 segment = segmentIdentity,
+                next = nextDomain,
+            )
+
+            IssueFreespinActionJourneyNode::class.simpleName -> IssueFreespinActionJourneyNode(
+                id = id.value,
+                identity = issueFreespinIdentity!!,
+                next = nextDomain,
+            )
+
+            PlacePayloadActionJourneyNode::class.simpleName -> PlacePayloadActionJourneyNode(
+                id = id.value,
+                key = placePayloadKey!!,
+                value = placePayloadValue!!,
                 next = nextDomain,
             )
 

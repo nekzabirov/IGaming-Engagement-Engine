@@ -37,6 +37,7 @@ import com.nekgambling.infrastructure.external.rabbitmq.config.RabbitMQConfig
 import com.nekgambling.infrastructure.external.redis.RedisLockAdapter
 import com.nekgambling.infrastructure.external.redis.config.RedisConfig
 import com.nekgambling.domain.strategy.JourneyNodeNomenclature
+import com.nekgambling.domain.strategy.JourneyNodeProcess
 import com.nekgambling.infrastructure.journey.extractor.amount.PercentageAmountExtractorParams
 import com.nekgambling.infrastructure.journey.extractor.playerProfile.PlayerProfileExtractorParams
 import com.nekgambling.infrastructure.journey.player.IPlayerDefinitionEvaluator
@@ -44,6 +45,13 @@ import com.nekgambling.infrastructure.journey.player.PlayerJourneyNodeNomenclatu
 import com.nekgambling.infrastructure.journey.trigger.bonus.BonusTriggerJourneyNodeNomenclature
 import com.nekgambling.infrastructure.journey.trigger.freespin.FreespinTriggerJourneyNodeNomenclature
 import com.nekgambling.infrastructure.journey.trigger.invoice.InvoiceTriggerJourneyNodeNomenclature
+import com.nekgambling.infrastructure.journey.action.issue.bonus.IssueDynamicBonusActionJourneyNodeNomenclature
+import com.nekgambling.infrastructure.journey.action.issue.bonus.IssueFixedBonusActionJourneyNodeNomenclature
+import com.nekgambling.infrastructure.journey.action.issue.freespin.IssueFreespinActionJourneyNodeNomenclature
+import com.nekgambling.infrastructure.journey.action.issue.freespin.IssueFreespinIActionJourneyNodeProcess
+import com.nekgambling.infrastructure.journey.action.payload.PlacePayloadActionJourneyNodeNomenclature
+import com.nekgambling.infrastructure.journey.action.payload.PlacePayloadActionJourneyNodeProcess
+import com.nekgambling.infrastructure.journey.action.push.PushActionJourneyNodeNomenclature
 import com.nekgambling.infrastructure.journey.trigger.segment.SegmentTriggerJourneyNodeNomenclature
 import com.nekgambling.infrastructure.journey.player.invoiceTotal.InvoiceTotalPlayerDefinitionEvaluator
 import com.nekgambling.infrastructure.journey.player.playerAge.PlayerAgeDefinitionEvaluator
@@ -163,6 +171,20 @@ val infrastructureModule = module {
     single<JourneyNodeNomenclature<*>> { PlayerProfileExtractorParams } bind JourneyNodeNomenclature::class
 
     single<JourneyNodeNomenclature<*>> { PlayerJourneyNodeNomenclature } bind JourneyNodeNomenclature::class
+
+    single<JourneyNodeNomenclature<*>> { PushActionJourneyNodeNomenclature } bind JourneyNodeNomenclature::class
+
+    single<JourneyNodeNomenclature<*>> { IssueFixedBonusActionJourneyNodeNomenclature } bind JourneyNodeNomenclature::class
+
+    single<JourneyNodeNomenclature<*>> { IssueDynamicBonusActionJourneyNodeNomenclature } bind JourneyNodeNomenclature::class
+
+    single<JourneyNodeNomenclature<*>> { IssueFreespinActionJourneyNodeNomenclature } bind JourneyNodeNomenclature::class
+
+    single { IssueFreespinIActionJourneyNodeProcess() } bind JourneyNodeProcess::class
+
+    single<JourneyNodeNomenclature<*>> { PlacePayloadActionJourneyNodeNomenclature } bind JourneyNodeNomenclature::class
+
+    single { PlacePayloadActionJourneyNodeProcess() } bind JourneyNodeProcess::class
 
     // --- Player definition evaluators ---
 

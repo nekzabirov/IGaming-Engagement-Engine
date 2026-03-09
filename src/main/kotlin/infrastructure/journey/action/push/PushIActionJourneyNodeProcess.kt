@@ -1,10 +1,10 @@
 package com.nekgambling.infrastructure.journey.action.push
 
 import com.nekgambling.domain.strategy.JourneyNodeProcess
-import com.nekgambling.infrastructure.journey.action.ActionJourneyNodeProcess
+import com.nekgambling.infrastructure.journey.action.IActionJourneyNodeProcess
 import kotlin.reflect.KClass
 
-class PushActionJourneyNodeProcess : ActionJourneyNodeProcess<IPushActionJourneyNode>() {
+class PushIActionJourneyNodeProcess : IActionJourneyNodeProcess<IPushActionJourneyNode>() {
     override val nodeType: KClass<IPushActionJourneyNode> = IPushActionJourneyNode::class
 
     override suspend fun process(

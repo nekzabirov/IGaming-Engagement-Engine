@@ -40,4 +40,11 @@ object JourneyNodesTable : LongIdTable("journey_nodes") {
     // SegmentTriggerJourneyNode
     val segmentType = varchar("segment_type", 50).nullable()
     val segmentIdentity = varchar("segment_identity", 255).nullable()
+
+    // IssueFreespinActionJourneyNode
+    val issueFreespinIdentity = varchar("issue_freespin_identity", 255).nullable()
+
+    // PlacePayloadActionJourneyNode
+    val placePayloadKey = varchar("place_payload_key", 255).nullable()
+    val placePayloadValue = varchar("place_payload_value", 1024).nullable()
 }
