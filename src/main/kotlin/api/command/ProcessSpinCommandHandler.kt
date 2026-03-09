@@ -2,6 +2,7 @@ package com.nekgambling.api.command
 
 import com.nekgambling.application.adapter.ICurrencyAdapter
 import com.nekgambling.application.adapter.IEventAdapter
+import com.nekgambling.application.cqrs.command.ICommandHandler
 import com.nekgambling.application.event.player.spin.SpinClosedEvent
 import com.nekgambling.application.event.player.spin.SpinOpenedEvent
 import com.nekgambling.domain.model.player.PlayerSpin
@@ -15,7 +16,7 @@ class ProcessSpinCommandHandler(
     private val spinRepository: IPlayerSpinRepository,
     private val currencyAdapter: ICurrencyAdapter,
     private val eventAdapter: IEventAdapter,
-) : ICommandHandler<ProcessSpinCommand, Unit> {
+) : ICommandHandler<ProcessSpinCommand> {
 
     override val commandType: KClass<ProcessSpinCommand> = ProcessSpinCommand::class
 

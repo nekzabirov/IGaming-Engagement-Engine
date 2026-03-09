@@ -3,6 +3,7 @@ package com.nekgambling.api.command
 import com.nekgambling.api.dto.AccountStatus
 import com.nekgambling.api.dto.UserGender
 import com.nekgambling.application.adapter.IEventAdapter
+import com.nekgambling.application.cqrs.command.ICommandHandler
 import com.nekgambling.application.event.player.player.PlayerRegisteredEvent
 import com.nekgambling.application.event.player.player.PlayerUpdatedEvent
 import com.nekgambling.domain.model.player.PlayerDetails
@@ -17,7 +18,7 @@ import kotlin.reflect.KClass
 class ProcessPlayerCommandHandler(
     private val playerRepository: IPlayerDetailsRepository,
     private val eventAdapter: IEventAdapter,
-) : ICommandHandler<ProcessPlayerCommand, Unit> {
+) : ICommandHandler<ProcessPlayerCommand> {
 
     override val commandType: KClass<ProcessPlayerCommand> = ProcessPlayerCommand::class
 

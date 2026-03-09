@@ -6,11 +6,11 @@ import com.nekgambling.api.command.ProcessSpinCommandHandler
 import com.nekgambling.application.adapter.ICurrencyAdapter
 import com.nekgambling.application.adapter.IEventAdapter
 import com.nekgambling.application.adapter.ILockAdapter
-import com.nekgambling.api.command.CommandBus
-import com.nekgambling.api.command.ICommandHandler
+import com.nekgambling.application.cqrs.command.CommandBus
+import com.nekgambling.application.cqrs.command.ICommandHandler
 import com.nekgambling.application.resolver.JourneyNodeProcessResolver
-import com.nekgambling.application.query.IQueryHandler
-import com.nekgambling.application.query.QueryBus
+import com.nekgambling.application.cqrs.query.IQueryHandler
+import com.nekgambling.application.cqrs.query.QueryBus
 import com.nekgambling.domain.repository.IJourneyInstantRepository
 import com.nekgambling.domain.repository.IJourneyRepository
 import com.nekgambling.domain.repository.player.IPlayerBonusRepository

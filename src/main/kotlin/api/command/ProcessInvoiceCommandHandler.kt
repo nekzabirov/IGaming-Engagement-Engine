@@ -2,6 +2,7 @@ package com.nekgambling.api.command
 
 import com.nekgambling.application.adapter.ICurrencyAdapter
 import com.nekgambling.application.adapter.IEventAdapter
+import com.nekgambling.application.cqrs.command.ICommandHandler
 import com.nekgambling.application.event.player.invoice.InvoiceCreatedEvent
 import com.nekgambling.application.event.player.invoice.InvoiceUpdatedEvent
 import com.nekgambling.domain.model.player.PlayerInvoice
@@ -15,7 +16,7 @@ class ProcessInvoiceCommandHandler(
     private val invoiceRepository: IPlayerInvoiceRepository,
     private val currencyAdapter: ICurrencyAdapter,
     private val eventAdapter: IEventAdapter,
-) : ICommandHandler<ProcessInvoiceCommand, Unit> {
+) : ICommandHandler<ProcessInvoiceCommand> {
 
     override val commandType: KClass<ProcessInvoiceCommand> = ProcessInvoiceCommand::class
 

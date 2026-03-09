@@ -1,6 +1,6 @@
 package com.nekgambling.api.command
 
-
+import com.nekgambling.application.cqrs.command.ICommand
 
 data class ProcessInvoiceCommand(
     val playerId: String,
@@ -14,7 +14,7 @@ data class ProcessInvoiceCommand(
     val transactionAmount: Double = 0.0,
     val taxAmount: Double = 0.0,
     val feeAmount: Double = 0.0,
-) : ICommand<Unit> {
+) : ICommand {
 
     enum class Type {
         DEPOSIT,

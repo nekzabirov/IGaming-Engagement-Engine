@@ -1,5 +1,7 @@
 package com.nekgambling.api.command
 
+import com.nekgambling.application.cqrs.command.ICommand
+
 data class ProcessSpinCommand(
     val playerId: String,
     val id: String,
@@ -10,4 +12,4 @@ data class ProcessSpinCommand(
     val gameProvider: String,
     val gameIdentity: String,
     val currency: String,
-) : ICommand<Unit>
+) : ICommand

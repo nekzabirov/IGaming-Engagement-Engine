@@ -4,7 +4,7 @@ import com.nekgambling.api.command.ProcessInvoiceCommand
 import com.nekgambling.api.command.ProcessPlayerCommand
 import com.nekgambling.api.command.ProcessSpinCommand
 import com.nekgambling.api.dto.*
-import com.nekgambling.api.command.CommandBus
+import com.nekgambling.application.cqrs.command.CommandBus
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*

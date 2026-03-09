@@ -2,6 +2,7 @@ package com.nekgambling.api.command
 
 import com.nekgambling.api.dto.AccountStatus
 import com.nekgambling.api.dto.UserGender
+import com.nekgambling.application.cqrs.command.ICommand
 
 
 data class ProcessPlayerCommand(
@@ -20,4 +21,4 @@ data class ProcessPlayerCommand(
     val userCountry: String? = null,
     val firstName: String? = null,
     val lastName: String? = null,
-) : ICommand<Unit>
+) : ICommand

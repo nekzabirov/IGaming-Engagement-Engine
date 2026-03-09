@@ -1,7 +1,7 @@
 package com.nekgambling.infrastructure.journey.player.spinTotal
 
-import com.nekgambling.application.query.QueryBus
-import com.nekgambling.application.query.player.GetPlayerSpinTotalQuery
+import com.nekgambling.application.cqrs.query.QueryBus
+import com.nekgambling.application.cqrs.query.player.GetPlayerSpinTotalQuery
 import com.nekgambling.infrastructure.journey.player.IPlayerDefinitionEvaluator
 import kotlin.reflect.KClass
 

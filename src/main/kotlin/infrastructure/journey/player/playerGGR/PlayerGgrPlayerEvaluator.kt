@@ -1,8 +1,8 @@
 package com.nekgambling.infrastructure.journey.player.playerGGR
 
-import com.nekgambling.application.query.QueryBus
-import com.nekgambling.application.query.player.GetPlayerBonusPayoutTotalQuery
-import com.nekgambling.application.query.player.GetPlayerSpinTotalQuery
+import com.nekgambling.application.cqrs.query.QueryBus
+import com.nekgambling.application.cqrs.query.player.GetPlayerBonusPayoutTotalQuery
+import com.nekgambling.application.cqrs.query.player.GetPlayerSpinTotalQuery
 import com.nekgambling.infrastructure.journey.player.IPlayerDefinitionEvaluator
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope

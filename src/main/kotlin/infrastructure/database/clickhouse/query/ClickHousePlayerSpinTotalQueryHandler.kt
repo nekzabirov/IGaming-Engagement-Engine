@@ -1,7 +1,7 @@
 package com.nekgambling.infrastructure.database.clickhouse.query
 
-import com.nekgambling.application.query.IQueryHandler
-import com.nekgambling.application.query.player.GetPlayerSpinTotalQuery
+import com.nekgambling.application.cqrs.query.IQueryHandler
+import com.nekgambling.application.cqrs.query.player.GetPlayerSpinTotalQuery
 import com.nekgambling.infrastructure.database.clickhouse.ClickHouseClient
 import com.nekgambling.infrastructure.database.clickhouse.ClickHouseTable
 import kotlin.reflect.KClass

@@ -8,7 +8,7 @@ globs: ["src/**/*.kt"]
 ## Naming
 - Commands: `Process<Entity>Command`
 - Command handlers: `Process<Entity>CommandHandler`
-- Use cases: `<Verb><Entity>UseCase` (e.g., `IssueBonusUseCase`, `UpdatePlayerUseCase`, `PlaceSpinUseCase`)
+- Use cases: `<Verb><Entity>UseCase` (e.g., `IssueBonusUseCase`, `UpdatePlayerUseCase`, `PlaceSpinUseCase`). Journey use cases in `application/usecase/journey/` (e.g., `ProcessJourneyNodeUsecase`)
 - Domain repositories: `I<Entity>Repository`
 - ClickHouse repos: `ClickHouse<Entity>Repository`
 - Exposed repos: `Exposed<Entity>Repository`

@@ -11,19 +11,22 @@ import com.nekgambling.infrastructure.database.exposed.table.JourneyInstantsTabl
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
+import java.util.Optional
 
 class ExposedJourneyInstantRepository(
     private val database: Database,
 ) : IJourneyInstantRepository {
 
-    override suspend fun findBy(playerId: String, journey: Journey): JourneyInstant? =
+    override suspend fun findBy(playerId: String, journey: Journey): Optional<JourneyInstant> =
         newSuspendedTransaction(db = database) {
             require(journey.id != Long.MIN_VALUE) { "Cannot find instant for unsaved journey" }
 
-            JourneyInstantEntity.find {
-                (JourneyInstantsTable.playerId eq playerId) and
-                    (JourneyInstantsTable.journey eq journey.id)
-            }.firstOrNull()?.toDomain()
+            Optional.ofNullable(
+                JourneyInstantEntity.find {
+                    (JourneyInstantsTable.playerId eq playerId) and
+                        (JourneyInstantsTable.journey eq journey.id)
+                }.firstOrNull()?.toDomain()
+            )
         }
 
     override suspend fun save(journeyInstant: JourneyInstant): JourneyInstant =
@@ -49,4 +52,13 @@ class ExposedJourneyInstantRepository(
 
             entity.toDomain()
         }
+
+    override suspend fun delete(journeyInstant: JourneyInstant) {
+        newSuspendedTransaction(db = database) {
+            require(journeyInstant.id != Long.MIN_VALUE) { "Cannot delete unsaved journey instant" }
+
+            JourneyInstantEntity.findById(journeyInstant.id)?.delete()
+                ?: error("JourneyInstant not found: ${journeyInstant.id}")
+        }
+    }
 }

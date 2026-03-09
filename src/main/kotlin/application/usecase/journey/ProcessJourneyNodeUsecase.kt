@@ -14,7 +14,6 @@ class ProcessJourneyNodeUsecase(
     private val lockAdapter: ILockAdapter,
     private val journeyNodeProcessResolver: JourneyNodeProcessResolver
 ) {
-
     suspend operator fun invoke(playerId: String, node: IJourneyNode, payload: Map<String, Any>): Result<Unit> =
         runCatching {
             val journey = journeyRepository.findOfNode(node)

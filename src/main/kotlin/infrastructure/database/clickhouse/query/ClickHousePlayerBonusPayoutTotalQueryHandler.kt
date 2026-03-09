@@ -1,7 +1,7 @@
 package com.nekgambling.infrastructure.database.clickhouse.query
 
-import com.nekgambling.application.query.IQueryHandler
-import com.nekgambling.application.query.player.GetPlayerBonusPayoutTotalQuery
+import com.nekgambling.application.cqrs.query.IQueryHandler
+import com.nekgambling.application.cqrs.query.player.GetPlayerBonusPayoutTotalQuery
 import com.nekgambling.infrastructure.database.clickhouse.ClickHouseClient
 import com.nekgambling.infrastructure.database.clickhouse.ClickHouseTable
 import kotlinx.coroutines.async

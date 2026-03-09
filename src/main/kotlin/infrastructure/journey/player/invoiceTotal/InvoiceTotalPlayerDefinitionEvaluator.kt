@@ -1,7 +1,7 @@
 package com.nekgambling.infrastructure.journey.player.invoiceTotal
 
-import com.nekgambling.application.query.QueryBus
-import com.nekgambling.application.query.player.GetPlayerInvoiceTotalQuery
+import com.nekgambling.application.cqrs.query.QueryBus
+import com.nekgambling.application.cqrs.query.player.GetPlayerInvoiceTotalQuery
 import com.nekgambling.infrastructure.journey.player.IPlayerDefinitionEvaluator
 import kotlin.reflect.KClass
 

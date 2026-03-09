@@ -1,4 +1,4 @@
-package com.nekgambling.application.query
+package com.nekgambling.application.cqrs.query
 
 class QueryBus(private val handlers: List<IQueryHandler<*, *>>) {
 
