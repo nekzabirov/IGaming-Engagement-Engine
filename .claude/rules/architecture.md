@@ -9,17 +9,25 @@ globs: ["src/**/*.kt"]
 - Domain layer (`domain/`) must NEVER depend on infrastructure or application layers
 - Application layer (`application/`) may depend on domain but NEVER on infrastructure
 - Infrastructure layer (`infrastructure/`) implements domain ports (repository interfaces, adapters)
-- API layer (`api/`) handles HTTP concerns and contains command handlers with business logic
+- API layer (`api/`) handles HTTP concerns and dispatches to command handlers
 
 ## CQRS
 - Commands modify state and go through `CommandBus` → `ICommandHandler`
 - Queries read state and go through `QueryBus` → `IQueryHandler`
 - Never mix reads and writes in the same handler
 
-## Command Handlers
-- Command handlers contain the full business logic (no separate use case layer)
-- Command handlers persist to ClickHouse and publish domain events via `IEventAdapter`
-- Command handlers check for existing records before creating (idempotency)
+## Command Handlers & Use Cases
+- Command handlers in `api/command/` dispatch to use cases for business logic
+- Use cases in `application/usecase/player/` encapsulate per-aggregate operations
+- Each use case takes a `Command` or `Details` inner data class, returns `Result<Unit>` via `runCatching`
+- Use cases depend on domain repository ports and `IEventAdapter`/`ICurrencyAdapter`
+- Command handlers persist to ClickHouse and publish domain events via use cases
+- Idempotency: check for existing records before creating
+
+## Use Case Layer
+- 13 use cases organized by aggregate: `bonus/` (Issue, Lost, StartWagering, Wagered), `freespin/` (Issue, Activate, Cancel, Finish), `invoice/` (Create, Update), `spin/` (Place, Settle), `player/` (Update)
+- Use cases use `operator fun invoke()` for clean call syntax
+- Domain imports: `com.nekgambling.domain.model.player.*` for models, `com.nekgambling.domain.repository.player.*` for repositories, `com.nekgambling.domain.vo.*` for value objects
 
 ## Domain Events
 - Define event data classes in `application/event/` under the appropriate aggregate package
@@ -40,12 +48,19 @@ globs: ["src/**/*.kt"]
 - `JourneyNodeProcess.process()` returns `JourneyNodeProcess.Response?` (contains `nextNode` + `output` map) — `null` means no match
 - `JourneyNodeNomenclature<N>` strategy interface (in `domain/strategy/`) declares `inputParams(node)` and `outputParams(node)` per node type, with implementations in `infrastructure/journey/` alongside each node class
 - `Journey` exposes a `tail` property that traverses the `next` chain from `head` to return the last node
-- `IActionJourneyNode` is an abstract class extending `IJourneyNode` for side-effect action nodes (push notifications, etc.)
+- `IActionJourneyNode` is an abstract class extending `IJourneyNode` for side-effect action nodes
 - `IPushActionJourneyNode` is a sealed class extending `IActionJourneyNode` with `templateId` and `placeHolders` — concrete subtypes: `EMailPushActionJourneyNode`, `SmsPushActionJourneyNode`, `InAppPushActionJourneyNode`
+- `IssueBonusActionJourneyNode` is a sealed class extending `IActionJourneyNode` — concrete subtypes: `IssueFixedBonusActionJourneyNode` (currency + amount), `IssueDynamicBonusActionJourneyNode`
 - `IActionJourneyNodeProcess<T>` is the abstract base for action node processors, extending `JourneyNodeProcess<T>`; `IPushActionJourneyNodeProcess` processes all push subtypes via sealed class matching
 - `JourneyInstant` tracks player progress through a journey (current node + payload)
 
+## Extractor Journey Nodes
+- `IExtractorJourneyNode` is an abstract class extending `IJourneyNode` with a `suspend fun extract(playerId: String, inputs: Map<String, Any>): Map<String, Any>` method
+- `PlayerProfileExtractor` extracts all player fields with `player:` prefix (e.g., `player:username`, `player:email`)
+- `PercentageAmountExtractor` (extends `IAmountExtractor`) calculates amounts with percentage + optional max cap
+- Each extractor has its own `JourneyNodeNomenclature` implementation registered in Koin
+
 ## Dependency Injection
 - All wiring in single `infrastructureModule` in `infrastructure/koin.kt`
-- Multi-binding pattern: `bind Interface::class` + `getAll()` for CommandBus, QueryBus, JourneyNodeNomenclature, and player definition evaluators
+- Multi-binding pattern: `bind Interface::class` + `getAll()` for CommandBus, QueryBus, JourneyNodeNomenclature, JourneyNodeProcess, and player definition evaluators
 - All bindings are `single` scoped

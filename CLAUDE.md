@@ -37,16 +37,17 @@ api/                      → HTTP entry point + CommandBus dispatching
   EventApi.kt             → Single POST /event endpoint (returns 201)
   command/                → CommandBus, ICommand, ICommandHandler, 3 command handlers
   dto/                    → EventRequest, EventPayload (sealed interface with 4 payload types)
-application/              → Queries, port interfaces, events
+application/              → Use cases, queries, port interfaces, events
   adapter/                → Port interfaces: IEventAdapter, ILockAdapter, ICurrencyAdapter
   event/                  → Domain event definitions (sealed interfaces per aggregate)
   query/                  → QueryBus + 3 query types (bonus payout, invoice total, spin total)
+  usecase/player/         → Use cases per aggregate (bonus, freespin, invoice, spin, player)
 domain/                   → Pure business logic
   model/journey/          → Journey graph: IJourneyNode (abstract), Journey, JourneyInstant
   model/player/           → Player aggregates: Details, Bonus, Freespin, Invoice, Spin
   repository/             → Repository ports: IJourneyRepository, IJourneyInstantRepository
   repository/player/      → Player repository ports
-  strategy/               → JourneyNodeProcess strategy interface
+  strategy/               → JourneyNodeProcess, JourneyNodeNomenclature strategy interfaces
   shared/vo/              → Value objects: Currency, Country, Locale, Period
   shared/param/           → Parameter value types: NumberParamValue, BoolParamValue, etc.
 infrastructure/           → All adapters and implementations
@@ -60,6 +61,9 @@ infrastructure/           → All adapters and implementations
   journey/trigger/        → Trigger journey nodes (bonus, freespin, invoice, segment)
   journey/action/         → Action journey nodes (IActionJourneyNode base) + processors
   journey/action/push/    → Push action nodes (email, SMS, in-app) with template + placeholders
+  journey/action/issue/   → Issue action nodes (bonus fixed/dynamic, freespin)
+  journey/action/payload/ → Payload action node (key/value placement)
+  journey/extractor/      → Extractor journey nodes (player profile, percentage amount)
 ```
 
 ## Key Patterns
@@ -68,16 +72,32 @@ infrastructure/           → All adapters and implementations
 `POST /event` → `EventApi` deserializes `EventRequest` → `CommandBus` dispatches to handler → handler persists to ClickHouse + publishes event via `IEventAdapter`.
 
 ### CQRS Buses
-- **CommandBus**: Dispatches `ICommand<R>` to matching `ICommandHandler` by `commandType: KClass`. All 3 commands return `Unit`. Command handlers contain the full business logic (no separate use case layer).
+- **CommandBus**: Dispatches `ICommand<R>` to matching `ICommandHandler` by `commandType: KClass`. All 3 commands return `Unit`. Command handlers delegate to use cases for business logic.
 - **QueryBus**: Dispatches `IQuery<R>` to matching `IQueryHandler` by `queryType: KClass`. Query handlers read from ClickHouse materialized views.
 
+### Use Case Layer
+Use cases in `application/usecase/player/` encapsulate business logic per aggregate operation. Each use case:
+- Takes a `Command` or `Details` inner data class as input
+- Returns `Result<Unit>` via `runCatching`
+- Depends on domain repository ports and `IEventAdapter`/`ICurrencyAdapter`
+- Handles create vs update logic (e.g., `UpdatePlayerUseCase` detects new vs existing player)
+
+13 use cases organized by aggregate: `bonus/` (Issue, Lost, StartWagering, Wagered), `freespin/` (Issue, Activate, Cancel, Finish), `invoice/` (Create, Update), `spin/` (Place, Settle), `player/` (Update).
+
 ### Journey Node Architecture
-`IJourneyNode` is an abstract class with `id`, `next`, `inputParams()`, and `outputParams()`. Three node categories:
+`IJourneyNode` is an abstract class with `id` and `next`. Four node categories:
 - **PlayerJourneyNode**: Evaluates player definitions (`IPlayerDefinition`) with match/mismatch branching
 - **ITriggerJourneyNode**: Matches incoming event payload against node criteria (bonus, freespin, invoice, segment triggers)
-- **IActionJourneyNode**: Executes side-effect actions (e.g., push notifications). Subcategory `IPushActionJourneyNode` (sealed class with `templateId` + `placeHolders`) has three concrete types: `EMailPushActionJourneyNode`, `SmsPushActionJourneyNode`, `InAppPushActionJourneyNode`
+- **IActionJourneyNode**: Executes side-effect actions. Subcategories:
+  - `IPushActionJourneyNode` (sealed class with `templateId` + `placeHolders`): `EMailPushActionJourneyNode`, `SmsPushActionJourneyNode`, `InAppPushActionJourneyNode`
+  - `IssueBonusActionJourneyNode` (sealed class): `IssueFixedBonusActionJourneyNode` (currency + amount), `IssueDynamicBonusActionJourneyNode`
+  - `IssueFreespinActionJourneyNode` (identity)
+  - `PlacePayloadActionJourneyNode` (key/value)
+- **IExtractorJourneyNode**: Extracts and enriches data from player context. Implementations:
+  - `PlayerProfileExtractor`: Extracts all player fields with `player:` prefix (e.g., `player:username`, `player:email`)
+  - `PercentageAmountExtractor`: Calculates amounts with percentage + optional max cap
 
-`JourneyNodeProcess<N>` strategy interface processes nodes. `IActionJourneyNodeProcess<T>` is the abstract base for action processors; `IPushActionJourneyNodeProcess` handles all push subtypes. `IPlayerDefinitionEvaluator<T>` implementations evaluate player conditions. Five definition types: `playerAge`, `profileField`, `spinTotal`, `invoiceTotal`, `playerGgr`.
+`JourneyNodeProcess<N>` strategy interface processes nodes. `JourneyNodeNomenclature<N>` strategy interface declares `inputParams(node)` and `outputParams(node)` per node type. `IPlayerDefinitionEvaluator<T>` implementations evaluate player conditions. Five definition types: `playerAge`, `profileField`, `spinTotal`, `invoiceTotal`, `playerGgr`.
 
 ### Dual Database Design
 - **ClickHouse** (analytics): Player activity data in `ReplacingMergeTree` tables with `_version` for upserts. Two `SummingMergeTree` tables (`player_invoice_total`, `player_total_spin_info`) fed by materialized views for pre-aggregated queries.
@@ -127,9 +147,10 @@ SQL init scripts at `src/main/resources/clickhouse/init.sql` and `clickhouse/met
 ## Conventions
 
 - **Monetary values**: `Long` in minor units (cents). `ICurrencyAdapter.convertToUnits()` converts `Double` → `Long` via `* 100`.
-- **Naming**: Commands `Process<Entity>Command`, Handlers `Process<Entity>CommandHandler`, Repositories `I<Entity>Repository` / `ClickHouse<Entity>Repository` / `Exposed<Entity>Repository`.
-- **DI**: Single `infrastructureModule` in `infrastructure/koin.kt`. Multi-binding via `bind Interface::class` + `getAll()` for buses and evaluators. Everything is `single` scoped.
+- **Naming**: Commands `Process<Entity>Command`, Handlers `Process<Entity>CommandHandler`, Use cases `<Verb><Entity>UseCase`, Repositories `I<Entity>Repository` / `ClickHouse<Entity>Repository` / `Exposed<Entity>Repository`.
+- **DI**: Single `infrastructureModule` in `infrastructure/koin.kt`. Multi-binding via `bind Interface::class` + `getAll()` for buses, nomenclatures, and evaluators. Everything is `single` scoped.
 - **Player definitions**: Polymorphic serialization via `@Serializable` + `@SerialName`. New definitions need: data class implementing `IPlayerDefinition`, evaluator implementing `IPlayerDefinitionEvaluator<T>`, Koin binding, and registration in `PlayerDefinitionJson.kt` serializers module.
+- **Nomenclature naming**: `<NodeType>Nomenclature` objects (e.g., `BonusTriggerJourneyNodeNomenclature`, `PlayerJourneyNodeNomenclature`), placed alongside their node class, registered in Koin with `bind JourneyNodeNomenclature::class`.
 
 ## Adding a New Player Definition
 
