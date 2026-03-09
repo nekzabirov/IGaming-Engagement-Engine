@@ -1,9 +1,9 @@
 package com.nekgambling.infrastructure.journey.player
 
-import com.nekgambling.domain.strategy.JourneyNodeParams
+import com.nekgambling.domain.strategy.JourneyNodeNomenclature
 import kotlin.reflect.KClass
 
-object PlayerJourneyNodeParams : JourneyNodeParams<PlayerJourneyNode> {
+object PlayerJourneyNodeNomenclature : JourneyNodeNomenclature<PlayerJourneyNode> {
     override val nodeType: KClass<PlayerJourneyNode> = PlayerJourneyNode::class
 
     override fun inputParams(): Set<String> =

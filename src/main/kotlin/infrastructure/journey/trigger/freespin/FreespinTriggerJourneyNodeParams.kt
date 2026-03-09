@@ -1,9 +1,9 @@
 package com.nekgambling.infrastructure.journey.trigger.freespin
 
-import com.nekgambling.domain.strategy.JourneyNodeParams
+import com.nekgambling.domain.strategy.JourneyNodeNomenclature
 import kotlin.reflect.KClass
 
-object FreespinTriggerJourneyNodeParams : JourneyNodeParams<FreespinTriggerJourneyNode> {
+object FreespinTriggerJourneyNodeNomenclature : JourneyNodeNomenclature<FreespinTriggerJourneyNode> {
     override val nodeType: KClass<FreespinTriggerJourneyNode> = FreespinTriggerJourneyNode::class
 
     override fun inputParams(): Set<String> =

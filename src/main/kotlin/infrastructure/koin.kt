@@ -36,14 +36,14 @@ import com.nekgambling.infrastructure.external.rabbitmq.RabbitMQEventAdapter
 import com.nekgambling.infrastructure.external.rabbitmq.config.RabbitMQConfig
 import com.nekgambling.infrastructure.external.redis.RedisLockAdapter
 import com.nekgambling.infrastructure.external.redis.config.RedisConfig
-import com.nekgambling.domain.strategy.JourneyNodeParams
+import com.nekgambling.domain.strategy.JourneyNodeNomenclature
 import com.nekgambling.infrastructure.journey.extractor.amount.PercentageAmountExtractorParams
 import com.nekgambling.infrastructure.journey.player.IPlayerDefinitionEvaluator
-import com.nekgambling.infrastructure.journey.player.PlayerJourneyNodeParams
-import com.nekgambling.infrastructure.journey.trigger.bonus.BonusTriggerJourneyNodeParams
-import com.nekgambling.infrastructure.journey.trigger.freespin.FreespinTriggerJourneyNodeParams
-import com.nekgambling.infrastructure.journey.trigger.invoice.InvoiceTriggerJourneyNodeParams
-import com.nekgambling.infrastructure.journey.trigger.segment.SegmentTriggerJourneyNodeParams
+import com.nekgambling.infrastructure.journey.player.PlayerJourneyNodeNomenclature
+import com.nekgambling.infrastructure.journey.trigger.bonus.BonusTriggerJourneyNodeNomenclature
+import com.nekgambling.infrastructure.journey.trigger.freespin.FreespinTriggerJourneyNodeNomenclature
+import com.nekgambling.infrastructure.journey.trigger.invoice.InvoiceTriggerJourneyNodeNomenclature
+import com.nekgambling.infrastructure.journey.trigger.segment.SegmentTriggerJourneyNodeNomenclature
 import com.nekgambling.infrastructure.journey.player.invoiceTotal.InvoiceTotalPlayerDefinitionEvaluator
 import com.nekgambling.infrastructure.journey.player.playerAge.PlayerAgeDefinitionEvaluator
 import com.nekgambling.infrastructure.journey.player.playerGGR.PlayerGgrPlayerEvaluator
@@ -149,17 +149,17 @@ val infrastructureModule = module {
 
     // --- Journey node params ---
 
-    single<JourneyNodeParams<*>> { BonusTriggerJourneyNodeParams } bind JourneyNodeParams::class
+    single<JourneyNodeNomenclature<*>> { BonusTriggerJourneyNodeNomenclature } bind JourneyNodeNomenclature::class
 
-    single<JourneyNodeParams<*>> { FreespinTriggerJourneyNodeParams } bind JourneyNodeParams::class
+    single<JourneyNodeNomenclature<*>> { FreespinTriggerJourneyNodeNomenclature } bind JourneyNodeNomenclature::class
 
-    single<JourneyNodeParams<*>> { InvoiceTriggerJourneyNodeParams } bind JourneyNodeParams::class
+    single<JourneyNodeNomenclature<*>> { InvoiceTriggerJourneyNodeNomenclature } bind JourneyNodeNomenclature::class
 
-    single<JourneyNodeParams<*>> { SegmentTriggerJourneyNodeParams } bind JourneyNodeParams::class
+    single<JourneyNodeNomenclature<*>> { SegmentTriggerJourneyNodeNomenclature } bind JourneyNodeNomenclature::class
 
-    single<JourneyNodeParams<*>> { PercentageAmountExtractorParams } bind JourneyNodeParams::class
+    single<JourneyNodeNomenclature<*>> { PercentageAmountExtractorParams } bind JourneyNodeNomenclature::class
 
-    single<JourneyNodeParams<*>> { PlayerJourneyNodeParams } bind JourneyNodeParams::class
+    single<JourneyNodeNomenclature<*>> { PlayerJourneyNodeNomenclature } bind JourneyNodeNomenclature::class
 
     // --- Player definition evaluators ---
 

@@ -1,9 +1,9 @@
 package com.nekgambling.infrastructure.journey.trigger.segment
 
-import com.nekgambling.domain.strategy.JourneyNodeParams
+import com.nekgambling.domain.strategy.JourneyNodeNomenclature
 import kotlin.reflect.KClass
 
-object SegmentTriggerJourneyNodeParams : JourneyNodeParams<SegmentTriggerJourneyNode> {
+object SegmentTriggerJourneyNodeNomenclature : JourneyNodeNomenclature<SegmentTriggerJourneyNode> {
     override val nodeType: KClass<SegmentTriggerJourneyNode> = SegmentTriggerJourneyNode::class
 
     override fun inputParams(): Set<String> =

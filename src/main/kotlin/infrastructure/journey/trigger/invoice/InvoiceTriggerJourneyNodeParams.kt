@@ -1,9 +1,9 @@
 package com.nekgambling.infrastructure.journey.trigger.invoice
 
-import com.nekgambling.domain.strategy.JourneyNodeParams
+import com.nekgambling.domain.strategy.JourneyNodeNomenclature
 import kotlin.reflect.KClass
 
-object InvoiceTriggerJourneyNodeParams : JourneyNodeParams<InvoiceTriggerJourneyNode> {
+object InvoiceTriggerJourneyNodeNomenclature : JourneyNodeNomenclature<InvoiceTriggerJourneyNode> {
     override val nodeType: KClass<InvoiceTriggerJourneyNode> = InvoiceTriggerJourneyNode::class
 
     override fun inputParams(): Set<String> =

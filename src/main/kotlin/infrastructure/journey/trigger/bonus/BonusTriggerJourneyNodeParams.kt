@@ -1,9 +1,9 @@
 package com.nekgambling.infrastructure.journey.trigger.bonus
 
-import com.nekgambling.domain.strategy.JourneyNodeParams
+import com.nekgambling.domain.strategy.JourneyNodeNomenclature
 import kotlin.reflect.KClass
 
-object BonusTriggerJourneyNodeParams : JourneyNodeParams<BonusTriggerJourneyNode> {
+object BonusTriggerJourneyNodeNomenclature : JourneyNodeNomenclature<BonusTriggerJourneyNode> {
     override val nodeType: KClass<BonusTriggerJourneyNode> = BonusTriggerJourneyNode::class
 
     override fun inputParams(): Set<String> =
