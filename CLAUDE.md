@@ -148,7 +148,7 @@ SQL init scripts at `src/main/resources/clickhouse/init.sql` and `clickhouse/met
 
 - **Monetary values**: `Long` in minor units (cents). `ICurrencyAdapter.convertToUnits()` converts `Double` → `Long` via `* 100`.
 - **Naming**: Commands `Process<Entity>Command`, Handlers `Process<Entity>CommandHandler`, Use cases `<Verb><Entity>UseCase`, Repositories `I<Entity>Repository` / `ClickHouse<Entity>Repository` / `Exposed<Entity>Repository`.
-- **DI**: Single `infrastructureModule` in `infrastructure/koin.kt`. Multi-binding via `bind Interface::class` + `getAll()` for buses, nomenclatures, and evaluators. Everything is `single` scoped.
+- **DI**: Single `infrastructureModule` in `infrastructure/koin.kt`. Journey-related bindings (nomenclatures, processors, evaluators) are organized in a private `journeyModule()` extension function called within `infrastructureModule`. Multi-binding via `bind Interface::class` + `getAll()` for buses, nomenclatures, processors, and evaluators. Everything is `single` scoped.
 - **Player definitions**: Polymorphic serialization via `@Serializable` + `@SerialName`. New definitions need: data class implementing `IPlayerDefinition`, evaluator implementing `IPlayerDefinitionEvaluator<T>`, Koin binding, and registration in `PlayerDefinitionJson.kt` serializers module.
 - **Nomenclature naming**: `<NodeType>Nomenclature` objects (e.g., `BonusTriggerJourneyNodeNomenclature`, `PlayerJourneyNodeNomenclature`), placed alongside their node class, registered in Koin with `bind JourneyNodeNomenclature::class`.
 

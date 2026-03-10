@@ -49,11 +49,18 @@ import com.nekgambling.infrastructure.journey.trigger.invoice.InvoiceTriggerJour
 import com.nekgambling.infrastructure.journey.action.issue.bonus.IssueDynamicBonusActionJourneyNodeNomenclature
 import com.nekgambling.infrastructure.journey.action.issue.bonus.IssueFixedBonusActionJourneyNodeNomenclature
 import com.nekgambling.infrastructure.journey.action.issue.freespin.IssueFreespinActionJourneyNodeNomenclature
+import com.nekgambling.infrastructure.journey.action.issue.bonus.IssueBonusActionJourneyNodeProcess
 import com.nekgambling.infrastructure.journey.action.issue.freespin.IssueFreespinIActionJourneyNodeProcess
 import com.nekgambling.infrastructure.journey.action.payload.PlacePayloadActionJourneyNodeNomenclature
 import com.nekgambling.infrastructure.journey.action.payload.PlacePayloadActionJourneyNodeProcess
 import com.nekgambling.infrastructure.journey.action.push.PushActionJourneyNodeNomenclature
+import com.nekgambling.infrastructure.journey.action.push.PushIActionJourneyNodeProcess
+import com.nekgambling.infrastructure.journey.player.PlayerJourneyNodeProcess
+import com.nekgambling.infrastructure.journey.trigger.bonus.BonusTriggerJourneyNodeProcess
+import com.nekgambling.infrastructure.journey.trigger.freespin.FreespinTriggerJourneyNodeProcess
+import com.nekgambling.infrastructure.journey.trigger.invoice.InvoiceTriggerJourneyNodeProcess
 import com.nekgambling.infrastructure.journey.trigger.segment.SegmentTriggerJourneyNodeNomenclature
+import com.nekgambling.infrastructure.journey.trigger.segment.SegmentTriggerJourneyNodeProcess
 import com.nekgambling.infrastructure.journey.player.invoiceTotal.InvoiceTotalPlayerDefinitionEvaluator
 import com.nekgambling.infrastructure.journey.player.playerAge.PlayerAgeDefinitionEvaluator
 import com.nekgambling.infrastructure.journey.player.playerGGR.PlayerGgrPlayerEvaluator
@@ -157,7 +164,14 @@ val infrastructureModule = module {
 
     single { CommandBus(getAll()) }
 
-    // --- Journey node params ---
+    // --- Journey ---
+
+    journeyModule()
+}
+
+private fun org.koin.core.module.Module.journeyModule() {
+
+    // --- Journey node nomenclatures ---
 
     single<JourneyNodeNomenclature<*>> { BonusTriggerJourneyNodeNomenclature } bind JourneyNodeNomenclature::class
 
@@ -181,9 +195,25 @@ val infrastructureModule = module {
 
     single<JourneyNodeNomenclature<*>> { IssueFreespinActionJourneyNodeNomenclature } bind JourneyNodeNomenclature::class
 
-    single { IssueFreespinIActionJourneyNodeProcess() } bind JourneyNodeProcess::class
-
     single<JourneyNodeNomenclature<*>> { PlacePayloadActionJourneyNodeNomenclature } bind JourneyNodeNomenclature::class
+
+    // --- Journey node processors ---
+
+    single { BonusTriggerJourneyNodeProcess() } bind JourneyNodeProcess::class
+
+    single { FreespinTriggerJourneyNodeProcess() } bind JourneyNodeProcess::class
+
+    single { InvoiceTriggerJourneyNodeProcess() } bind JourneyNodeProcess::class
+
+    single { SegmentTriggerJourneyNodeProcess() } bind JourneyNodeProcess::class
+
+    single { PlayerJourneyNodeProcess(getAll()) } bind JourneyNodeProcess::class
+
+    single { PushIActionJourneyNodeProcess() } bind JourneyNodeProcess::class
+
+    single { IssueBonusActionJourneyNodeProcess() } bind JourneyNodeProcess::class
+
+    single { IssueFreespinIActionJourneyNodeProcess() } bind JourneyNodeProcess::class
 
     single { PlacePayloadActionJourneyNodeProcess() } bind JourneyNodeProcess::class
 
