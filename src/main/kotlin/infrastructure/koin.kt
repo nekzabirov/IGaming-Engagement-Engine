@@ -39,14 +39,18 @@ import com.nekgambling.infrastructure.external.redis.RedisLockAdapter
 import com.nekgambling.infrastructure.external.redis.config.RedisConfig
 import com.nekgambling.domain.strategy.JourneyNodeNomenclature
 import com.nekgambling.domain.strategy.JourneyNodeProcess
+import com.nekgambling.infrastructure.journey.extractor.amount.AmountExtractorProcess
 import com.nekgambling.infrastructure.journey.extractor.amount.PercentageAmountExtractorParams
-import com.nekgambling.infrastructure.journey.extractor.playerProfile.PlayerProfileExtractorParams
-import com.nekgambling.infrastructure.journey.player.PlayerJourneyNodeNomenclature
-import com.nekgambling.infrastructure.journey.player.playerAge.PlayerAgePlayerJourneyNodeProcess
-import com.nekgambling.infrastructure.journey.player.profile.ProfileFieldPlayerJourneyNodeProcess
-import com.nekgambling.infrastructure.journey.player.spinTotal.SpinTotalPlayerJourneyNodeProcess
-import com.nekgambling.infrastructure.journey.player.invoiceTotal.InvoiceTotalPlayerJourneyNodeProcess
-import com.nekgambling.infrastructure.journey.player.playerGGR.PlayerGgrPlayerJourneyNodeProcess
+import com.nekgambling.infrastructure.journey.extractor.player.invoiceTotal.InvoiceTotalExtractorNomenclature
+import com.nekgambling.infrastructure.journey.extractor.player.invoiceTotal.InvoiceTotalExtractorProcess
+import com.nekgambling.infrastructure.journey.extractor.player.playerAge.PlayerAgeExtractorNomenclature
+import com.nekgambling.infrastructure.journey.extractor.player.playerAge.PlayerAgeExtractorProcess
+import com.nekgambling.infrastructure.journey.extractor.player.playerGgr.PlayerGgrExtractorNomenclature
+import com.nekgambling.infrastructure.journey.extractor.player.playerGgr.PlayerGgrExtractorProcess
+import com.nekgambling.infrastructure.journey.extractor.player.playerProfile.PlayerProfileExtractorNomenclature
+import com.nekgambling.infrastructure.journey.extractor.player.playerProfile.PlayerProfileExtractorProcess
+import com.nekgambling.infrastructure.journey.extractor.player.spinTotal.SpinTotalExtractorNomenclature
+import com.nekgambling.infrastructure.journey.extractor.player.spinTotal.SpinTotalExtractorProcess
 import com.nekgambling.infrastructure.journey.trigger.bonus.BonusTriggerJourneyNodeNomenclature
 import com.nekgambling.infrastructure.journey.trigger.freespin.FreespinTriggerJourneyNodeNomenclature
 import com.nekgambling.infrastructure.journey.trigger.invoice.InvoiceTriggerJourneyNodeNomenclature
@@ -181,9 +185,15 @@ private fun org.koin.core.module.Module.journeyModule() {
 
     single<JourneyNodeNomenclature<*>> { PercentageAmountExtractorParams } bind JourneyNodeNomenclature::class
 
-    single<JourneyNodeNomenclature<*>> { PlayerProfileExtractorParams } bind JourneyNodeNomenclature::class
+    single<JourneyNodeNomenclature<*>> { PlayerProfileExtractorNomenclature } bind JourneyNodeNomenclature::class
 
-    single<JourneyNodeNomenclature<*>> { PlayerJourneyNodeNomenclature } bind JourneyNodeNomenclature::class
+    single<JourneyNodeNomenclature<*>> { PlayerAgeExtractorNomenclature } bind JourneyNodeNomenclature::class
+
+    single<JourneyNodeNomenclature<*>> { SpinTotalExtractorNomenclature } bind JourneyNodeNomenclature::class
+
+    single<JourneyNodeNomenclature<*>> { InvoiceTotalExtractorNomenclature } bind JourneyNodeNomenclature::class
+
+    single<JourneyNodeNomenclature<*>> { PlayerGgrExtractorNomenclature } bind JourneyNodeNomenclature::class
 
     single<JourneyNodeNomenclature<*>> { PushActionJourneyNodeNomenclature } bind JourneyNodeNomenclature::class
 
@@ -205,15 +215,17 @@ private fun org.koin.core.module.Module.journeyModule() {
 
     single { SegmentTriggerJourneyNodeProcess() } bind JourneyNodeProcess::class
 
-    single { PlayerAgePlayerJourneyNodeProcess(get()) } bind JourneyNodeProcess::class
+    single { AmountExtractorProcess() } bind JourneyNodeProcess::class
 
-    single { ProfileFieldPlayerJourneyNodeProcess(get()) } bind JourneyNodeProcess::class
+    single { PlayerProfileExtractorProcess(get()) } bind JourneyNodeProcess::class
 
-    single { SpinTotalPlayerJourneyNodeProcess(get()) } bind JourneyNodeProcess::class
+    single { PlayerAgeExtractorProcess(get()) } bind JourneyNodeProcess::class
 
-    single { InvoiceTotalPlayerJourneyNodeProcess(get()) } bind JourneyNodeProcess::class
+    single { SpinTotalExtractorProcess(get()) } bind JourneyNodeProcess::class
 
-    single { PlayerGgrPlayerJourneyNodeProcess(get()) } bind JourneyNodeProcess::class
+    single { InvoiceTotalExtractorProcess(get()) } bind JourneyNodeProcess::class
+
+    single { PlayerGgrExtractorProcess(get()) } bind JourneyNodeProcess::class
 
     single { PushIActionJourneyNodeProcess() } bind JourneyNodeProcess::class
 

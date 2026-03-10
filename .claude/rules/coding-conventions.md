@@ -13,17 +13,16 @@ globs: ["src/**/*.kt"]
 - ClickHouse repos: `ClickHouse<Entity>Repository`
 - Exposed repos: `Exposed<Entity>Repository`
 - Player definitions (DB only, legacy): `<Name>PlayerDefinition` with `@SerialName("<camelCase>")` — used only for PostgreSQL JSONB serialization
-- Player journey nodes: `<Name>PlayerJourneyNode` extending `PlayerJourneyNode` (abstract class), with `override val id`, `override val matchNode`, `override val notMatchNode` constructor params. Each holds its own condition params directly (e.g., `PlayerAgePlayerJourneyNode` has `value: NumberParamValue`)
-- Player journey node processors: `<Name>PlayerJourneyNodeProcess` implementing `IPlayerJourneyNodeProcess<T>`, placed in same package as their node class. Returns `Response(nextNode = matchNode/notMatchNode)` based on condition evaluation
 - Trigger journey nodes: `<Name>TriggerJourneyNode` extending `ITriggerJourneyNode` (abstract class), with `override val id` and `override val next` constructor params, and a `companion object { const val TRIGGER_NAME = "<name>" }` for trigger name matching
 - Journey node processors: `override val nodeType: KClass<N>` (not `node`) to avoid confusion with the `process(node)` parameter
-- Journey node nomenclatures: `<NodeType>Nomenclature` objects (e.g., `BonusTriggerJourneyNodeNomenclature`, `PlayerAgePlayerJourneyNodeNomenclature`), placed alongside their node class, registered in Koin with `bind JourneyNodeNomenclature::class`. Each concrete player journey node type has its own nomenclature
-- Player journey branching: `matchNode` / `notMatchNode` on `PlayerJourneyNode`
+- Journey node nomenclatures: `<NodeType>Nomenclature` objects (e.g., `BonusTriggerJourneyNodeNomenclature`, `PlayerAgeExtractorNomenclature`), placed alongside their node class, registered in Koin with `bind JourneyNodeNomenclature::class`
 - Action journey nodes: `<Name>ActionJourneyNode` extending `IActionJourneyNode` (abstract class), with `id` and `next` constructor params
 - Push action journey nodes: `<Channel>PushActionJourneyNode` extending `IPushActionJourneyNode` (sealed class with `templateId` + `placeHolders`), e.g., `EMailPushActionJourneyNode`, `SmsPushActionJourneyNode`, `InAppPushActionJourneyNode`
 - Action node processors: `<Name>ActionJourneyNodeProcess` extending `ActionJourneyNodeProcess<T>`, placed in same package as their node class
 - Issue action journey nodes: `Issue<Entity>ActionJourneyNode` in `infrastructure/journey/action/issue/<entity>/` package (e.g., `IssueFreespinActionJourneyNode`)
 - Extractor journey nodes: `<Name>Extractor` extending `IExtractorJourneyNode`, in `infrastructure/journey/extractor/<name>/` package
+- Player extractor journey nodes: `<Name>Extractor` extending `IPlayerExtractorJourneyNode` (abstract class with `player:` prefix helper), in `infrastructure/journey/extractor/player/<name>/` package. Use `buildOutput()` helper to auto-prefix keys with `player:`. Nodes: `PlayerProfileExtractor`, `PlayerAgeExtractor`, `SpinTotalExtractor`, `InvoiceTotalExtractor`, `PlayerGgrExtractor`
+- Extractor processing: Single `ExtractorJourneyNodeProcess` handles ALL `IExtractorJourneyNode` subtypes — no per-extractor processors needed
 - Trigger node output keys: Use `domain:field` colon-separated prefix format (e.g., `bonus:id`, `invoice:amount`, `freespin:currency`). Input payload keys from upstream events remain camelCase (e.g., `bonusId`, `invoiceAmount`)
 - Trigger node input params: All trigger nomenclatures must include `"triggerName"` in `inputParams()`. Process implementations must check `payload["triggerName"]` matches the node's `TRIGGER_NAME` constant at the top, returning `null` if missing or mismatched
 

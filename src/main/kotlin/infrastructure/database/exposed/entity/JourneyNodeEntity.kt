@@ -6,7 +6,6 @@ import com.nekgambling.domain.model.player.PlayerFreespin
 import com.nekgambling.domain.model.player.PlayerInvoice
 import com.nekgambling.domain.vo.Currency
 import com.nekgambling.infrastructure.database.exposed.table.JourneyNodesTable
-import com.nekgambling.infrastructure.journey.player.PlayerJourneyNode
 import com.nekgambling.infrastructure.journey.trigger.bonus.BonusTriggerJourneyNode
 import com.nekgambling.infrastructure.journey.trigger.freespin.FreespinTriggerJourneyNode
 import com.nekgambling.infrastructure.journey.trigger.invoice.InvoiceTriggerJourneyNode
@@ -23,10 +22,6 @@ class JourneyNodeEntity(id: EntityID<Long>) : LongEntity(id) {
     var type by JourneyNodesTable.type
     var journey by JourneyEntity referencedOn JourneyNodesTable.journeyId
     var next by JourneyNodeEntity optionalReferencedOn JourneyNodesTable.next
-
-    // PlayerJourneyNode
-    var playerDefinition by JourneyNodesTable.playerDefinition
-    var onMismatch by JourneyNodeEntity optionalReferencedOn JourneyNodesTable.onMismatch
 
     // BonusTriggerJourneyNode
     var bonusId by JourneyNodesTable.bonusId
@@ -64,16 +59,6 @@ class JourneyNodeEntity(id: EntityID<Long>) : LongEntity(id) {
         val nextDomain = next?.toDomain(cache)
 
         val node: IJourneyNode = when (type) {
-            PlayerJourneyNode::class.simpleName -> {
-                val onMismatchDomain = onMismatch?.toDomain(cache)
-                PlayerJourneyNode(
-                    id = id.value,
-                    rule = playerDefinition!!,
-                    matchNode = nextDomain,
-                    notMatchNode = onMismatchDomain,
-                )
-            }
-
             BonusTriggerJourneyNode::class.simpleName -> BonusTriggerJourneyNode(
                 id = id.value,
                 bonusId = bonusId,

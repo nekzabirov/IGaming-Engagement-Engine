@@ -2,8 +2,6 @@ package com.nekgambling.infrastructure.database.exposed.table
 
 import com.nekgambling.domain.vo.param.NumberParamValue
 import com.nekgambling.infrastructure.database.exposed.mapper.numberParamValueJson
-import com.nekgambling.infrastructure.journey.player.IPlayerDefinition
-import com.nekgambling.infrastructure.database.exposed.mapper.conditionRuleJson
 import org.jetbrains.exposed.dao.id.LongIdTable
 import org.jetbrains.exposed.sql.json.jsonb
 
@@ -13,10 +11,6 @@ object JourneyNodesTable : LongIdTable("journey_nodes") {
     val journeyId = reference("journey_id", JourneysTable)
 
     val next = optReference("next_id", JourneyNodesTable)
-
-    // PlayerJourneyNode
-    val playerDefinition = jsonb<IPlayerDefinition>("player_definition", conditionRuleJson).nullable()
-    val onMismatch = optReference("on_mismatch_id", JourneyNodesTable)
 
     // BonusTriggerJourneyNode
     val bonusId = varchar("bonus_id", 255).nullable()
