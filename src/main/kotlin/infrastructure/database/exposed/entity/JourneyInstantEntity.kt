@@ -1,6 +1,5 @@
 package com.nekgambling.infrastructure.database.exposed.entity
 
-import com.nekgambling.domain.model.journey.JourneyInstant
 import com.nekgambling.infrastructure.database.exposed.table.JourneyInstantsTable
 import kotlinx.serialization.json.*
 import org.jetbrains.exposed.dao.LongEntity
@@ -14,14 +13,6 @@ class JourneyInstantEntity(id: EntityID<Long>) : LongEntity(id) {
     var journey by JourneyEntity referencedOn JourneyInstantsTable.journey
     var currentNode by JourneyNodeEntity referencedOn JourneyInstantsTable.currentNode
     var payload by JourneyInstantsTable.payload
-
-    fun toDomain() = JourneyInstant(
-        id = id.value,
-        playerId = playerId,
-        journey = journey.toDomain(),
-        currentNode = currentNode.toDomain(),
-        payload = deserializePayload(payload),
-    )
 }
 
 internal fun serializePayload(payload: Map<String, Any>): String {
