@@ -6,6 +6,7 @@ import com.nekgambling.domain.model.journey.IJourneyNode
 import com.nekgambling.domain.model.journey.JourneyInstant
 import com.nekgambling.domain.repository.IJourneyInstantRepository
 import com.nekgambling.domain.repository.IJourneyRepository
+import com.nekgambling.domain.vo.Payload
 import kotlin.jvm.optionals.getOrNull
 
 class ProcessJourneyNodeUsecase(
@@ -14,7 +15,7 @@ class ProcessJourneyNodeUsecase(
     private val lockAdapter: ILockAdapter,
     private val journeyNodeProcessResolver: JourneyNodeProcessResolver
 ) {
-    suspend operator fun invoke(playerId: String, node: IJourneyNode, payload: Map<String, Any>): Result<Unit> =
+    suspend operator fun invoke(playerId: String, node: IJourneyNode, payload: Payload): Result<Unit> =
         runCatching {
             val journey = journeyRepository.findOfNode(node)
 

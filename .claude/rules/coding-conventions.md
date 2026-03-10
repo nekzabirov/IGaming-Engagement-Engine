@@ -28,10 +28,14 @@ globs: ["src/**/*.kt"]
 ## Package Imports
 - Domain models: `com.nekgambling.domain.model.player.*` (NOT `domain.player.model`)
 - Domain repositories: `com.nekgambling.domain.repository.player.*` (NOT `domain.player.repository`)
-- Value objects: `com.nekgambling.domain.vo.*` (Currency, Country, Locale)
+- Value objects: `com.nekgambling.domain.vo.*` (Currency, Country, Locale, Payload, Period)
 - Shared params: `com.nekgambling.domain.shared.param.*`
 - Journey domain: `com.nekgambling.domain.model.journey.*`
 - Strategy interfaces: `com.nekgambling.domain.strategy.*`
+
+## Type Aliases
+- `Payload` = `Map<String, Any>` (`domain.vo.Payload`) — use for all journey node payload/output parameters instead of raw `Map<String, Any>`
+- `Period` = `Pair<Instant, Instant>` (`domain.vo.Period`) — date range for queries
 
 ## Monetary Values
 - Always use `Long` in minor units (cents) — never `Double` or `BigDecimal` for storage

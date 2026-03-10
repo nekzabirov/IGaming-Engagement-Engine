@@ -1,6 +1,7 @@
 package com.nekgambling.infrastructure.journey.extractor.player
 
 import com.nekgambling.domain.model.journey.IJourneyNode
+import com.nekgambling.domain.vo.Payload
 import com.nekgambling.infrastructure.journey.extractor.IExtractorJourneyNode
 
 abstract class IPlayerExtractorJourneyNode(
@@ -11,7 +12,7 @@ abstract class IPlayerExtractorJourneyNode(
     companion object {
         const val PREFIX = "player"
 
-        fun buildOutput(vararg pairs: Pair<String, Any?>): Map<String, Any> =
+        fun buildOutput(vararg pairs: Pair<String, Any?>): Payload =
             pairs.mapNotNull { (key, value) ->
                 value?.let { "$PREFIX:$key" to it }
             }.toMap()

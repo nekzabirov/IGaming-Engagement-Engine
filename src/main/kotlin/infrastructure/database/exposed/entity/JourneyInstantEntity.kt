@@ -1,5 +1,6 @@
 package com.nekgambling.infrastructure.database.exposed.entity
 
+import com.nekgambling.domain.vo.Payload
 import com.nekgambling.infrastructure.database.exposed.table.JourneyInstantsTable
 import kotlinx.serialization.json.*
 import org.jetbrains.exposed.dao.LongEntity
@@ -15,7 +16,7 @@ class JourneyInstantEntity(id: EntityID<Long>) : LongEntity(id) {
     var payload by JourneyInstantsTable.payload
 }
 
-internal fun serializePayload(payload: Map<String, Any>): String {
+internal fun serializePayload(payload: Payload): String {
     val jsonObject = buildJsonObject {
         payload.forEach { (key, value) ->
             when (value) {
@@ -29,7 +30,7 @@ internal fun serializePayload(payload: Map<String, Any>): String {
     return Json.encodeToString(JsonObject.serializer(), jsonObject)
 }
 
-internal fun deserializePayload(json: String): Map<String, Any> {
+internal fun deserializePayload(json: String): Payload {
     val jsonObject = Json.decodeFromString<JsonObject>(json)
     return jsonObject.mapValues { (_, element) ->
         when (element) {

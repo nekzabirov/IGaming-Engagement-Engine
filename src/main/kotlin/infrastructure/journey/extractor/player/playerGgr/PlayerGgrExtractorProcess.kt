@@ -3,6 +3,7 @@ package com.nekgambling.infrastructure.journey.extractor.player.playerGgr
 import com.nekgambling.application.cqrs.query.QueryBus
 import com.nekgambling.application.cqrs.query.player.GetPlayerBonusPayoutTotalQuery
 import com.nekgambling.application.cqrs.query.player.GetPlayerSpinTotalQuery
+import com.nekgambling.domain.vo.Payload
 import com.nekgambling.infrastructure.journey.extractor.ExtractorJourneyNodeProcess
 import com.nekgambling.infrastructure.journey.extractor.player.IPlayerExtractorJourneyNode.Companion.buildOutput
 import kotlinx.coroutines.async
@@ -18,8 +19,8 @@ class PlayerGgrExtractorProcess(
     override suspend fun extract(
         playerId: String,
         node: PlayerGgrExtractor,
-        payload: Map<String, Any>,
-    ): Map<String, Any> = coroutineScope {
+        payload: Payload,
+    ): Payload = coroutineScope {
         val bonusPayoutDeferred = async {
             queryBus.execute(GetPlayerBonusPayoutTotalQuery(playerId, node.date.toPeriod()))
         }

@@ -1,6 +1,7 @@
 package com.nekgambling.infrastructure.journey.trigger.segment
 
 import com.nekgambling.domain.strategy.JourneyNodeProcess
+import com.nekgambling.domain.vo.Payload
 import com.nekgambling.infrastructure.journey.trigger.ITriggerJourneyNodeProcess
 import kotlin.reflect.KClass
 
@@ -10,7 +11,7 @@ class SegmentTriggerJourneyNodeProcess : ITriggerJourneyNodeProcess<SegmentTrigg
     override suspend fun process(
         playerId: String,
         node: SegmentTriggerJourneyNode,
-        payload: Map<String, Any>,
+        payload: Payload,
     ): JourneyNodeProcess.Response? {
         val triggerName = payload["triggerName"] as? String ?: return null
         if (triggerName != SegmentTriggerJourneyNode.TRIGGER_NAME) return null

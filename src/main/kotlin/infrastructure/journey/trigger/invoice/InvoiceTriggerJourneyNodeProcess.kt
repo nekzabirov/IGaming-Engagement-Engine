@@ -1,7 +1,8 @@
 package com.nekgambling.infrastructure.journey.trigger.invoice
 
-import com.nekgambling.domain.strategy.JourneyNodeProcess
 import com.nekgambling.domain.model.player.PlayerInvoice
+import com.nekgambling.domain.strategy.JourneyNodeProcess
+import com.nekgambling.domain.vo.Payload
 import com.nekgambling.domain.vo.Currency
 import com.nekgambling.infrastructure.journey.trigger.ITriggerJourneyNodeProcess
 import kotlin.reflect.KClass
@@ -12,7 +13,7 @@ class InvoiceTriggerJourneyNodeProcess : ITriggerJourneyNodeProcess<InvoiceTrigg
     override suspend fun process(
         playerId: String,
         node: InvoiceTriggerJourneyNode,
-        payload: Map<String, Any>,
+        payload: Payload,
     ): JourneyNodeProcess.Response? {
         val triggerName = payload["triggerName"] as? String ?: return null
         if (triggerName != InvoiceTriggerJourneyNode.TRIGGER_NAME) return null

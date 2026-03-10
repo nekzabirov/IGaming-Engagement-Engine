@@ -1,5 +1,6 @@
 package com.nekgambling.infrastructure.journey.extractor.amount
 
+import com.nekgambling.domain.vo.Payload
 import com.nekgambling.infrastructure.journey.extractor.ExtractorJourneyNodeProcess
 import kotlin.reflect.KClass
 
@@ -10,8 +11,8 @@ class AmountExtractorProcess : ExtractorJourneyNodeProcess<IAmountExtractor>() {
     override suspend fun extract(
         playerId: String,
         node: IAmountExtractor,
-        payload: Map<String, Any>,
-    ): Map<String, Any> {
+        payload: Payload,
+    ): Payload {
         require(payload.containsKey(node.inputKey)) {
             "Parameters are not defined for ${node.inputKey}"
         }

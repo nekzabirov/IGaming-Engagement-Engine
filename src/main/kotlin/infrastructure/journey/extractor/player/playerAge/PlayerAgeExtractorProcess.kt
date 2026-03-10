@@ -1,6 +1,7 @@
 package com.nekgambling.infrastructure.journey.extractor.player.playerAge
 
 import com.nekgambling.domain.repository.player.IPlayerDetailsRepository
+import com.nekgambling.domain.vo.Payload
 import com.nekgambling.infrastructure.journey.extractor.ExtractorJourneyNodeProcess
 import com.nekgambling.infrastructure.journey.extractor.player.IPlayerExtractorJourneyNode.Companion.buildOutput
 import kotlinx.datetime.*
@@ -15,8 +16,8 @@ class PlayerAgeExtractorProcess(
     override suspend fun extract(
         playerId: String,
         node: PlayerAgeExtractor,
-        payload: Map<String, Any>,
-    ): Map<String, Any> {
+        payload: Payload,
+    ): Payload {
         val playerDetails = playerDetailsRepository.findById(playerId).orElse(null)
             ?: return emptyMap()
 

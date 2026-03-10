@@ -1,6 +1,7 @@
 package com.nekgambling.infrastructure.journey.extractor.player.playerProfile
 
 import com.nekgambling.domain.repository.player.IPlayerDetailsRepository
+import com.nekgambling.domain.vo.Payload
 import com.nekgambling.infrastructure.journey.extractor.ExtractorJourneyNodeProcess
 import com.nekgambling.infrastructure.journey.extractor.player.IPlayerExtractorJourneyNode.Companion.buildOutput
 import kotlin.reflect.KClass
@@ -14,8 +15,8 @@ class PlayerProfileExtractorProcess(
     override suspend fun extract(
         playerId: String,
         node: PlayerProfileExtractor,
-        payload: Map<String, Any>,
-    ): Map<String, Any> {
+        payload: Payload,
+    ): Payload {
         val player = playerDetailsRepository.findById(playerId)
             .orElse(null) ?: return emptyMap()
 

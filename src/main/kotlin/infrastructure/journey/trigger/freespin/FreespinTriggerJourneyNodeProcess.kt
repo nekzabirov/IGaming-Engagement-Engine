@@ -1,7 +1,8 @@
 package com.nekgambling.infrastructure.journey.trigger.freespin
 
-import com.nekgambling.domain.strategy.JourneyNodeProcess
 import com.nekgambling.domain.model.player.PlayerFreespin
+import com.nekgambling.domain.strategy.JourneyNodeProcess
+import com.nekgambling.domain.vo.Payload
 import com.nekgambling.infrastructure.journey.trigger.ITriggerJourneyNodeProcess
 import kotlin.reflect.KClass
 
@@ -11,7 +12,7 @@ class FreespinTriggerJourneyNodeProcess : ITriggerJourneyNodeProcess<FreespinTri
     override suspend fun process(
         playerId: String,
         node: FreespinTriggerJourneyNode,
-        payload: Map<String, Any>,
+        payload: Payload,
     ): JourneyNodeProcess.Response? {
         val triggerName = payload["triggerName"] as? String ?: return null
         if (triggerName != FreespinTriggerJourneyNode.TRIGGER_NAME) return null

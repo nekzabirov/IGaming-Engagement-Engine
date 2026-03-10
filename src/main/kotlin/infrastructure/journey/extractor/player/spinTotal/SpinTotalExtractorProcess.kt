@@ -2,6 +2,7 @@ package com.nekgambling.infrastructure.journey.extractor.player.spinTotal
 
 import com.nekgambling.application.cqrs.query.QueryBus
 import com.nekgambling.application.cqrs.query.player.GetPlayerSpinTotalQuery
+import com.nekgambling.domain.vo.Payload
 import com.nekgambling.infrastructure.journey.extractor.ExtractorJourneyNodeProcess
 import com.nekgambling.infrastructure.journey.extractor.player.IPlayerExtractorJourneyNode.Companion.buildOutput
 import kotlin.reflect.KClass
@@ -15,8 +16,8 @@ class SpinTotalExtractorProcess(
     override suspend fun extract(
         playerId: String,
         node: SpinTotalExtractor,
-        payload: Map<String, Any>,
-    ): Map<String, Any> {
+        payload: Payload,
+    ): Payload {
         val total = queryBus.execute(GetPlayerSpinTotalQuery(playerId, node.date.toPeriod()))
 
         return buildOutput(

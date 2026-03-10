@@ -1,7 +1,8 @@
 package com.nekgambling.infrastructure.journey.trigger.bonus
 
-import com.nekgambling.domain.strategy.JourneyNodeProcess
 import com.nekgambling.domain.model.player.PlayerBonus
+import com.nekgambling.domain.strategy.JourneyNodeProcess
+import com.nekgambling.domain.vo.Payload
 import com.nekgambling.infrastructure.journey.trigger.ITriggerJourneyNodeProcess
 import kotlin.reflect.KClass
 
@@ -11,7 +12,7 @@ class BonusTriggerJourneyNodeProcess : ITriggerJourneyNodeProcess<BonusTriggerJo
     override suspend fun process(
         playerId: String,
         node: BonusTriggerJourneyNode,
-        payload: Map<String, Any>,
+        payload: Payload,
     ): JourneyNodeProcess.Response? {
         val triggerName = payload["triggerName"] as? String ?: return null
         if (triggerName != BonusTriggerJourneyNode.TRIGGER_NAME) return null

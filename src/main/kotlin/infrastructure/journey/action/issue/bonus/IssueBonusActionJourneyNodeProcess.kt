@@ -2,6 +2,7 @@ package com.nekgambling.infrastructure.journey.action.issue.bonus
 
 import com.nekgambling.domain.strategy.JourneyNodeProcess
 import com.nekgambling.domain.vo.Currency
+import com.nekgambling.domain.vo.Payload
 import com.nekgambling.infrastructure.journey.action.IActionJourneyNodeProcess
 import kotlin.reflect.KClass
 
@@ -11,7 +12,7 @@ class IssueBonusActionJourneyNodeProcess : IActionJourneyNodeProcess<IssueBonusA
     override suspend fun process(
         playerId: String,
         node: IssueBonusActionJourneyNode,
-        payload: Map<String, Any>
+        payload: Payload
     ): JourneyNodeProcess.Response {
         val (amount, currency) = when (node) {
             is IssueFixedBonusActionJourneyNode -> {
