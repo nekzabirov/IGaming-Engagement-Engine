@@ -1,17 +1,16 @@
 package com.nekgambling.infrastructure.journey.player.profile
 
-import com.nekgambling.infrastructure.journey.player.IPlayerDefinition
+import com.nekgambling.domain.model.journey.IJourneyNode
 import com.nekgambling.domain.vo.param.ParamValue
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import com.nekgambling.infrastructure.journey.player.PlayerJourneyNode
 
-@Serializable
-@SerialName("profileField")
-data class ProfileFieldPlayerDefinition(
+data class ProfileFieldPlayerJourneyNode(
+    override val id: Long = Long.MIN_VALUE,
     val field: Field,
-
-    val value: ParamValue
-) : IPlayerDefinition {
+    val expectedValue: ParamValue,
+    override val matchNode: IJourneyNode? = null,
+    override val notMatchNode: IJourneyNode? = null,
+) : PlayerJourneyNode(id = id, matchNode = matchNode, notMatchNode = notMatchNode) {
     enum class Field {
         USERNAME,
         EMAIL,

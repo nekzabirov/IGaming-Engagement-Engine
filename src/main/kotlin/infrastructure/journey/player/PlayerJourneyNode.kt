@@ -2,11 +2,8 @@ package com.nekgambling.infrastructure.journey.player
 
 import com.nekgambling.domain.model.journey.IJourneyNode
 
-interface IPlayerDefinition
-
-data class PlayerJourneyNode(
+abstract class PlayerJourneyNode(
     override val id: Long = Long.MIN_VALUE,
-    val rule: IPlayerDefinition,
-    val matchNode: IJourneyNode? = null,
-    val notMatchNode: IJourneyNode? = null,
+    open val matchNode: IJourneyNode? = null,
+    open val notMatchNode: IJourneyNode? = null,
 ) : IJourneyNode(id = id, next = matchNode)

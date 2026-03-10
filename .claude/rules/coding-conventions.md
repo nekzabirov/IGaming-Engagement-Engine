@@ -12,11 +12,12 @@ globs: ["src/**/*.kt"]
 - Domain repositories: `I<Entity>Repository`
 - ClickHouse repos: `ClickHouse<Entity>Repository`
 - Exposed repos: `Exposed<Entity>Repository`
-- Player definitions: `<Name>PlayerDefinition` with `@SerialName("<camelCase>")`
-- Player definition evaluators: `<Name>PlayerDefinitionEvaluator` (or `<Name>Evaluator`)
+- Player definitions (DB only, legacy): `<Name>PlayerDefinition` with `@SerialName("<camelCase>")` — used only for PostgreSQL JSONB serialization
+- Player journey nodes: `<Name>PlayerJourneyNode` extending `PlayerJourneyNode` (abstract class), with `override val id`, `override val matchNode`, `override val notMatchNode` constructor params. Each holds its own condition params directly (e.g., `PlayerAgePlayerJourneyNode` has `value: NumberParamValue`)
+- Player journey node processors: `<Name>PlayerJourneyNodeProcess` implementing `IPlayerJourneyNodeProcess<T>`, placed in same package as their node class. Returns `Response(nextNode = matchNode/notMatchNode)` based on condition evaluation
 - Trigger journey nodes: `<Name>TriggerJourneyNode` extending `ITriggerJourneyNode` (abstract class), with `override val id` and `override val next` constructor params, and a `companion object { const val TRIGGER_NAME = "<name>" }` for trigger name matching
 - Journey node processors: `override val nodeType: KClass<N>` (not `node`) to avoid confusion with the `process(node)` parameter
-- Journey node nomenclatures: `<NodeType>Nomenclature` objects (e.g., `BonusTriggerJourneyNodeNomenclature`, `PlayerJourneyNodeNomenclature`), placed alongside their node class, registered in Koin with `bind JourneyNodeNomenclature::class`
+- Journey node nomenclatures: `<NodeType>Nomenclature` objects (e.g., `BonusTriggerJourneyNodeNomenclature`, `PlayerAgePlayerJourneyNodeNomenclature`), placed alongside their node class, registered in Koin with `bind JourneyNodeNomenclature::class`. Each concrete player journey node type has its own nomenclature
 - Player journey branching: `matchNode` / `notMatchNode` on `PlayerJourneyNode`
 - Action journey nodes: `<Name>ActionJourneyNode` extending `IActionJourneyNode` (abstract class), with `id` and `next` constructor params
 - Push action journey nodes: `<Channel>PushActionJourneyNode` extending `IPushActionJourneyNode` (sealed class with `templateId` + `placeHolders`), e.g., `EMailPushActionJourneyNode`, `SmsPushActionJourneyNode`, `InAppPushActionJourneyNode`

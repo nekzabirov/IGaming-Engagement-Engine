@@ -41,8 +41,12 @@ import com.nekgambling.domain.strategy.JourneyNodeNomenclature
 import com.nekgambling.domain.strategy.JourneyNodeProcess
 import com.nekgambling.infrastructure.journey.extractor.amount.PercentageAmountExtractorParams
 import com.nekgambling.infrastructure.journey.extractor.playerProfile.PlayerProfileExtractorParams
-import com.nekgambling.infrastructure.journey.player.IPlayerDefinitionEvaluator
 import com.nekgambling.infrastructure.journey.player.PlayerJourneyNodeNomenclature
+import com.nekgambling.infrastructure.journey.player.playerAge.PlayerAgePlayerJourneyNodeProcess
+import com.nekgambling.infrastructure.journey.player.profile.ProfileFieldPlayerJourneyNodeProcess
+import com.nekgambling.infrastructure.journey.player.spinTotal.SpinTotalPlayerJourneyNodeProcess
+import com.nekgambling.infrastructure.journey.player.invoiceTotal.InvoiceTotalPlayerJourneyNodeProcess
+import com.nekgambling.infrastructure.journey.player.playerGGR.PlayerGgrPlayerJourneyNodeProcess
 import com.nekgambling.infrastructure.journey.trigger.bonus.BonusTriggerJourneyNodeNomenclature
 import com.nekgambling.infrastructure.journey.trigger.freespin.FreespinTriggerJourneyNodeNomenclature
 import com.nekgambling.infrastructure.journey.trigger.invoice.InvoiceTriggerJourneyNodeNomenclature
@@ -55,17 +59,11 @@ import com.nekgambling.infrastructure.journey.action.payload.PlacePayloadActionJ
 import com.nekgambling.infrastructure.journey.action.payload.PlacePayloadActionJourneyNodeProcess
 import com.nekgambling.infrastructure.journey.action.push.PushActionJourneyNodeNomenclature
 import com.nekgambling.infrastructure.journey.action.push.PushIActionJourneyNodeProcess
-import com.nekgambling.infrastructure.journey.player.PlayerJourneyNodeProcess
 import com.nekgambling.infrastructure.journey.trigger.bonus.BonusTriggerJourneyNodeProcess
 import com.nekgambling.infrastructure.journey.trigger.freespin.FreespinTriggerJourneyNodeProcess
 import com.nekgambling.infrastructure.journey.trigger.invoice.InvoiceTriggerJourneyNodeProcess
 import com.nekgambling.infrastructure.journey.trigger.segment.SegmentTriggerJourneyNodeNomenclature
 import com.nekgambling.infrastructure.journey.trigger.segment.SegmentTriggerJourneyNodeProcess
-import com.nekgambling.infrastructure.journey.player.invoiceTotal.InvoiceTotalPlayerDefinitionEvaluator
-import com.nekgambling.infrastructure.journey.player.playerAge.PlayerAgeDefinitionEvaluator
-import com.nekgambling.infrastructure.journey.player.playerGGR.PlayerGgrPlayerEvaluator
-import com.nekgambling.infrastructure.journey.player.profile.ProfileFieldPlayerDefinitionEvaluator
-import com.nekgambling.infrastructure.journey.player.spinTotal.SpinTotalPlayerDefinitionEvaluator
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
@@ -207,7 +205,15 @@ private fun org.koin.core.module.Module.journeyModule() {
 
     single { SegmentTriggerJourneyNodeProcess() } bind JourneyNodeProcess::class
 
-    single { PlayerJourneyNodeProcess(getAll()) } bind JourneyNodeProcess::class
+    single { PlayerAgePlayerJourneyNodeProcess(get()) } bind JourneyNodeProcess::class
+
+    single { ProfileFieldPlayerJourneyNodeProcess(get()) } bind JourneyNodeProcess::class
+
+    single { SpinTotalPlayerJourneyNodeProcess(get()) } bind JourneyNodeProcess::class
+
+    single { InvoiceTotalPlayerJourneyNodeProcess(get()) } bind JourneyNodeProcess::class
+
+    single { PlayerGgrPlayerJourneyNodeProcess(get()) } bind JourneyNodeProcess::class
 
     single { PushIActionJourneyNodeProcess() } bind JourneyNodeProcess::class
 
@@ -219,15 +225,4 @@ private fun org.koin.core.module.Module.journeyModule() {
 
     single { JourneyNodeProcessResolver(getAll()) }
 
-    // --- Player definition evaluators ---
-
-    single { PlayerAgeDefinitionEvaluator(get()) } bind IPlayerDefinitionEvaluator::class
-
-    single { ProfileFieldPlayerDefinitionEvaluator(get()) } bind IPlayerDefinitionEvaluator::class
-
-    single { SpinTotalPlayerDefinitionEvaluator(get()) } bind IPlayerDefinitionEvaluator::class
-
-    single { InvoiceTotalPlayerDefinitionEvaluator(get()) } bind IPlayerDefinitionEvaluator::class
-
-    single { PlayerGgrPlayerEvaluator(get()) } bind IPlayerDefinitionEvaluator::class
 }
