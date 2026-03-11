@@ -14,4 +14,8 @@ object PlayerAgeExtractorNomenclature : JourneyNodeNomenclature<PlayerAgeExtract
     override fun outputParams(): Set<String> = setOf(
         "${IPlayerExtractorJourneyNode.PREFIX}:age",
     )
+
+    override fun toAssetsMap(node: PlayerAgeExtractor): Map<String, Any> = emptyMap()
+
+    override fun fromAssetsMap(map: Map<String, Any>): PlayerAgeExtractor = PlayerAgeExtractor()
 }

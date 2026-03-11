@@ -1,6 +1,7 @@
 package com.nekgambling.infrastructure.journey.extractor.player.invoiceTotal
 
 import com.nekgambling.domain.strategy.JourneyNodeNomenclature
+import com.nekgambling.domain.asset.DateParamValue
 import com.nekgambling.infrastructure.journey.extractor.player.IPlayerExtractorJourneyNode
 import kotlin.reflect.KClass
 
@@ -18,5 +19,15 @@ object InvoiceTotalExtractorNomenclature : JourneyNodeNomenclature<InvoiceTotalE
         "${IPlayerExtractorJourneyNode.PREFIX}:withdrawCount",
         "${IPlayerExtractorJourneyNode.PREFIX}:taxAmount",
         "${IPlayerExtractorJourneyNode.PREFIX}:feesAmount",
+    )
+
+    @Suppress("UNCHECKED_CAST")
+    override fun toAssetsMap(node: InvoiceTotalExtractor): Map<String, Any> = mapOf(
+        "date" to node.date.toMap()
+    )
+
+    @Suppress("UNCHECKED_CAST")
+    override fun fromAssetsMap(map: Map<String, Any>): InvoiceTotalExtractor = InvoiceTotalExtractor(
+        date = DateParamValue.fromMap(map["date"] as Map<String, Any>),
     )
 }

@@ -32,4 +32,8 @@ object PlayerProfileExtractorNomenclature : JourneyNodeNomenclature<PlayerProfil
         "${IPlayerExtractorJourneyNode.PREFIX}:affiliateTag",
         "${IPlayerExtractorJourneyNode.PREFIX}:registeredAt",
     )
+
+    override fun toAssetsMap(node: PlayerProfileExtractor): Map<String, Any> = emptyMap()
+
+    override fun fromAssetsMap(map: Map<String, Any>): PlayerProfileExtractor = PlayerProfileExtractor()
 }

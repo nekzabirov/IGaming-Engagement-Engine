@@ -30,7 +30,7 @@ globs: ["src/**/*.kt"]
 - Domain models: `com.nekgambling.domain.model.player.*` (NOT `domain.player.model`)
 - Domain repositories: `com.nekgambling.domain.repository.player.*` (NOT `domain.player.repository`)
 - Value objects: `com.nekgambling.domain.vo.*` (Currency, Country, Locale, Payload, Period)
-- Shared params: `com.nekgambling.domain.shared.param.*`
+- Param value types: `com.nekgambling.domain.vo.param.*` (NumberParamValue, DateParamValue)
 - Journey domain: `com.nekgambling.domain.model.journey.*`
 - Strategy interfaces: `com.nekgambling.domain.strategy.*`
 

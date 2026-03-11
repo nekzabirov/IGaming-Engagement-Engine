@@ -13,4 +13,16 @@ object PercentageAmountExtractorParams : JourneyNodeNomenclature<PercentageAmoun
 
     override fun outputParams(): Set<String> =
         setOf(IAmountExtractor.OUTPUT_KEY)
+
+    override fun toAssetsMap(node: PercentageAmountExtractor): Map<String, Any> = buildMap {
+        put("inputKey", node.inputKey)
+        put("percentage", node.percentage)
+        node.maxAmount?.let { put("maxAmount", it) }
+    }
+
+    override fun fromAssetsMap(map: Map<String, Any>): PercentageAmountExtractor = PercentageAmountExtractor(
+        inputKey = map["inputKey"] as? String ?: "",
+        percentage = (map["percentage"] as Number).toInt(),
+        maxAmount = (map["maxAmount"] as? Number)?.toLong(),
+    )
 }

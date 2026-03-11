@@ -11,4 +11,8 @@ interface JourneyNodeNomenclature<N: IJourneyNode> {
     fun inputParams(): Set<String>
 
     fun outputParams(): Set<String>
+
+    fun toAssetsMap(node: N): Map<String, Any>
+
+    fun fromAssetsMap(map: Map<String, Any>): N
 }

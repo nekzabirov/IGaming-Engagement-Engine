@@ -11,4 +11,14 @@ object PlacePayloadActionJourneyNodeNomenclature : ActionJourneyNodeNomenclature
     override fun inputParams(): Set<String> = emptySet()
 
     override fun outputParams(): Set<String> = emptySet()
+
+    override fun toAssetsMap(node: PlacePayloadActionJourneyNode): Map<String, Any> = mapOf(
+        "key" to node.key,
+        "value" to node.value,
+    )
+
+    override fun fromAssetsMap(map: Map<String, Any>): PlacePayloadActionJourneyNode = PlacePayloadActionJourneyNode(
+        key = map["key"] as String,
+        value = map["value"]!!,
+    )
 }
