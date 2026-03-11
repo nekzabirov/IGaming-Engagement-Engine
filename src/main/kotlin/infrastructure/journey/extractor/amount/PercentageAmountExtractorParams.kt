@@ -1,5 +1,6 @@
 package com.nekgambling.infrastructure.journey.extractor.amount
 
+import com.nekgambling.domain.model.journey.IJourneyNode
 import com.nekgambling.domain.strategy.AssetParamDescriptor
 import com.nekgambling.domain.strategy.JourneyNodeNomenclature
 import com.nekgambling.domain.strategy.NodeCategory
@@ -21,8 +22,8 @@ object PercentageAmountExtractorParams : JourneyNodeNomenclature<PercentageAmoun
 
     override fun assetsSchema(): List<AssetParamDescriptor> = listOf(
         AssetParamDescriptor(name = "inputKey", type = ParamType.STRING, required = true),
-        AssetParamDescriptor(name = "percentage", type = ParamType.INT, required = true),
-        AssetParamDescriptor(name = "maxAmount", type = ParamType.LONG, required = false),
+        AssetParamDescriptor(name = "percentage", type = ParamType.NUMBER, required = true),
+        AssetParamDescriptor(name = "maxAmount", type = ParamType.NUMBER, required = false),
     )
 
     override fun toAssetsMap(node: PercentageAmountExtractor): Map<String, Any> = buildMap {
@@ -36,4 +37,7 @@ object PercentageAmountExtractorParams : JourneyNodeNomenclature<PercentageAmoun
         percentage = (map["percentage"] as Number).toInt(),
         maxAmount = (map["maxAmount"] as? Number)?.toLong(),
     )
+
+    override fun withLinks(node: PercentageAmountExtractor, next: IJourneyNode?, matchNode: IJourneyNode?, notMatchNode: IJourneyNode?): PercentageAmountExtractor =
+        node.copy(next = next)
 }

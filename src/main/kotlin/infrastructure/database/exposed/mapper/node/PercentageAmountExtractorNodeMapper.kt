@@ -20,4 +20,10 @@ object PercentageAmountExtractorNodeMapper : IJourneyNodeMapper<PercentageAmount
             maxAmount = entity.maxAmount,
         )
     }
+
+    override fun applyToEntity(entity: JourneyNodeEntity, node: PercentageAmountExtractor) {
+        entity.inputKey = node.inputKey
+        entity.percentage = node.percentage
+        entity.maxAmount = node.maxAmount
+    }
 }

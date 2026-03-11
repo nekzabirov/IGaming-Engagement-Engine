@@ -1,5 +1,6 @@
 package com.nekgambling.infrastructure.journey.action.issue.bonus
 
+import com.nekgambling.domain.model.journey.IJourneyNode
 import com.nekgambling.domain.strategy.AssetParamDescriptor
 import com.nekgambling.domain.strategy.ParamType
 import com.nekgambling.domain.vo.Currency
@@ -18,7 +19,7 @@ object IssueFixedBonusActionJourneyNodeNomenclature : ActionJourneyNodeNomenclat
     override fun assetsSchema(): List<AssetParamDescriptor> = listOf(
         AssetParamDescriptor(name = "bonusIdentity", type = ParamType.STRING, required = true),
         AssetParamDescriptor(name = "currency", type = ParamType.CURRENCY, required = true),
-        AssetParamDescriptor(name = "amount", type = ParamType.LONG, required = true),
+        AssetParamDescriptor(name = "amount", type = ParamType.NUMBER, required = true),
     )
 
     override fun toAssetsMap(node: IssueFixedBonusActionJourneyNode): Map<String, Any> = mapOf(
@@ -32,6 +33,9 @@ object IssueFixedBonusActionJourneyNodeNomenclature : ActionJourneyNodeNomenclat
         currency = Currency(map["currency"] as String),
         amount = (map["amount"] as Number).toLong(),
     )
+
+    override fun withLinks(node: IssueFixedBonusActionJourneyNode, next: IJourneyNode?, matchNode: IJourneyNode?, notMatchNode: IJourneyNode?): IssueFixedBonusActionJourneyNode =
+        node.copy(next = next)
 }
 
 object IssueDynamicBonusActionJourneyNodeNomenclature : ActionJourneyNodeNomenclature<IssueDynamicBonusActionJourneyNode>() {
@@ -54,4 +58,7 @@ object IssueDynamicBonusActionJourneyNodeNomenclature : ActionJourneyNodeNomencl
     override fun fromAssetsMap(map: Map<String, Any>): IssueDynamicBonusActionJourneyNode = IssueDynamicBonusActionJourneyNode(
         bonusIdentity = map["bonusIdentity"] as String,
     )
+
+    override fun withLinks(node: IssueDynamicBonusActionJourneyNode, next: IJourneyNode?, matchNode: IJourneyNode?, notMatchNode: IJourneyNode?): IssueDynamicBonusActionJourneyNode =
+        node.copy(next = next)
 }

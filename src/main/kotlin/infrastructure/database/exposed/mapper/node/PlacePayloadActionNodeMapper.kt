@@ -21,6 +21,11 @@ object PlacePayloadActionNodeMapper : IJourneyNodeMapper<PlacePayloadActionJourn
         )
     }
 
+    override fun applyToEntity(entity: JourneyNodeEntity, node: PlacePayloadActionJourneyNode) {
+        entity.payloadKey = node.key
+        entity.payloadValue = serializeValue(node.value)
+    }
+
     private fun deserializeValue(json: String): Any {
         val element = Json.parseToJsonElement(json)
         if (element is JsonPrimitive) {
@@ -33,5 +38,12 @@ object PlacePayloadActionNodeMapper : IJourneyNodeMapper<PlacePayloadActionJourn
             }
         }
         return element.toString()
+    }
+
+    private fun serializeValue(value: Any): String = when (value) {
+        is String -> Json.encodeToString(JsonPrimitive.serializer(), JsonPrimitive(value))
+        is Number -> Json.encodeToString(JsonPrimitive.serializer(), JsonPrimitive(value))
+        is Boolean -> Json.encodeToString(JsonPrimitive.serializer(), JsonPrimitive(value))
+        else -> Json.encodeToString(JsonPrimitive.serializer(), JsonPrimitive(value.toString()))
     }
 }

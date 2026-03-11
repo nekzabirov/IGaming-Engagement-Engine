@@ -63,4 +63,35 @@ object ConditionNodeMapper : IJourneyNodeMapper<IConditionJourneyNode> {
             else -> error("Unknown condition subType: ${entity.subType}")
         }
     }
+
+    override fun applyToEntity(entity: JourneyNodeEntity, node: IConditionJourneyNode) {
+        entity.inputKey = node.inputKey
+        when (node) {
+            is BoolConditionJourneyNode -> {
+                entity.subType = "bool"
+                entity.expected = node.expected
+            }
+            is NumberInRangeConditionJourneyNode -> {
+                entity.subType = "numberInRange"
+                entity.rangeMin = node.min
+                entity.rangeMax = node.max
+            }
+            is NumberMoreThanConditionJourneyNode -> {
+                entity.subType = "numberMoreThan"
+                entity.threshold = node.threshold
+            }
+            is NumberLessThanConditionJourneyNode -> {
+                entity.subType = "numberLessThan"
+                entity.threshold = node.threshold
+            }
+            is NumberEqualConditionJourneyNode -> {
+                entity.subType = "numberEqual"
+                entity.targetNumber = node.target
+            }
+            is StringEqualConditionJourneyNode -> {
+                entity.subType = "stringEqual"
+                entity.targetString = node.target
+            }
+        }
+    }
 }

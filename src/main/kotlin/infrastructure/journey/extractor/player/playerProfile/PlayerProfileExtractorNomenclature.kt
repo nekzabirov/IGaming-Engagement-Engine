@@ -1,5 +1,6 @@
 package com.nekgambling.infrastructure.journey.extractor.player.playerProfile
 
+import com.nekgambling.domain.model.journey.IJourneyNode
 import com.nekgambling.domain.strategy.AssetParamDescriptor
 import com.nekgambling.domain.strategy.JourneyNodeNomenclature
 import com.nekgambling.domain.strategy.NodeCategory
@@ -42,4 +43,7 @@ object PlayerProfileExtractorNomenclature : JourneyNodeNomenclature<PlayerProfil
     override fun toAssetsMap(node: PlayerProfileExtractor): Map<String, Any> = emptyMap()
 
     override fun fromAssetsMap(map: Map<String, Any>): PlayerProfileExtractor = PlayerProfileExtractor()
+
+    override fun withLinks(node: PlayerProfileExtractor, next: IJourneyNode?, matchNode: IJourneyNode?, notMatchNode: IJourneyNode?): PlayerProfileExtractor =
+        node.copy(next = next)
 }

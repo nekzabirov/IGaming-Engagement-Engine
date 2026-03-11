@@ -8,7 +8,7 @@ data class AssetParamDescriptor(
     val type: ParamType,
     val required: Boolean,
     val description: String? = null,
-    val enumValues: List<String>? = null,
+    val options: List<String>? = null,
     val subtypes: List<SubtypeDescriptor>? = null,
 )
 
@@ -20,5 +20,5 @@ data class SubtypeDescriptor(
 
 @Serializable
 enum class ParamType {
-    STRING, LONG, INT, DOUBLE, BOOLEAN, ENUM, CURRENCY, OBJECT, MAP, ANY
+    STRING, NUMBER, BOOLEAN, ENUM, CURRENCY, OBJECT, MAP, ANY
 }

@@ -1,5 +1,6 @@
 package com.nekgambling.infrastructure.journey.action.issue.freespin
 
+import com.nekgambling.domain.model.journey.IJourneyNode
 import com.nekgambling.domain.strategy.AssetParamDescriptor
 import com.nekgambling.domain.strategy.ParamType
 import com.nekgambling.infrastructure.journey.action.ActionJourneyNodeNomenclature
@@ -25,4 +26,7 @@ object IssueFreespinActionJourneyNodeNomenclature : ActionJourneyNodeNomenclatur
     override fun fromAssetsMap(map: Map<String, Any>): IssueFreespinActionJourneyNode = IssueFreespinActionJourneyNode(
         freespinIdentity = map["freespinIdentity"] as String,
     )
+
+    override fun withLinks(node: IssueFreespinActionJourneyNode, next: IJourneyNode?, matchNode: IJourneyNode?, notMatchNode: IJourneyNode?): IssueFreespinActionJourneyNode =
+        node.copy(next = next)
 }

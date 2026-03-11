@@ -28,6 +28,7 @@ kotlin {
 dependencies {
     // Ktor Server
     implementation(libs.bundles.ktor.server)
+    implementation(libs.ktor.server.swagger)
     implementation("io.ktor:ktor-server-config-yaml:${libs.versions.ktor.get()}")
     implementation(libs.logback)
 

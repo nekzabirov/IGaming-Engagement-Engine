@@ -1,5 +1,6 @@
 package com.nekgambling.infrastructure.journey.action.payload
 
+import com.nekgambling.domain.model.journey.IJourneyNode
 import com.nekgambling.domain.strategy.AssetParamDescriptor
 import com.nekgambling.domain.strategy.ParamType
 import com.nekgambling.infrastructure.journey.action.ActionJourneyNodeNomenclature
@@ -28,4 +29,7 @@ object PlacePayloadActionJourneyNodeNomenclature : ActionJourneyNodeNomenclature
         key = map["key"] as String,
         value = map["value"]!!,
     )
+
+    override fun withLinks(node: PlacePayloadActionJourneyNode, next: IJourneyNode?, matchNode: IJourneyNode?, notMatchNode: IJourneyNode?): PlacePayloadActionJourneyNode =
+        node.copy(next = next)
 }

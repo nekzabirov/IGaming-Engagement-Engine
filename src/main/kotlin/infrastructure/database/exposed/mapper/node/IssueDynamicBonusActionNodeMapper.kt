@@ -17,4 +17,9 @@ object IssueDynamicBonusActionNodeMapper : IJourneyNodeMapper<IssueDynamicBonusA
             bonusIdentity = entity.bonusIdentity!!,
         )
     }
+
+    override fun applyToEntity(entity: JourneyNodeEntity, node: IssueDynamicBonusActionJourneyNode) {
+        entity.nodeIdentity = node.bonusIdentity
+        entity.bonusIdentity = node.bonusIdentity
+    }
 }

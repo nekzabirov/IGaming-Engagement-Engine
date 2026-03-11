@@ -1,6 +1,7 @@
 package com.nekgambling.infrastructure.journey.trigger.invoice
 
 import com.nekgambling.domain.model.player.PlayerInvoice
+import com.nekgambling.domain.model.journey.IJourneyNode
 import com.nekgambling.domain.strategy.*
 import com.nekgambling.domain.vo.Currency
 import com.nekgambling.domain.asset.NumberParamValue
@@ -22,11 +23,11 @@ object InvoiceTriggerJourneyNodeNomenclature : JourneyNodeNomenclature<InvoiceTr
     override fun assetsSchema(): List<AssetParamDescriptor> = listOf(
         AssetParamDescriptor(
             name = "invoiceType", type = ParamType.ENUM, required = true,
-            enumValues = PlayerInvoice.Type.entries.map { it.name },
+            options = PlayerInvoice.Type.entries.map { it.name },
         ),
         AssetParamDescriptor(
             name = "invoiceStatus", type = ParamType.ENUM, required = true,
-            enumValues = PlayerInvoice.Status.entries.map { it.name },
+            options = PlayerInvoice.Status.entries.map { it.name },
         ),
         AssetParamDescriptor(name = "invoiceCurrency", type = ParamType.CURRENCY, required = false),
         AssetParamDescriptor(
@@ -49,4 +50,7 @@ object InvoiceTriggerJourneyNodeNomenclature : JourneyNodeNomenclature<InvoiceTr
         invoiceCurrency = (map["invoiceCurrency"] as? String)?.let { Currency(it) },
         invoiceAmount = (map["invoiceAmount"] as? Map<String, Any>)?.let { NumberParamValue.fromMap(it) },
     )
+
+    override fun withLinks(node: InvoiceTriggerJourneyNode, next: IJourneyNode?, matchNode: IJourneyNode?, notMatchNode: IJourneyNode?): InvoiceTriggerJourneyNode =
+        node.copy(next = next)
 }

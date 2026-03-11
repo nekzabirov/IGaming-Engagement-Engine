@@ -17,4 +17,8 @@ object PlayerAgeExtractorNodeMapper : IJourneyNodeMapper<PlayerAgeExtractor> {
             next = resolveNode(entity.next),
         )
     }
+
+    override fun applyToEntity(entity: JourneyNodeEntity, node: PlayerAgeExtractor) {
+        // No data columns
+    }
 }

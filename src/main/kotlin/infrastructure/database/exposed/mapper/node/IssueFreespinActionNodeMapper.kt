@@ -18,4 +18,9 @@ object IssueFreespinActionNodeMapper : IJourneyNodeMapper<IssueFreespinActionJou
             freespinIdentity = entity.freespinIdentity!!,
         )
     }
+
+    override fun applyToEntity(entity: JourneyNodeEntity, node: IssueFreespinActionJourneyNode) {
+        entity.nodeIdentity = node.freespinIdentity
+        entity.freespinIdentity = node.freespinIdentity
+    }
 }

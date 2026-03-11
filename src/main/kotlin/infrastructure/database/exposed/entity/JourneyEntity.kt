@@ -9,5 +9,5 @@ class JourneyEntity(id: EntityID<Long>) : LongEntity(id) {
     companion object : LongEntityClass<JourneyEntity>(JourneysTable)
 
     var identity by JourneysTable.identity
-    var head by JourneyNodeEntity referencedOn JourneysTable.head
+    var head by JourneyNodeEntity optionalReferencedOn JourneysTable.head
 }

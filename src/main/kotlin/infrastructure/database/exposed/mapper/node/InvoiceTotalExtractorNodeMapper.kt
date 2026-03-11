@@ -19,4 +19,8 @@ object InvoiceTotalExtractorNodeMapper : IJourneyNodeMapper<InvoiceTotalExtracto
             date = Json.decodeFromString<DateParamValue>(entity.dateParam!!),
         )
     }
+
+    override fun applyToEntity(entity: JourneyNodeEntity, node: InvoiceTotalExtractor) {
+        entity.dateParam = Json.encodeToString(DateParamValue.serializer(), node.date)
+    }
 }

@@ -7,4 +7,12 @@ interface IJourneyRepository {
 
     suspend fun findOfNode(node: IJourneyNode): Journey
 
+    suspend fun findById(id: Long): Journey?
+
+    suspend fun findAll(): List<Journey>
+
+    suspend fun save(journey: Journey): Journey
+
+    suspend fun delete(id: Long)
+
 }

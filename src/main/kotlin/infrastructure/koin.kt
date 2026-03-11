@@ -39,6 +39,7 @@ import com.nekgambling.infrastructure.external.redis.RedisLockAdapter
 import com.nekgambling.infrastructure.external.redis.config.RedisConfig
 import com.nekgambling.domain.strategy.JourneyNodeNomenclature
 import com.nekgambling.domain.strategy.JourneyNodeProcess
+import com.nekgambling.infrastructure.journey.NomenclatureRegistry
 import com.nekgambling.infrastructure.database.exposed.mapper.IJourneyNodeMapper
 import com.nekgambling.infrastructure.database.exposed.mapper.JourneyMapper
 import com.nekgambling.infrastructure.database.exposed.mapper.JourneyNodeMapperRegistry
@@ -67,7 +68,12 @@ import com.nekgambling.infrastructure.journey.action.payload.PlacePayloadActionJ
 import com.nekgambling.infrastructure.journey.action.payload.PlacePayloadActionJourneyNodeProcess
 import com.nekgambling.infrastructure.journey.action.push.PushActionJourneyNodeNomenclature
 import com.nekgambling.infrastructure.journey.action.push.PushIActionJourneyNodeProcess
-import com.nekgambling.infrastructure.journey.condition.ConditionJourneyNodeNomenclature
+import com.nekgambling.infrastructure.journey.condition.BoolConditionNomenclature
+import com.nekgambling.infrastructure.journey.condition.NumberInRangeConditionNomenclature
+import com.nekgambling.infrastructure.journey.condition.NumberMoreThanConditionNomenclature
+import com.nekgambling.infrastructure.journey.condition.NumberLessThanConditionNomenclature
+import com.nekgambling.infrastructure.journey.condition.NumberEqualConditionNomenclature
+import com.nekgambling.infrastructure.journey.condition.StringEqualConditionNomenclature
 import com.nekgambling.infrastructure.journey.condition.ConditionJourneyNodeProcess
 import com.nekgambling.infrastructure.journey.trigger.bonus.BonusTriggerJourneyNodeProcess
 import com.nekgambling.infrastructure.journey.trigger.freespin.FreespinTriggerJourneyNodeProcess
@@ -148,7 +154,7 @@ val infrastructureModule = module {
 
     single { ClickHousePlayerSpinRepository(get()) } bind IPlayerSpinRepository::class
 
-    single { ExposedJourneyRepository(get(), get()) } bind IJourneyRepository::class
+    single { ExposedJourneyRepository(get(), get(), get()) } bind IJourneyRepository::class
 
     single { ExposedJourneyInstantRepository(get(), get()) } bind IJourneyInstantRepository::class
 
@@ -181,37 +187,47 @@ private fun org.koin.core.module.Module.journeyModule() {
 
     // --- Journey node nomenclatures ---
 
-    single<JourneyNodeNomenclature<*>> { BonusTriggerJourneyNodeNomenclature } bind JourneyNodeNomenclature::class
+    single { BonusTriggerJourneyNodeNomenclature } bind JourneyNodeNomenclature::class
 
-    single<JourneyNodeNomenclature<*>> { FreespinTriggerJourneyNodeNomenclature } bind JourneyNodeNomenclature::class
+    single { FreespinTriggerJourneyNodeNomenclature } bind JourneyNodeNomenclature::class
 
-    single<JourneyNodeNomenclature<*>> { InvoiceTriggerJourneyNodeNomenclature } bind JourneyNodeNomenclature::class
+    single { InvoiceTriggerJourneyNodeNomenclature } bind JourneyNodeNomenclature::class
 
-    single<JourneyNodeNomenclature<*>> { SegmentTriggerJourneyNodeNomenclature } bind JourneyNodeNomenclature::class
+    single { SegmentTriggerJourneyNodeNomenclature } bind JourneyNodeNomenclature::class
 
-    single<JourneyNodeNomenclature<*>> { PercentageAmountExtractorParams } bind JourneyNodeNomenclature::class
+    single { PercentageAmountExtractorParams } bind JourneyNodeNomenclature::class
 
-    single<JourneyNodeNomenclature<*>> { PlayerProfileExtractorNomenclature } bind JourneyNodeNomenclature::class
+    single { PlayerProfileExtractorNomenclature } bind JourneyNodeNomenclature::class
 
-    single<JourneyNodeNomenclature<*>> { PlayerAgeExtractorNomenclature } bind JourneyNodeNomenclature::class
+    single { PlayerAgeExtractorNomenclature } bind JourneyNodeNomenclature::class
 
-    single<JourneyNodeNomenclature<*>> { SpinTotalExtractorNomenclature } bind JourneyNodeNomenclature::class
+    single { SpinTotalExtractorNomenclature } bind JourneyNodeNomenclature::class
 
-    single<JourneyNodeNomenclature<*>> { InvoiceTotalExtractorNomenclature } bind JourneyNodeNomenclature::class
+    single { InvoiceTotalExtractorNomenclature } bind JourneyNodeNomenclature::class
 
-    single<JourneyNodeNomenclature<*>> { PlayerGgrExtractorNomenclature } bind JourneyNodeNomenclature::class
+    single { PlayerGgrExtractorNomenclature } bind JourneyNodeNomenclature::class
 
-    single<JourneyNodeNomenclature<*>> { PushActionJourneyNodeNomenclature } bind JourneyNodeNomenclature::class
+    single { PushActionJourneyNodeNomenclature } bind JourneyNodeNomenclature::class
 
-    single<JourneyNodeNomenclature<*>> { IssueFixedBonusActionJourneyNodeNomenclature } bind JourneyNodeNomenclature::class
+    single { IssueFixedBonusActionJourneyNodeNomenclature } bind JourneyNodeNomenclature::class
 
-    single<JourneyNodeNomenclature<*>> { IssueDynamicBonusActionJourneyNodeNomenclature } bind JourneyNodeNomenclature::class
+    single { IssueDynamicBonusActionJourneyNodeNomenclature } bind JourneyNodeNomenclature::class
 
-    single<JourneyNodeNomenclature<*>> { IssueFreespinActionJourneyNodeNomenclature } bind JourneyNodeNomenclature::class
+    single { IssueFreespinActionJourneyNodeNomenclature } bind JourneyNodeNomenclature::class
 
-    single<JourneyNodeNomenclature<*>> { PlacePayloadActionJourneyNodeNomenclature } bind JourneyNodeNomenclature::class
+    single { PlacePayloadActionJourneyNodeNomenclature } bind JourneyNodeNomenclature::class
 
-    single<JourneyNodeNomenclature<*>> { ConditionJourneyNodeNomenclature } bind JourneyNodeNomenclature::class
+    single { BoolConditionNomenclature } bind JourneyNodeNomenclature::class
+
+    single { NumberInRangeConditionNomenclature } bind JourneyNodeNomenclature::class
+
+    single { NumberMoreThanConditionNomenclature } bind JourneyNodeNomenclature::class
+
+    single { NumberLessThanConditionNomenclature } bind JourneyNodeNomenclature::class
+
+    single { NumberEqualConditionNomenclature } bind JourneyNodeNomenclature::class
+
+    single { StringEqualConditionNomenclature } bind JourneyNodeNomenclature::class
 
     // --- Journey node processors ---
 
@@ -249,40 +265,42 @@ private fun org.koin.core.module.Module.journeyModule() {
 
     // --- Journey node DB mappers ---
 
-    single<IJourneyNodeMapper<*>> { BonusTriggerNodeMapper } bind IJourneyNodeMapper::class
+    single { BonusTriggerNodeMapper } bind IJourneyNodeMapper::class
 
-    single<IJourneyNodeMapper<*>> { FreespinTriggerNodeMapper } bind IJourneyNodeMapper::class
+    single { FreespinTriggerNodeMapper } bind IJourneyNodeMapper::class
 
-    single<IJourneyNodeMapper<*>> { InvoiceTriggerNodeMapper } bind IJourneyNodeMapper::class
+    single { InvoiceTriggerNodeMapper } bind IJourneyNodeMapper::class
 
-    single<IJourneyNodeMapper<*>> { SegmentTriggerNodeMapper } bind IJourneyNodeMapper::class
+    single { SegmentTriggerNodeMapper } bind IJourneyNodeMapper::class
 
-    single<IJourneyNodeMapper<*>> { PushActionNodeMapper } bind IJourneyNodeMapper::class
+    single { PushActionNodeMapper } bind IJourneyNodeMapper::class
 
-    single<IJourneyNodeMapper<*>> { IssueFixedBonusActionNodeMapper } bind IJourneyNodeMapper::class
+    single { IssueFixedBonusActionNodeMapper } bind IJourneyNodeMapper::class
 
-    single<IJourneyNodeMapper<*>> { IssueDynamicBonusActionNodeMapper } bind IJourneyNodeMapper::class
+    single { IssueDynamicBonusActionNodeMapper } bind IJourneyNodeMapper::class
 
-    single<IJourneyNodeMapper<*>> { IssueFreespinActionNodeMapper } bind IJourneyNodeMapper::class
+    single { IssueFreespinActionNodeMapper } bind IJourneyNodeMapper::class
 
-    single<IJourneyNodeMapper<*>> { PlacePayloadActionNodeMapper } bind IJourneyNodeMapper::class
+    single { PlacePayloadActionNodeMapper } bind IJourneyNodeMapper::class
 
-    single<IJourneyNodeMapper<*>> { ConditionNodeMapper } bind IJourneyNodeMapper::class
+    single { ConditionNodeMapper } bind IJourneyNodeMapper::class
 
-    single<IJourneyNodeMapper<*>> { PlayerProfileExtractorNodeMapper } bind IJourneyNodeMapper::class
+    single { PlayerProfileExtractorNodeMapper } bind IJourneyNodeMapper::class
 
-    single<IJourneyNodeMapper<*>> { PlayerAgeExtractorNodeMapper } bind IJourneyNodeMapper::class
+    single { PlayerAgeExtractorNodeMapper } bind IJourneyNodeMapper::class
 
-    single<IJourneyNodeMapper<*>> { SpinTotalExtractorNodeMapper } bind IJourneyNodeMapper::class
+    single { SpinTotalExtractorNodeMapper } bind IJourneyNodeMapper::class
 
-    single<IJourneyNodeMapper<*>> { InvoiceTotalExtractorNodeMapper } bind IJourneyNodeMapper::class
+    single { InvoiceTotalExtractorNodeMapper } bind IJourneyNodeMapper::class
 
-    single<IJourneyNodeMapper<*>> { PlayerGgrExtractorNodeMapper } bind IJourneyNodeMapper::class
+    single { PlayerGgrExtractorNodeMapper } bind IJourneyNodeMapper::class
 
-    single<IJourneyNodeMapper<*>> { PercentageAmountExtractorNodeMapper } bind IJourneyNodeMapper::class
+    single { PercentageAmountExtractorNodeMapper } bind IJourneyNodeMapper::class
 
     single { JourneyNodeMapperRegistry(getAll()) }
 
     single { JourneyMapper(get()) }
+
+    single { NomenclatureRegistry(getAll()) }
 
 }

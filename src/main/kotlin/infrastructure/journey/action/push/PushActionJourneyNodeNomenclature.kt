@@ -1,5 +1,6 @@
 package com.nekgambling.infrastructure.journey.action.push
 
+import com.nekgambling.domain.model.journey.IJourneyNode
 import com.nekgambling.domain.strategy.AssetParamDescriptor
 import com.nekgambling.domain.strategy.ParamType
 import com.nekgambling.infrastructure.journey.action.ActionJourneyNodeNomenclature
@@ -17,7 +18,7 @@ object PushActionJourneyNodeNomenclature : ActionJourneyNodeNomenclature<IPushAc
     override fun assetsSchema(): List<AssetParamDescriptor> = listOf(
         AssetParamDescriptor(
             name = "channel", type = ParamType.ENUM, required = true,
-            enumValues = listOf("email", "sms", "inApp"),
+            options = listOf("email", "sms", "inApp"),
         ),
         AssetParamDescriptor(name = "templateId", type = ParamType.STRING, required = true),
         AssetParamDescriptor(name = "placeHolders", type = ParamType.MAP, required = false),
@@ -45,4 +46,11 @@ object PushActionJourneyNodeNomenclature : ActionJourneyNodeNomenclature<IPushAc
             else -> error("Unknown push channel: ${map["channel"]}")
         }
     }
+
+    override fun withLinks(node: IPushActionJourneyNode, next: IJourneyNode?, matchNode: IJourneyNode?, notMatchNode: IJourneyNode?): IPushActionJourneyNode =
+        when (node) {
+            is EMailPushActionJourneyNode -> node.copy(next = next)
+            is SmsPushActionJourneyNode -> node.copy(next = next)
+            is InAppPushActionJourneyNode -> node.copy(next = next)
+        }
 }

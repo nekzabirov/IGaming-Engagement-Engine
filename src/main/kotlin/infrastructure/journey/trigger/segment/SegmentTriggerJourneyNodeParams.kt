@@ -1,5 +1,6 @@
 package com.nekgambling.infrastructure.journey.trigger.segment
 
+import com.nekgambling.domain.model.journey.IJourneyNode
 import com.nekgambling.domain.strategy.*
 import kotlin.reflect.KClass
 
@@ -19,7 +20,7 @@ object SegmentTriggerJourneyNodeNomenclature : JourneyNodeNomenclature<SegmentTr
     override fun assetsSchema(): List<AssetParamDescriptor> = listOf(
         AssetParamDescriptor(
             name = "type", type = ParamType.ENUM, required = true,
-            enumValues = SegmentTriggerJourneyNode.Type.entries.map { it.name },
+            options = SegmentTriggerJourneyNode.Type.entries.map { it.name },
         ),
         AssetParamDescriptor(name = "segment", type = ParamType.STRING, required = false),
     )
@@ -33,4 +34,7 @@ object SegmentTriggerJourneyNodeNomenclature : JourneyNodeNomenclature<SegmentTr
         type = SegmentTriggerJourneyNode.Type.valueOf(map["type"] as String),
         segment = map["segment"] as? String,
     )
+
+    override fun withLinks(node: SegmentTriggerJourneyNode, next: IJourneyNode?, matchNode: IJourneyNode?, notMatchNode: IJourneyNode?): SegmentTriggerJourneyNode =
+        node.copy(next = next)
 }

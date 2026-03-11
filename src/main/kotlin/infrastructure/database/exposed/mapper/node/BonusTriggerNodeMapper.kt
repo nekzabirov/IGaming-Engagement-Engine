@@ -23,4 +23,11 @@ object BonusTriggerNodeMapper : IJourneyNodeMapper<BonusTriggerJourneyNode> {
             next = resolveNode(entity.next),
         )
     }
+
+    override fun applyToEntity(entity: JourneyNodeEntity, node: BonusTriggerJourneyNode) {
+        entity.bonusId = node.bonusId
+        entity.bonusIdentity = node.bonusIdentity
+        entity.bonusStatus = node.bonusStatus?.name
+        entity.bonusPayoutAmount = node.bonusPayoutAmount?.let { Json.encodeToString(NumberParamValue.serializer(), it) }
+    }
 }

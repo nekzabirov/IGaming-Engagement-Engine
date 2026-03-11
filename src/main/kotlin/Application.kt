@@ -1,11 +1,13 @@
 package com.nekgambling
 
 import com.nekgambling.api.eventApi
+import com.nekgambling.api.journeyApi
 import com.nekgambling.api.journeyNodeTemplateApi
 import com.nekgambling.infrastructure.infrastructureModule
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.server.plugins.swagger.*
 import io.ktor.server.routing.routing
 import kotlinx.serialization.json.Json
 import org.koin.ktor.plugin.Koin
@@ -29,7 +31,9 @@ fun Application.module() {
     }
 
     routing {
+        swaggerUI(path = "swagger", swaggerFile = "openapi/documentation.yaml")
         eventApi()
         journeyNodeTemplateApi()
+        journeyApi()
     }
 }

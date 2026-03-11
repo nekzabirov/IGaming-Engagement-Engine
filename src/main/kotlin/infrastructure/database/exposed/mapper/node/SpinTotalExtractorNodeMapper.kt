@@ -19,4 +19,8 @@ object SpinTotalExtractorNodeMapper : IJourneyNodeMapper<SpinTotalExtractor> {
             date = Json.decodeFromString<DateParamValue>(entity.dateParam!!),
         )
     }
+
+    override fun applyToEntity(entity: JourneyNodeEntity, node: SpinTotalExtractor) {
+        entity.dateParam = Json.encodeToString(DateParamValue.serializer(), node.date)
+    }
 }

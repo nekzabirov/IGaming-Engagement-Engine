@@ -4,6 +4,7 @@ package com.nekgambling.infrastructure.database.exposed.mapper.node
 import com.nekgambling.domain.model.journey.IJourneyNode
 import com.nekgambling.infrastructure.database.exposed.entity.JourneyNodeEntity
 import com.nekgambling.infrastructure.database.exposed.entity.deserializePayload
+import com.nekgambling.infrastructure.database.exposed.entity.serializePayload
 import com.nekgambling.infrastructure.database.exposed.mapper.IJourneyNodeMapper
 import com.nekgambling.infrastructure.journey.action.push.EMailPushActionJourneyNode
 import com.nekgambling.infrastructure.journey.action.push.IPushActionJourneyNode
@@ -42,5 +43,15 @@ object PushActionNodeMapper : IJourneyNodeMapper<IPushActionJourneyNode> {
             )
             else -> error("Unknown push action subType: ${entity.subType}")
         }
+    }
+
+    override fun applyToEntity(entity: JourneyNodeEntity, node: IPushActionJourneyNode) {
+        entity.subType = when (node) {
+            is EMailPushActionJourneyNode -> "email"
+            is SmsPushActionJourneyNode -> "sms"
+            is InAppPushActionJourneyNode -> "inApp"
+        }
+        entity.templateId = node.templateId
+        entity.placeHolders = if (node.placeHolders.isNotEmpty()) serializePayload(node.placeHolders) else null
     }
 }

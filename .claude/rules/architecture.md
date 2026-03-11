@@ -62,7 +62,7 @@ globs: ["src/**/*.kt"]
 - `IConditionJourneyNode` is a `@Serializable` abstract class extending `IJourneyNode` with `@Transient` properties (`id`, `inputKey`, `matchNode`, `notMatchNode`) and abstract `evaluate(value: Any): Boolean`
 - The `next` chain follows `matchNode` (passed to `IJourneyNode` super constructor)
 - `ConditionJourneyNodeProcess` validates that `inputKey` exists in the payload (throws if missing), calls `evaluate()`, and returns `matchNode` on true or `notMatchNode` on false with empty output
-- `ConditionJourneyNodeNomenclature` declares empty `inputParams()` and `outputParams()`
+- Each concrete condition type has its own nomenclature (e.g., `BoolConditionNomenclature`, `NumberInRangeConditionNomenclature`, `StringEqualConditionNomenclature`), all with empty `inputParams()` and `outputParams()`
 - Concrete condition nodes (e.g., `NumberConditionJourneyNode`) extend `IConditionJourneyNode` as `@Serializable` sealed classes with `@Transient` properties. Leaf data classes use `@Serializable` + `@SerialName`, `@Polymorphic` on `matchNode`/`notMatchNode`, and `Double` (not `Number`) for numeric fields
 
 ## Extractor Journey Nodes
@@ -73,5 +73,5 @@ globs: ["src/**/*.kt"]
 
 ## Dependency Injection
 - All wiring in single `infrastructureModule` in `infrastructure/koin.kt`
-- Multi-binding pattern: `bind Interface::class` + `getAll()` for CommandBus, QueryBus, JourneyNodeNomenclature, JourneyNodeProcess, and player definition evaluators
+- Multi-binding pattern: `single { ConcreteImpl } bind Interface::class` + `getAll()` for CommandBus, QueryBus, JourneyNodeNomenclature, JourneyNodeProcess, JourneyNodeMapper, and player definition evaluators. **Important:** Never use explicit interface type parameters (e.g., `single<Interface<*>>`) — this causes Koin to override previous bindings. Let Koin infer the concrete type so each binding is unique
 - All bindings are `single` scoped

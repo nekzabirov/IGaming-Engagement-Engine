@@ -24,4 +24,12 @@ object FreespinTriggerNodeMapper : IJourneyNodeMapper<FreespinTriggerJourneyNode
             next = resolveNode(entity.next),
         )
     }
+
+    override fun applyToEntity(entity: JourneyNodeEntity, node: FreespinTriggerJourneyNode) {
+        entity.freespinId = node.freespinId
+        entity.freespinIdentity = node.freespinIdentity
+        entity.gameId = node.gameId
+        entity.freespinStatus = node.freespinStatus?.name
+        entity.freespinPayoutRealAmount = node.freespinPayoutRealAmount?.let { Json.encodeToString(NumberParamValue.serializer(), it) }
+    }
 }

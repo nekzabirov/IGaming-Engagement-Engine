@@ -1,6 +1,7 @@
 package com.nekgambling.infrastructure.journey.trigger.freespin
 
 import com.nekgambling.domain.model.player.PlayerFreespin
+import com.nekgambling.domain.model.journey.IJourneyNode
 import com.nekgambling.domain.strategy.*
 import com.nekgambling.domain.asset.NumberParamValue
 import kotlin.reflect.KClass
@@ -24,7 +25,7 @@ object FreespinTriggerJourneyNodeNomenclature : JourneyNodeNomenclature<Freespin
         AssetParamDescriptor(name = "gameId", type = ParamType.STRING, required = false),
         AssetParamDescriptor(
             name = "freespinStatus", type = ParamType.ENUM, required = false,
-            enumValues = PlayerFreespin.Status.entries.map { it.name },
+            options = PlayerFreespin.Status.entries.map { it.name },
         ),
         AssetParamDescriptor(
             name = "freespinPayoutRealAmount", type = ParamType.OBJECT, required = false,
@@ -48,4 +49,7 @@ object FreespinTriggerJourneyNodeNomenclature : JourneyNodeNomenclature<Freespin
         freespinStatus = (map["freespinStatus"] as? String)?.let { PlayerFreespin.Status.valueOf(it) },
         freespinPayoutRealAmount = (map["freespinPayoutRealAmount"] as? Map<String, Any>)?.let { NumberParamValue.fromMap(it) },
     )
+
+    override fun withLinks(node: FreespinTriggerJourneyNode, next: IJourneyNode?, matchNode: IJourneyNode?, notMatchNode: IJourneyNode?): FreespinTriggerJourneyNode =
+        node.copy(next = next)
 }

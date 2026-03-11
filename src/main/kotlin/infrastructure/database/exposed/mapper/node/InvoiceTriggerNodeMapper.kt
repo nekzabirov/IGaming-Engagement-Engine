@@ -24,4 +24,11 @@ object InvoiceTriggerNodeMapper : IJourneyNodeMapper<InvoiceTriggerJourneyNode> 
             next = resolveNode(entity.next),
         )
     }
+
+    override fun applyToEntity(entity: JourneyNodeEntity, node: InvoiceTriggerJourneyNode) {
+        entity.invoiceType = node.invoiceType.name
+        entity.invoiceStatus = node.invoiceStatus.name
+        entity.currency = node.invoiceCurrency?.code
+        entity.invoiceAmount = node.invoiceAmount?.let { Json.encodeToString(NumberParamValue.serializer(), it) }
+    }
 }

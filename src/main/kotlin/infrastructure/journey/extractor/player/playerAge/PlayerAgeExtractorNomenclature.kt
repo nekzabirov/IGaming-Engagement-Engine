@@ -1,5 +1,6 @@
 package com.nekgambling.infrastructure.journey.extractor.player.playerAge
 
+import com.nekgambling.domain.model.journey.IJourneyNode
 import com.nekgambling.domain.strategy.AssetParamDescriptor
 import com.nekgambling.domain.strategy.JourneyNodeNomenclature
 import com.nekgambling.domain.strategy.NodeCategory
@@ -24,4 +25,7 @@ object PlayerAgeExtractorNomenclature : JourneyNodeNomenclature<PlayerAgeExtract
     override fun toAssetsMap(node: PlayerAgeExtractor): Map<String, Any> = emptyMap()
 
     override fun fromAssetsMap(map: Map<String, Any>): PlayerAgeExtractor = PlayerAgeExtractor()
+
+    override fun withLinks(node: PlayerAgeExtractor, next: IJourneyNode?, matchNode: IJourneyNode?, notMatchNode: IJourneyNode?): PlayerAgeExtractor =
+        node.copy(next = next)
 }

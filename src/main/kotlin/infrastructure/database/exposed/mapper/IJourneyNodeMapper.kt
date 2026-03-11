@@ -10,4 +10,6 @@ interface IJourneyNodeMapper<T : IJourneyNode> {
     val identity: String
 
     fun toDomain(entity: JourneyNodeEntity, resolveNode: (JourneyNodeEntity?) -> IJourneyNode?): T
+
+    fun applyToEntity(entity: JourneyNodeEntity, node: T)
 }

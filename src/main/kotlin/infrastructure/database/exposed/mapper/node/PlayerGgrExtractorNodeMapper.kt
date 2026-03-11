@@ -19,4 +19,8 @@ object PlayerGgrExtractorNodeMapper : IJourneyNodeMapper<PlayerGgrExtractor> {
             date = Json.decodeFromString<DateParamValue>(entity.dateParam!!),
         )
     }
+
+    override fun applyToEntity(entity: JourneyNodeEntity, node: PlayerGgrExtractor) {
+        entity.dateParam = Json.encodeToString(DateParamValue.serializer(), node.date)
+    }
 }

@@ -1,0 +1,373 @@
+openapi: 3.0.3
+info:
+  title: CRM Engine API
+  description: CRM data processing service for the IGambling platform. Ingests player lifecycle events, manages journey orchestration, and publishes domain events.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+    description: Local development
+
+tags:
+  - name: Events
+    description: Player lifecycle event ingestion
+  - name: Journeys
+    description: Journey management
+  - name: Journey Templates
+    description: Journey node type catalog
+
+paths:
+  /event:
+    post:
+      tags: [Events]
+      summary: Ingest player event
+      description: |
+        Receives a player lifecycle event (registration, deposit, withdrawal, casino bet)
+        and dispatches it to the appropriate command handler for processing.
+      operationId: processEvent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventRequest'
+            examples:
+              userRegistration:
+                summary: User registration event
+                value:
+                  event_type: "user_registered"
+                  user_ext_id: "player-123"
+                  payload:
+                    core_username: "john_doe"
+                    user_email: "john@example.com"
+                    user_country: "US"
+                    core_user_language: "en"
+              deposit:
+                summary: Deposit approved event
+                value:
+                  event_type: "acc_deposit_approved"
+                  user_ext_id: "player-123"
+                  payload:
+                    acc_last_deposit_amount: 100.0
+                    acc_last_deposit_date: 1710000000
+                    acc_last_transaction_id: "tx-456"
+                    acc_last_deposit_payment_method: "card"
+                    core_wallet_currency: "USD"
+              casinoBet:
+                summary: Casino bet/win event
+                value:
+                  event_type: "casino_bet_win"
+                  user_ext_id: "player-123"
+                  payload:
+                    casino_last_bet_id: "bet-789"
+                    casino_last_bet_dt: 1710000000
+                    casino_last_bet_amount: 10.0
+                    casino_last_bet_amount_real: 10.0
+                    casino_last_bet_amount_bonus: 0.0
+                    casino_last_win_amount: 25.0
+                    casino_last_win_amount_real: 25.0
+                    casino_last_win_amount_bonus: 0.0
+                    casino_last_bet_game_provider: "pragmatic"
+                    casino_last_bet_game_name: "sweet-bonanza"
+                    casino_last_bet_game_type: "slots"
+                    casino_last_bet_game_vendor: "pragmatic"
+                    core_wallet_currency: "USD"
+      responses:
+        '201':
+          description: Event accepted and processed
+        '400':
+          description: Invalid request body
+
+  /journey:
+    post:
+      tags: [Journeys]
+      summary: Create a journey
+      description: |
+        Creates a new journey with a nested node tree. The request body contains the journey
+        identity and a `head` node. Each node contains its children inline via `next`,
+        `matchNode` (condition true branch), and `notMatchNode` (condition false branch).
+
+        The `type` field must match a nomenclature `identity` from `GET /journey/node/templates`.
+        The `assets` object must match the asset schema for that type.
+      operationId: createJourney
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateJourneyRequest'
+            examples:
+              simpleJourney:
+                summary: Trigger + action journey
+                value:
+                  identity: "welcome-bonus"
+                  head:
+                    type: "bonusTrigger"
+                    assets:
+                      bonusStatus: "ISSUE"
+                    next:
+                      type: "pushAction"
+                      assets:
+                        channel: "email"
+                        templateId: "welcome-email"
+                        placeHolders: {}
+              conditionBranching:
+                summary: Journey with condition branching
+                value:
+                  identity: "age-gate"
+                  head:
+                    type: "playerAgeExtractor"
+                    assets: {}
+                    next:
+                      type: "numberMoreThanCondition"
+                      assets:
+                        inputKey: "player:age"
+                        threshold: 18.0
+                      matchNode:
+                        type: "pushAction"
+                        assets:
+                          channel: "email"
+                          templateId: "welcome"
+                          placeHolders: {}
+                      notMatchNode: null
+      responses:
+        '201':
+          description: Journey created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JourneyResponse'
+        '400':
+          description: Invalid request (unknown node ref, unknown type, etc.)
+
+  /journey/{id}:
+    delete:
+      tags: [Journeys]
+      summary: Delete a journey
+      description: Deletes a journey along with all its nodes and journey instants.
+      operationId: deleteJourney
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Journey ID
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Journey deleted
+        '400':
+          description: Invalid ID format
+
+  /journey/node/templates:
+    get:
+      tags: [Journey Templates]
+      summary: List node templates
+      description: |
+        Returns all available journey node types with their asset schemas.
+        Use this to discover node types, their categories (TRIGGER, ACTION, CONDITION, EXTRACTOR),
+        input/output params, and the asset schema for building the journey creation form.
+      operationId: listNodeTemplates
+      responses:
+        '200':
+          description: List of node templates
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/JourneyNodeTemplateResponse'
+              example:
+                - identity: "bonusTrigger"
+                  category: "TRIGGER"
+                  inputParams: ["triggerName", "bonusId", "bonusIdentity", "bonusStatus", "bonusPayoutAmount"]
+                  outputParams: ["bonus:id", "bonus:identity", "bonus:status", "bonus:payoutAmount"]
+                  assets:
+                    - name: "bonusId"
+                      type: "STRING"
+                      required: false
+                    - name: "bonusStatus"
+                      type: "ENUM"
+                      required: false
+                      options: ["ISSUE", "LOST", "START_WAGERING", "WAGERED"]
+                - identity: "pushAction"
+                  category: "ACTION"
+                  inputParams: ["locale"]
+                  outputParams: []
+                  assets:
+                    - name: "channel"
+                      type: "ENUM"
+                      required: true
+                      options: ["email", "sms", "inApp"]
+                    - name: "templateId"
+                      type: "STRING"
+                      required: true
+                    - name: "placeHolders"
+                      type: "MAP"
+                      required: false
+
+components:
+  schemas:
+    EventRequest:
+      type: object
+      required: [event_type, user_ext_id, payload]
+      properties:
+        event_type:
+          type: string
+          description: Event type identifier
+          example: "acc_deposit_approved"
+        user_ext_id:
+          type: string
+          description: External player ID
+          example: "player-123"
+        payload:
+          type: object
+          description: Event-specific payload (UserPayload, DepositApprovePayload, WithdrawPayload, or CasinoBetWinPayload)
+          additionalProperties: true
+
+    CreateJourneyRequest:
+      type: object
+      required: [identity, head]
+      properties:
+        identity:
+          type: string
+          description: Unique journey identifier
+          example: "welcome-bonus"
+        head:
+          $ref: '#/components/schemas/JourneyNodeRequest'
+
+    JourneyNodeRequest:
+      type: object
+      required: [type]
+      properties:
+        type:
+          type: string
+          description: Nomenclature identity (from GET /journey/node/templates)
+          example: "bonusTrigger"
+        assets:
+          type: object
+          additionalProperties: true
+          description: Node-specific parameters matching the nomenclature asset schema
+          example:
+            bonusStatus: "ISSUE"
+        next:
+          $ref: '#/components/schemas/JourneyNodeRequest'
+          nullable: true
+          description: Next node (non-condition nodes)
+        matchNode:
+          $ref: '#/components/schemas/JourneyNodeRequest'
+          nullable: true
+          description: True-branch node (condition nodes only)
+        notMatchNode:
+          $ref: '#/components/schemas/JourneyNodeRequest'
+          nullable: true
+          description: False-branch node (condition nodes only)
+
+    JourneyResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Journey DB ID
+          example: 1
+        identity:
+          type: string
+          description: Journey identifier
+          example: "welcome-bonus"
+        head:
+          $ref: '#/components/schemas/JourneyNodeResponse'
+
+    JourneyNodeResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Node DB ID
+          example: 42
+        type:
+          type: string
+          description: Nomenclature identity
+          example: "bonusTrigger"
+        assets:
+          type: object
+          additionalProperties: true
+          description: Node-specific parameters
+        next:
+          $ref: '#/components/schemas/JourneyNodeResponse'
+          nullable: true
+          description: Next node (non-condition nodes)
+        matchNode:
+          $ref: '#/components/schemas/JourneyNodeResponse'
+          nullable: true
+          description: True-branch node (condition nodes)
+        notMatchNode:
+          $ref: '#/components/schemas/JourneyNodeResponse'
+          nullable: true
+          description: False-branch node (condition nodes)
+
+    JourneyNodeTemplateResponse:
+      type: object
+      properties:
+        identity:
+          type: string
+          description: Node type identifier (used as `type` in JourneyNodeRequest)
+          example: "bonusTrigger"
+        category:
+          type: string
+          enum: [TRIGGER, ACTION, CONDITION, EXTRACTOR]
+          description: Node category
+        inputParams:
+          type: array
+          items:
+            type: string
+          description: Expected input payload keys
+        outputParams:
+          type: array
+          items:
+            type: string
+          description: Output payload keys produced by this node
+        assets:
+          type: array
+          items:
+            $ref: '#/components/schemas/AssetParamDescriptor'
+          description: Asset schema for building forms
+
+    AssetParamDescriptor:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "bonusId"
+        type:
+          type: string
+          enum: [STRING, NUMBER, BOOLEAN, ENUM, CURRENCY, OBJECT, MAP, ANY]
+        required:
+          type: boolean
+        description:
+          type: string
+          nullable: true
+        options:
+          type: array
+          items:
+            type: string
+          nullable: true
+          description: Valid values for ENUM type
+        subtypes:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubtypeDescriptor'
+          nullable: true
+          description: Subtype descriptors for OBJECT type
+
+    SubtypeDescriptor:
+      type: object
+      properties:
+        discriminatorValue:
+          type: string
+        assets:
+          type: array
+          items:
+            $ref: '#/components/schemas/AssetParamDescriptor'

@@ -5,6 +5,7 @@ import com.nekgambling.domain.strategy.JourneyNodeNomenclature
 import com.nekgambling.domain.strategy.NodeCategory
 import com.nekgambling.domain.strategy.ParamType
 import com.nekgambling.domain.strategy.dateParamValueSubtypes
+import com.nekgambling.domain.model.journey.IJourneyNode
 import com.nekgambling.domain.asset.DateParamValue
 import com.nekgambling.infrastructure.journey.extractor.player.IPlayerExtractorJourneyNode
 import kotlin.reflect.KClass
@@ -39,4 +40,7 @@ object PlayerGgrExtractorNomenclature : JourneyNodeNomenclature<PlayerGgrExtract
     override fun fromAssetsMap(map: Map<String, Any>): PlayerGgrExtractor = PlayerGgrExtractor(
         date = DateParamValue.fromMap(map["date"] as Map<String, Any>),
     )
+
+    override fun withLinks(node: PlayerGgrExtractor, next: IJourneyNode?, matchNode: IJourneyNode?, notMatchNode: IJourneyNode?): PlayerGgrExtractor =
+        node.copy(next = next)
 }

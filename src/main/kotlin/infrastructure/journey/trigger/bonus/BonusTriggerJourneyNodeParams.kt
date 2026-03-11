@@ -1,6 +1,7 @@
 package com.nekgambling.infrastructure.journey.trigger.bonus
 
 import com.nekgambling.domain.model.player.PlayerBonus
+import com.nekgambling.domain.model.journey.IJourneyNode
 import com.nekgambling.domain.strategy.*
 import com.nekgambling.domain.asset.NumberParamValue
 import kotlin.reflect.KClass
@@ -23,7 +24,7 @@ object BonusTriggerJourneyNodeNomenclature : JourneyNodeNomenclature<BonusTrigge
         AssetParamDescriptor(name = "bonusIdentity", type = ParamType.STRING, required = false),
         AssetParamDescriptor(
             name = "bonusStatus", type = ParamType.ENUM, required = false,
-            enumValues = PlayerBonus.Status.entries.map { it.name },
+            options = PlayerBonus.Status.entries.map { it.name },
         ),
         AssetParamDescriptor(
             name = "bonusPayoutAmount", type = ParamType.OBJECT, required = false,
@@ -45,4 +46,7 @@ object BonusTriggerJourneyNodeNomenclature : JourneyNodeNomenclature<BonusTrigge
         bonusStatus = (map["bonusStatus"] as? String)?.let { PlayerBonus.Status.valueOf(it) },
         bonusPayoutAmount = (map["bonusPayoutAmount"] as? Map<String, Any>)?.let { NumberParamValue.fromMap(it) },
     )
+
+    override fun withLinks(node: BonusTriggerJourneyNode, next: IJourneyNode?, matchNode: IJourneyNode?, notMatchNode: IJourneyNode?): BonusTriggerJourneyNode =
+        node.copy(next = next)
 }

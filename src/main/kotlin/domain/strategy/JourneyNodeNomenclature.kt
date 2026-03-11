@@ -19,4 +19,11 @@ interface JourneyNodeNomenclature<N: IJourneyNode> {
     fun toAssetsMap(node: N): Map<String, Any>
 
     fun fromAssetsMap(map: Map<String, Any>): N
+
+    fun withLinks(
+        node: N,
+        next: IJourneyNode? = null,
+        matchNode: IJourneyNode? = null,
+        notMatchNode: IJourneyNode? = null,
+    ): N
 }

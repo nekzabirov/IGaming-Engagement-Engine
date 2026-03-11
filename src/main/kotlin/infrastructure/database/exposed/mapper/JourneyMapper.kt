@@ -9,6 +9,6 @@ class JourneyMapper(private val registry: JourneyNodeMapperRegistry) {
         Journey(
             id = journeyEntity.id.value,
             identity = journeyEntity.identity,
-            head = registry.toDomain(journeyEntity.head),
+            head = registry.toDomain(journeyEntity.head!!),
         )
 }

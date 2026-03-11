@@ -19,4 +19,9 @@ object SegmentTriggerNodeMapper : IJourneyNodeMapper<SegmentTriggerJourneyNode> 
             next = resolveNode(entity.next),
         )
     }
+
+    override fun applyToEntity(entity: JourneyNodeEntity, node: SegmentTriggerJourneyNode) {
+        entity.segmentType = node.type.name
+        entity.segment = node.segment
+    }
 }

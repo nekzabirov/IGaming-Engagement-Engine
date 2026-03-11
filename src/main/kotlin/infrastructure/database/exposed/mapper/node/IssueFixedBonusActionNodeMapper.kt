@@ -21,4 +21,11 @@ object IssueFixedBonusActionNodeMapper : IJourneyNodeMapper<IssueFixedBonusActio
             amount = entity.amount!!,
         )
     }
+
+    override fun applyToEntity(entity: JourneyNodeEntity, node: IssueFixedBonusActionJourneyNode) {
+        entity.nodeIdentity = node.bonusIdentity
+        entity.bonusIdentity = node.bonusIdentity
+        entity.currency = node.currency.code
+        entity.amount = node.amount
+    }
 }
