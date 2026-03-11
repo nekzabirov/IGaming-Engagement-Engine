@@ -33,10 +33,11 @@ docker-compose up clickhouse   # Start only ClickHouse (needed for tests)
 Hexagonal Architecture + DDD + CQRS. Package base: `com.nekgambling`
 
 ```
-api/                      → HTTP entry point + CommandBus dispatching
-  EventApi.kt             → Single POST /event endpoint (returns 201)
+api/                      → HTTP entry points + CommandBus dispatching
+  EventApi.kt             → POST /event endpoint (returns 201)
+  JourneyNodeTemplateApi.kt → GET /journey/node/templates (returns node catalog)
   command/                → CommandBus, ICommand, ICommandHandler, 3 command handlers
-  dto/                    → EventRequest, EventPayload (sealed interface with 4 payload types)
+  dto/                    → EventRequest, EventPayload, JourneyNodeTemplateResponse
 application/              → Use cases, queries, port interfaces, events
   adapter/                → Port interfaces: IEventAdapter, ILockAdapter, ICurrencyAdapter
   event/                  → Domain event definitions (sealed interfaces per aggregate)
@@ -47,7 +48,7 @@ domain/                   → Pure business logic
   model/player/           → Player aggregates: Details, Bonus, Freespin, Invoice, Spin
   repository/             → Repository ports: IJourneyRepository, IJourneyInstantRepository
   repository/player/      → Player repository ports
-  strategy/               → JourneyNodeProcess, JourneyNodeNomenclature strategy interfaces
+  strategy/               → JourneyNodeProcess, JourneyNodeNomenclature, NodeCategory, AssetParamDescriptor, CommonParamSchemas
   vo/                     → Value objects: Currency, Country, Locale, Payload, Period
   vo/param/               → Parameter value types: NumberParamValue (sealed, numeric conditions), DateParamValue (sealed, date ranges)
 infrastructure/           → All adapters and implementations
@@ -99,7 +100,7 @@ Use cases in `application/usecase/player/` encapsulate business logic per aggreg
   - `PlayerProfileExtractor`: Extracts all player fields with `player:` prefix (e.g., `player:username`, `player:email`)
   - `PercentageAmountExtractor`: Calculates amounts with percentage + optional max cap
 
-`JourneyNodeProcess<N>` strategy interface processes nodes. `JourneyNodeNomenclature<N>` strategy interface declares `identity`, `inputParams()`, `outputParams()`, `toAssetsMap(node)` (serializes child-specific params to `Map<String, Any>`, excluding base `id`/`next`), and `fromAssetsMap(map)` (reconstructs node from map). `IPlayerDefinitionEvaluator<T>` implementations evaluate player conditions. Five definition types: `playerAge`, `profileField`, `spinTotal`, `invoiceTotal`, `playerGgr`.
+`JourneyNodeProcess<N>` strategy interface processes nodes. `JourneyNodeNomenclature<N>` strategy interface declares `identity`, `category` (`NodeCategory` enum: TRIGGER, ACTION, CONDITION, EXTRACTOR), `inputParams()`, `outputParams()`, `assetsSchema()` (returns `List<AssetParamDescriptor>` describing parameter types/constraints for frontend form generation), `toAssetsMap(node)` (serializes child-specific params to `Map<String, Any>`, excluding base `id`/`next`), and `fromAssetsMap(map)` (reconstructs node from map). Reusable subtype descriptors for `NumberParamValue` and `DateParamValue` in `CommonParamSchemas.kt`. `IPlayerDefinitionEvaluator<T>` implementations evaluate player conditions. Five definition types: `playerAge`, `profileField`, `spinTotal`, `invoiceTotal`, `playerGgr`.
 
 ### Dual Database Design
 - **ClickHouse** (analytics): Player activity data in `ReplacingMergeTree` tables with `_version` for upserts. Two `SummingMergeTree` tables (`player_invoice_total`, `player_total_spin_info`) fed by materialized views for pre-aggregated queries.

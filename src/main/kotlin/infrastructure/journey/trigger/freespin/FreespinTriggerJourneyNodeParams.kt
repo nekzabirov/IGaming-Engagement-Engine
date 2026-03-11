@@ -1,7 +1,7 @@
 package com.nekgambling.infrastructure.journey.trigger.freespin
 
 import com.nekgambling.domain.model.player.PlayerFreespin
-import com.nekgambling.domain.strategy.JourneyNodeNomenclature
+import com.nekgambling.domain.strategy.*
 import com.nekgambling.domain.asset.NumberParamValue
 import kotlin.reflect.KClass
 
@@ -10,11 +10,27 @@ object FreespinTriggerJourneyNodeNomenclature : JourneyNodeNomenclature<Freespin
 
     override val identity: String = "freespinTrigger"
 
+    override val category: NodeCategory = NodeCategory.TRIGGER
+
     override fun inputParams(): Set<String> =
         setOf("triggerName", "freespinId", "freespinIdentity", "gameId", "freespinCurrency", "freespinStatus")
 
     override fun outputParams(): Set<String> =
         setOf("freespin:id", "freespin:identity", "freespin:gameId", "freespin:currency", "freespin:status", "freespin:payoutRealAmount")
+
+    override fun assetsSchema(): List<AssetParamDescriptor> = listOf(
+        AssetParamDescriptor(name = "freespinId", type = ParamType.STRING, required = false),
+        AssetParamDescriptor(name = "freespinIdentity", type = ParamType.STRING, required = false),
+        AssetParamDescriptor(name = "gameId", type = ParamType.STRING, required = false),
+        AssetParamDescriptor(
+            name = "freespinStatus", type = ParamType.ENUM, required = false,
+            enumValues = PlayerFreespin.Status.entries.map { it.name },
+        ),
+        AssetParamDescriptor(
+            name = "freespinPayoutRealAmount", type = ParamType.OBJECT, required = false,
+            subtypes = numberParamValueSubtypes(),
+        ),
+    )
 
     override fun toAssetsMap(node: FreespinTriggerJourneyNode): Map<String, Any> = buildMap {
         node.freespinId?.let { put("freespinId", it) }

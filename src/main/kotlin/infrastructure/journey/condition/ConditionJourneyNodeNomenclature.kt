@@ -1,6 +1,6 @@
 package com.nekgambling.infrastructure.journey.condition
 
-import com.nekgambling.domain.strategy.JourneyNodeNomenclature
+import com.nekgambling.domain.strategy.*
 import kotlin.reflect.KClass
 
 object ConditionJourneyNodeNomenclature : JourneyNodeNomenclature<IConditionJourneyNode> {
@@ -8,9 +8,48 @@ object ConditionJourneyNodeNomenclature : JourneyNodeNomenclature<IConditionJour
 
     override val identity: String = "condition"
 
+    override val category: NodeCategory = NodeCategory.CONDITION
+
     override fun inputParams(): Set<String> = emptySet()
 
     override fun outputParams(): Set<String> = emptySet()
+
+    override fun assetsSchema(): List<AssetParamDescriptor> = listOf(
+        AssetParamDescriptor(name = "inputKey", type = ParamType.STRING, required = true),
+        AssetParamDescriptor(
+            name = "type", type = ParamType.ENUM, required = true,
+            enumValues = listOf("bool", "numberInRange", "numberMoreThan", "numberLessThan", "numberEqual", "stringEqual"),
+            subtypes = listOf(
+                SubtypeDescriptor(
+                    discriminatorValue = "bool",
+                    assets = listOf(AssetParamDescriptor(name = "expected", type = ParamType.BOOLEAN, required = true)),
+                ),
+                SubtypeDescriptor(
+                    discriminatorValue = "numberInRange",
+                    assets = listOf(
+                        AssetParamDescriptor(name = "min", type = ParamType.DOUBLE, required = true),
+                        AssetParamDescriptor(name = "max", type = ParamType.DOUBLE, required = true),
+                    ),
+                ),
+                SubtypeDescriptor(
+                    discriminatorValue = "numberMoreThan",
+                    assets = listOf(AssetParamDescriptor(name = "threshold", type = ParamType.DOUBLE, required = true)),
+                ),
+                SubtypeDescriptor(
+                    discriminatorValue = "numberLessThan",
+                    assets = listOf(AssetParamDescriptor(name = "threshold", type = ParamType.DOUBLE, required = true)),
+                ),
+                SubtypeDescriptor(
+                    discriminatorValue = "numberEqual",
+                    assets = listOf(AssetParamDescriptor(name = "target", type = ParamType.DOUBLE, required = true)),
+                ),
+                SubtypeDescriptor(
+                    discriminatorValue = "stringEqual",
+                    assets = listOf(AssetParamDescriptor(name = "target", type = ParamType.STRING, required = true)),
+                ),
+            ),
+        ),
+    )
 
     override fun toAssetsMap(node: IConditionJourneyNode): Map<String, Any> = buildMap {
         put("inputKey", node.inputKey)

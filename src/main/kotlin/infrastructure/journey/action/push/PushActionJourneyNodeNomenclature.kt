@@ -1,5 +1,7 @@
 package com.nekgambling.infrastructure.journey.action.push
 
+import com.nekgambling.domain.strategy.AssetParamDescriptor
+import com.nekgambling.domain.strategy.ParamType
 import com.nekgambling.infrastructure.journey.action.ActionJourneyNodeNomenclature
 import kotlin.reflect.KClass
 
@@ -11,6 +13,15 @@ object PushActionJourneyNodeNomenclature : ActionJourneyNodeNomenclature<IPushAc
     override fun inputParams(): Set<String> = setOf("locale")
 
     override fun outputParams(): Set<String> = emptySet()
+
+    override fun assetsSchema(): List<AssetParamDescriptor> = listOf(
+        AssetParamDescriptor(
+            name = "channel", type = ParamType.ENUM, required = true,
+            enumValues = listOf("email", "sms", "inApp"),
+        ),
+        AssetParamDescriptor(name = "templateId", type = ParamType.STRING, required = true),
+        AssetParamDescriptor(name = "placeHolders", type = ParamType.MAP, required = false),
+    )
 
     @Suppress("UNCHECKED_CAST")
     override fun toAssetsMap(node: IPushActionJourneyNode): Map<String, Any> = buildMap {

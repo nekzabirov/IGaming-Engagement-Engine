@@ -14,7 +14,7 @@ globs: ["src/**/*.kt"]
 - Exposed repos: `Exposed<Entity>Repository`
 - Trigger journey nodes: `<Name>TriggerJourneyNode` extending `ITriggerJourneyNode` (abstract class), with `override val id` and `override val next` constructor params, and a `companion object { const val TRIGGER_NAME = "<name>" }` for trigger name matching
 - Journey node processors: `override val nodeType: KClass<N>` (not `node`) to avoid confusion with the `process(node)` parameter
-- Journey node nomenclatures: `<NodeType>Nomenclature` objects (e.g., `BonusTriggerJourneyNodeNomenclature`, `PlayerAgeExtractorNomenclature`), placed alongside their node class, registered in Koin with `bind JourneyNodeNomenclature::class`
+- Journey node nomenclatures: `<NodeType>Nomenclature` objects (e.g., `BonusTriggerJourneyNodeNomenclature`, `PlayerAgeExtractorNomenclature`), placed alongside their node class, registered in Koin with `bind JourneyNodeNomenclature::class`. Must implement `category` (`NodeCategory`) and `assetsSchema()` (`List<AssetParamDescriptor>`). Action nomenclatures extend `ActionJourneyNodeNomenclature` which provides `category = NodeCategory.ACTION` by default. Use `numberParamValueSubtypes()` and `dateParamValueSubtypes()` helpers from `CommonParamSchemas.kt` for OBJECT-type params
 - Action journey nodes: `<Name>ActionJourneyNode` extending `IActionJourneyNode` (abstract class), with `id` and `next` constructor params
 - Push action journey nodes: `<Channel>PushActionJourneyNode` extending `IPushActionJourneyNode` (sealed class with `templateId` + `placeHolders`), as `@Serializable` data classes with `override val` properties, e.g., `EMailPushActionJourneyNode`, `SmsPushActionJourneyNode`, `InAppPushActionJourneyNode`
 - Action node processors: `<Name>ActionJourneyNodeProcess` extending `ActionJourneyNodeProcess<T>`, placed in same package as their node class
@@ -32,7 +32,7 @@ globs: ["src/**/*.kt"]
 - Value objects: `com.nekgambling.domain.vo.*` (Currency, Country, Locale, Payload, Period)
 - Param value types: `com.nekgambling.domain.vo.param.*` (NumberParamValue, DateParamValue)
 - Journey domain: `com.nekgambling.domain.model.journey.*`
-- Strategy interfaces: `com.nekgambling.domain.strategy.*`
+- Strategy interfaces: `com.nekgambling.domain.strategy.*` (JourneyNodeNomenclature, NodeCategory, AssetParamDescriptor, ParamType, SubtypeDescriptor, CommonParamSchemas helpers)
 
 ## Type Aliases
 - `Payload` = `Map<String, Any>` (`domain.vo.Payload`) — use for all journey node payload/output parameters instead of raw `Map<String, Any>`

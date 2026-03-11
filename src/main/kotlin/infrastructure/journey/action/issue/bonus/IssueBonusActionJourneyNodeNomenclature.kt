@@ -1,5 +1,7 @@
 package com.nekgambling.infrastructure.journey.action.issue.bonus
 
+import com.nekgambling.domain.strategy.AssetParamDescriptor
+import com.nekgambling.domain.strategy.ParamType
 import com.nekgambling.domain.vo.Currency
 import com.nekgambling.infrastructure.journey.action.ActionJourneyNodeNomenclature
 import kotlin.reflect.KClass
@@ -12,6 +14,12 @@ object IssueFixedBonusActionJourneyNodeNomenclature : ActionJourneyNodeNomenclat
     override fun inputParams(): Set<String> = emptySet()
 
     override fun outputParams(): Set<String> = emptySet()
+
+    override fun assetsSchema(): List<AssetParamDescriptor> = listOf(
+        AssetParamDescriptor(name = "bonusIdentity", type = ParamType.STRING, required = true),
+        AssetParamDescriptor(name = "currency", type = ParamType.CURRENCY, required = true),
+        AssetParamDescriptor(name = "amount", type = ParamType.LONG, required = true),
+    )
 
     override fun toAssetsMap(node: IssueFixedBonusActionJourneyNode): Map<String, Any> = mapOf(
         "bonusIdentity" to node.bonusIdentity,
@@ -34,6 +42,10 @@ object IssueDynamicBonusActionJourneyNodeNomenclature : ActionJourneyNodeNomencl
     override fun inputParams(): Set<String> = setOf("currency", "amount")
 
     override fun outputParams(): Set<String> = emptySet()
+
+    override fun assetsSchema(): List<AssetParamDescriptor> = listOf(
+        AssetParamDescriptor(name = "bonusIdentity", type = ParamType.STRING, required = true),
+    )
 
     override fun toAssetsMap(node: IssueDynamicBonusActionJourneyNode): Map<String, Any> = mapOf(
         "bonusIdentity" to node.bonusIdentity,

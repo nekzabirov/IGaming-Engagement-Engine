@@ -1,6 +1,8 @@
 package com.nekgambling.infrastructure.journey.extractor.player.playerProfile
 
+import com.nekgambling.domain.strategy.AssetParamDescriptor
 import com.nekgambling.domain.strategy.JourneyNodeNomenclature
+import com.nekgambling.domain.strategy.NodeCategory
 import com.nekgambling.infrastructure.journey.extractor.player.IPlayerExtractorJourneyNode
 import kotlin.reflect.KClass
 
@@ -8,6 +10,8 @@ object PlayerProfileExtractorNomenclature : JourneyNodeNomenclature<PlayerProfil
     override val nodeType: KClass<PlayerProfileExtractor> = PlayerProfileExtractor::class
 
     override val identity: String = "playerProfileExtractor"
+
+    override val category: NodeCategory = NodeCategory.EXTRACTOR
 
     override fun inputParams(): Set<String> =
         emptySet()
@@ -32,6 +36,8 @@ object PlayerProfileExtractorNomenclature : JourneyNodeNomenclature<PlayerProfil
         "${IPlayerExtractorJourneyNode.PREFIX}:affiliateTag",
         "${IPlayerExtractorJourneyNode.PREFIX}:registeredAt",
     )
+
+    override fun assetsSchema(): List<AssetParamDescriptor> = emptyList()
 
     override fun toAssetsMap(node: PlayerProfileExtractor): Map<String, Any> = emptyMap()
 

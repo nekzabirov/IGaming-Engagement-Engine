@@ -8,9 +8,13 @@ interface JourneyNodeNomenclature<N: IJourneyNode> {
 
     val identity: String
 
+    val category: NodeCategory
+
     fun inputParams(): Set<String>
 
     fun outputParams(): Set<String>
+
+    fun assetsSchema(): List<AssetParamDescriptor>
 
     fun toAssetsMap(node: N): Map<String, Any>
 

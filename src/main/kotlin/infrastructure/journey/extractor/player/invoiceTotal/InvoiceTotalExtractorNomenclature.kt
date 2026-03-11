@@ -1,6 +1,10 @@
 package com.nekgambling.infrastructure.journey.extractor.player.invoiceTotal
 
+import com.nekgambling.domain.strategy.AssetParamDescriptor
 import com.nekgambling.domain.strategy.JourneyNodeNomenclature
+import com.nekgambling.domain.strategy.NodeCategory
+import com.nekgambling.domain.strategy.ParamType
+import com.nekgambling.domain.strategy.dateParamValueSubtypes
 import com.nekgambling.domain.asset.DateParamValue
 import com.nekgambling.infrastructure.journey.extractor.player.IPlayerExtractorJourneyNode
 import kotlin.reflect.KClass
@@ -9,6 +13,8 @@ object InvoiceTotalExtractorNomenclature : JourneyNodeNomenclature<InvoiceTotalE
     override val nodeType: KClass<InvoiceTotalExtractor> = InvoiceTotalExtractor::class
 
     override val identity: String = "invoiceTotalExtractor"
+
+    override val category: NodeCategory = NodeCategory.EXTRACTOR
 
     override fun inputParams(): Set<String> = emptySet()
 
@@ -19,6 +25,13 @@ object InvoiceTotalExtractorNomenclature : JourneyNodeNomenclature<InvoiceTotalE
         "${IPlayerExtractorJourneyNode.PREFIX}:withdrawCount",
         "${IPlayerExtractorJourneyNode.PREFIX}:taxAmount",
         "${IPlayerExtractorJourneyNode.PREFIX}:feesAmount",
+    )
+
+    override fun assetsSchema(): List<AssetParamDescriptor> = listOf(
+        AssetParamDescriptor(
+            name = "date", type = ParamType.OBJECT, required = true,
+            subtypes = dateParamValueSubtypes(),
+        ),
     )
 
     @Suppress("UNCHECKED_CAST")

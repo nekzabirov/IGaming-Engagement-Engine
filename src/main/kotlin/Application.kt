@@ -1,6 +1,7 @@
 package com.nekgambling
 
 import com.nekgambling.api.eventApi
+import com.nekgambling.api.journeyNodeTemplateApi
 import com.nekgambling.infrastructure.infrastructureModule
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
@@ -29,5 +30,6 @@ fun Application.module() {
 
     routing {
         eventApi()
+        journeyNodeTemplateApi()
     }
 }
