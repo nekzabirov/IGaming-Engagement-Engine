@@ -47,7 +47,7 @@ globs: ["src/**/*.kt"]
 - Each trigger node has a `companion object { const val TRIGGER_NAME = "..." }` (e.g., `"bonus"`, `"freespin"`, `"invoice"`, `"segment"`) and its process checks `payload["triggerName"]` against `TRIGGER_NAME`, returning `null` (no match) if missing or mismatched
 - `PlayerJourneyNode` evaluates `IPlayerDefinition` rules with `matchNode`/`notMatchNode` branching
 - `JourneyNodeProcess.process()` returns `JourneyNodeProcess.Response?` (contains `nextNode` + `output` map) — `null` means no match
-- `JourneyNodeNomenclature<N>` strategy interface (in `domain/strategy/`) declares `inputParams(node)` and `outputParams(node)` per node type, with implementations in `infrastructure/journey/` alongside each node class
+- `JourneyNodeNomenclature<N>` strategy interface (in `domain/strategy/`) declares `identity`, `inputParams(node)` and `outputParams(node)` per node type, with implementations in `infrastructure/journey/` alongside each node class. `identity` is a camelCase identifier without the "JourneyNode" prefix (e.g., `"bonusTrigger"`, `"pushAction"`, `"playerProfileExtractor"`)
 - `Journey` exposes a `tail` property that traverses the `next` chain from `head` to return the last node
 - `IActionJourneyNode` is an abstract class extending `IJourneyNode` for side-effect action nodes
 - `IPushActionJourneyNode` is a sealed class extending `IActionJourneyNode` with `templateId` and `placeHolders` — concrete subtypes: `EMailPushActionJourneyNode`, `SmsPushActionJourneyNode`, `InAppPushActionJourneyNode`

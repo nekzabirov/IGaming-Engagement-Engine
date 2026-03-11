@@ -6,6 +6,8 @@ import kotlin.reflect.KClass
 object BonusTriggerJourneyNodeNomenclature : JourneyNodeNomenclature<BonusTriggerJourneyNode> {
     override val nodeType: KClass<BonusTriggerJourneyNode> = BonusTriggerJourneyNode::class
 
+    override val identity: String = "bonusTrigger"
+
     override fun inputParams(): Set<String> =
         setOf("triggerName", "bonusId", "bonusIdentity", "bonusStatus", "bonusPayoutAmount")
 

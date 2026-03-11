@@ -6,6 +6,8 @@ import kotlin.reflect.KClass
 object PercentageAmountExtractorParams : JourneyNodeNomenclature<PercentageAmountExtractor> {
     override val nodeType: KClass<PercentageAmountExtractor> = PercentageAmountExtractor::class
 
+    override val identity: String = "percentageAmountExtractor"
+
     override fun inputParams(): Set<String> =
         emptySet()
 

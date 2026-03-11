@@ -6,6 +6,8 @@ import kotlin.reflect.KClass
 object InvoiceTriggerJourneyNodeNomenclature : JourneyNodeNomenclature<InvoiceTriggerJourneyNode> {
     override val nodeType: KClass<InvoiceTriggerJourneyNode> = InvoiceTriggerJourneyNode::class
 
+    override val identity: String = "invoiceTrigger"
+
     override fun inputParams(): Set<String> =
         setOf("triggerName", "invoiceType", "invoiceStatus", "invoiceCurrency", "invoiceAmount", "invoiceTransactionAmount", "invoiceTaxAmount", "invoiceFeeAmount")
 

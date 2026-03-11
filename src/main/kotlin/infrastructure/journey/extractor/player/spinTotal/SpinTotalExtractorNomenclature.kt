@@ -7,6 +7,8 @@ import kotlin.reflect.KClass
 object SpinTotalExtractorNomenclature : JourneyNodeNomenclature<SpinTotalExtractor> {
     override val nodeType: KClass<SpinTotalExtractor> = SpinTotalExtractor::class
 
+    override val identity: String = "spinTotalExtractor"
+
     override fun inputParams(): Set<String> = emptySet()
 
     override fun outputParams(): Set<String> = setOf(

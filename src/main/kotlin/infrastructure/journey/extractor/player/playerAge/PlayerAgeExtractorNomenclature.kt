@@ -7,6 +7,8 @@ import kotlin.reflect.KClass
 object PlayerAgeExtractorNomenclature : JourneyNodeNomenclature<PlayerAgeExtractor> {
     override val nodeType: KClass<PlayerAgeExtractor> = PlayerAgeExtractor::class
 
+    override val identity: String = "playerAgeExtractor"
+
     override fun inputParams(): Set<String> = emptySet()
 
     override fun outputParams(): Set<String> = setOf(

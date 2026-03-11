@@ -6,6 +6,8 @@ import kotlin.reflect.KClass
 object IssueFreespinActionJourneyNodeNomenclature : ActionJourneyNodeNomenclature<IssueFreespinActionJourneyNode>() {
     override val nodeType: KClass<IssueFreespinActionJourneyNode> = IssueFreespinActionJourneyNode::class
 
+    override val identity: String = "issueFreespinAction"
+
     override fun inputParams(): Set<String> = emptySet()
 
     override fun outputParams(): Set<String> = emptySet()

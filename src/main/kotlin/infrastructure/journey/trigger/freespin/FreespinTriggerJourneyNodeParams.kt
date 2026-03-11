@@ -6,6 +6,8 @@ import kotlin.reflect.KClass
 object FreespinTriggerJourneyNodeNomenclature : JourneyNodeNomenclature<FreespinTriggerJourneyNode> {
     override val nodeType: KClass<FreespinTriggerJourneyNode> = FreespinTriggerJourneyNode::class
 
+    override val identity: String = "freespinTrigger"
+
     override fun inputParams(): Set<String> =
         setOf("triggerName", "freespinId", "freespinIdentity", "gameId", "freespinCurrency", "freespinStatus")
 

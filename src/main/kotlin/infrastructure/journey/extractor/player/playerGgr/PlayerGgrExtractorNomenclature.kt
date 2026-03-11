@@ -7,6 +7,8 @@ import kotlin.reflect.KClass
 object PlayerGgrExtractorNomenclature : JourneyNodeNomenclature<PlayerGgrExtractor> {
     override val nodeType: KClass<PlayerGgrExtractor> = PlayerGgrExtractor::class
 
+    override val identity: String = "playerGgrExtractor"
+
     override fun inputParams(): Set<String> = emptySet()
 
     override fun outputParams(): Set<String> = setOf(

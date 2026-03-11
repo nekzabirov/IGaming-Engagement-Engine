@@ -99,7 +99,7 @@ Use cases in `application/usecase/player/` encapsulate business logic per aggreg
   - `PlayerProfileExtractor`: Extracts all player fields with `player:` prefix (e.g., `player:username`, `player:email`)
   - `PercentageAmountExtractor`: Calculates amounts with percentage + optional max cap
 
-`JourneyNodeProcess<N>` strategy interface processes nodes. `JourneyNodeNomenclature<N>` strategy interface declares `inputParams(node)` and `outputParams(node)` per node type. `IPlayerDefinitionEvaluator<T>` implementations evaluate player conditions. Five definition types: `playerAge`, `profileField`, `spinTotal`, `invoiceTotal`, `playerGgr`.
+`JourneyNodeProcess<N>` strategy interface processes nodes. `JourneyNodeNomenclature<N>` strategy interface declares `identity`, `inputParams(node)` and `outputParams(node)` per node type. `IPlayerDefinitionEvaluator<T>` implementations evaluate player conditions. Five definition types: `playerAge`, `profileField`, `spinTotal`, `invoiceTotal`, `playerGgr`.
 
 ### Dual Database Design
 - **ClickHouse** (analytics): Player activity data in `ReplacingMergeTree` tables with `_version` for upserts. Two `SummingMergeTree` tables (`player_invoice_total`, `player_total_spin_info`) fed by materialized views for pre-aggregated queries.

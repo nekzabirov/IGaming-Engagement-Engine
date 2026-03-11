@@ -6,6 +6,8 @@ import kotlin.reflect.KClass
 object PushActionJourneyNodeNomenclature : ActionJourneyNodeNomenclature<IPushActionJourneyNode>() {
     override val nodeType: KClass<IPushActionJourneyNode> = IPushActionJourneyNode::class
 
+    override val identity: String = "pushAction"
+
     override fun inputParams(): Set<String> = setOf("locale")
 
     override fun outputParams(): Set<String> = emptySet()

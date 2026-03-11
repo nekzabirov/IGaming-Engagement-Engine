@@ -7,6 +7,8 @@ import kotlin.reflect.KClass
 object InvoiceTotalExtractorNomenclature : JourneyNodeNomenclature<InvoiceTotalExtractor> {
     override val nodeType: KClass<InvoiceTotalExtractor> = InvoiceTotalExtractor::class
 
+    override val identity: String = "invoiceTotalExtractor"
+
     override fun inputParams(): Set<String> = emptySet()
 
     override fun outputParams(): Set<String> = setOf(

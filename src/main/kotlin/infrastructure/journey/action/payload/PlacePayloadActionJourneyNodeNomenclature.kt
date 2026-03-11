@@ -6,6 +6,8 @@ import kotlin.reflect.KClass
 object PlacePayloadActionJourneyNodeNomenclature : ActionJourneyNodeNomenclature<PlacePayloadActionJourneyNode>() {
     override val nodeType: KClass<PlacePayloadActionJourneyNode> = PlacePayloadActionJourneyNode::class
 
+    override val identity: String = "placePayloadAction"
+
     override fun inputParams(): Set<String> = emptySet()
 
     override fun outputParams(): Set<String> = emptySet()
