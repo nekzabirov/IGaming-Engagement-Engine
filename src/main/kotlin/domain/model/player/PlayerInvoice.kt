@@ -2,6 +2,7 @@ package com.nekgambling.domain.model.player
 
 import com.nekgambling.domain.vo.Currency
 import kotlinx.datetime.Instant
+import kotlinx.serialization.Serializable
 
 data class PlayerInvoice(
     val id: String,
@@ -21,12 +22,14 @@ data class PlayerInvoice(
 
     val createdAt: Instant,
 ) {
+    @Serializable
     enum class Type {
         DEPOSIT,
         PAYOUT,
         REFUND
     }
 
+    @Serializable
     enum class Status {
         SUCCESS,
         REJECTED,

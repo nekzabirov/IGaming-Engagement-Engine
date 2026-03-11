@@ -25,7 +25,7 @@ class IssueBonusActionJourneyNodeProcess : IActionJourneyNodeProcess<IssueBonusA
             }
         }
 
-        issueBonus(node.identity, currency, amount)
+        issueBonus(node.bonusIdentity, currency, amount)
 
         return JourneyNodeProcess.Response(
             nextNode = node.next,

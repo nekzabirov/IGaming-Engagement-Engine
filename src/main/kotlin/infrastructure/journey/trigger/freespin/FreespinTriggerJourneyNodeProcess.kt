@@ -29,7 +29,7 @@ class FreespinTriggerJourneyNodeProcess : ITriggerJourneyNodeProcess<FreespinTri
                 && (node.freespinIdentity == null || freespinIdentity == node.freespinIdentity)
                 && (node.gameId == null || gameId == node.gameId)
                 && (node.freespinStatus == null || status == node.freespinStatus)
-                && (node.freespinPayoutRealAmount == null || payoutRealAmount != null && node.freespinPayoutRealAmount.check(payoutRealAmount))
+                && (node.freespinPayoutRealAmount == null || payoutRealAmount != null && node.freespinPayoutRealAmount.matches(payoutRealAmount))
 
         if (!matched) return null
 

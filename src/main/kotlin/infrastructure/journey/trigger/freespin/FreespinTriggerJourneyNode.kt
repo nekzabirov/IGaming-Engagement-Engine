@@ -4,7 +4,12 @@ import com.nekgambling.domain.model.journey.IJourneyNode
 import com.nekgambling.domain.model.player.PlayerFreespin
 import com.nekgambling.domain.asset.NumberParamValue
 import com.nekgambling.infrastructure.journey.trigger.ITriggerJourneyNode
+import kotlinx.serialization.Polymorphic
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
+@SerialName("freespinTrigger")
 data class FreespinTriggerJourneyNode(
     override val id: Long = Long.MIN_VALUE,
     val freespinId: String? = null,
@@ -13,7 +18,7 @@ data class FreespinTriggerJourneyNode(
     val freespinStatus: PlayerFreespin.Status? = null,
     val freespinPayoutRealAmount: NumberParamValue? = null,
 
-    override val next: IJourneyNode? = null,
+    @Polymorphic override val next: IJourneyNode? = null,
 ) : ITriggerJourneyNode(id = id, next = next) {
     companion object {
         const val TRIGGER_NAME = "freespin"

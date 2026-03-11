@@ -53,20 +53,20 @@ object ConditionJourneyNodeNomenclature : JourneyNodeNomenclature<IConditionJour
             )
             "numberInRange" -> NumberInRangeConditionJourneyNode(
                 inputKey = inputKey,
-                min = map["min"] as Number,
-                max = map["max"] as Number,
+                min = (map["min"] as Number).toDouble(),
+                max = (map["max"] as Number).toDouble(),
             )
             "numberMoreThan" -> NumberMoreThanConditionJourneyNode(
                 inputKey = inputKey,
-                threshold = map["threshold"] as Number,
+                threshold = (map["threshold"] as Number).toDouble(),
             )
             "numberLessThan" -> NumberLessThanConditionJourneyNode(
                 inputKey = inputKey,
-                threshold = map["threshold"] as Number,
+                threshold = (map["threshold"] as Number).toDouble(),
             )
             "numberEqual" -> NumberEqualConditionJourneyNode(
                 inputKey = inputKey,
-                target = map["target"] as Number,
+                target = (map["target"] as Number).toDouble(),
             )
             "stringEqual" -> StringEqualConditionJourneyNode(
                 inputKey = inputKey,

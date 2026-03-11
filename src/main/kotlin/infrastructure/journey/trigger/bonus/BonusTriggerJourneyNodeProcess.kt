@@ -26,7 +26,7 @@ class BonusTriggerJourneyNodeProcess : ITriggerJourneyNodeProcess<BonusTriggerJo
         val matched = (node.bonusId == null || bonusId == node.bonusId)
                 && (node.bonusIdentity == null || bonusIdentity == node.bonusIdentity)
                 && (node.bonusStatus == null || status == node.bonusStatus)
-                && (node.bonusPayoutAmount == null || node.bonusPayoutAmount.check(payoutAmount))
+                && (node.bonusPayoutAmount == null || node.bonusPayoutAmount.matches(payoutAmount))
 
         if (!matched) return null
 

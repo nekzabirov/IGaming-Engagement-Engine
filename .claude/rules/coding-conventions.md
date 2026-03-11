@@ -16,7 +16,7 @@ globs: ["src/**/*.kt"]
 - Journey node processors: `override val nodeType: KClass<N>` (not `node`) to avoid confusion with the `process(node)` parameter
 - Journey node nomenclatures: `<NodeType>Nomenclature` objects (e.g., `BonusTriggerJourneyNodeNomenclature`, `PlayerAgeExtractorNomenclature`), placed alongside their node class, registered in Koin with `bind JourneyNodeNomenclature::class`
 - Action journey nodes: `<Name>ActionJourneyNode` extending `IActionJourneyNode` (abstract class), with `id` and `next` constructor params
-- Push action journey nodes: `<Channel>PushActionJourneyNode` extending `IPushActionJourneyNode` (sealed class with `templateId` + `placeHolders`), e.g., `EMailPushActionJourneyNode`, `SmsPushActionJourneyNode`, `InAppPushActionJourneyNode`
+- Push action journey nodes: `<Channel>PushActionJourneyNode` extending `IPushActionJourneyNode` (sealed class with `templateId` + `placeHolders`), as `@Serializable` data classes with `override val` properties, e.g., `EMailPushActionJourneyNode`, `SmsPushActionJourneyNode`, `InAppPushActionJourneyNode`
 - Action node processors: `<Name>ActionJourneyNodeProcess` extending `ActionJourneyNodeProcess<T>`, placed in same package as their node class
 - Issue action journey nodes: `Issue<Entity>ActionJourneyNode` in `infrastructure/journey/action/issue/<entity>/` package (e.g., `IssueFreespinActionJourneyNode`)
 - Extractor journey nodes: `<Name>Extractor` extending `IExtractorJourneyNode`, in `infrastructure/journey/extractor/<name>/` package
@@ -59,6 +59,9 @@ globs: ["src/**/*.kt"]
 
 ## Serialization
 - Use `kotlinx.serialization` — not Jackson or Gson
+- **Journey node serialization pattern**: Abstract/sealed intermediate classes use `@Serializable` with `@Transient` on ALL constructor properties (to avoid duplicate serial name conflicts with child overrides). Concrete leaf data classes use `@Serializable` + `@SerialName("<identity>")` with NON-transient `override val` properties. `@Polymorphic` annotates all `IJourneyNode?` property references (`next`, `matchNode`, `notMatchNode`). `@Contextual` annotates `Map<String, Any>` values and `Any` properties. Polymorphic subtype registration in `JourneyNodeSerializersModule` (`domain/model/journey/JourneyNodeJson.kt`)
+- **Adding a new journey node**: Add `@Serializable @SerialName("<identity>")` to the concrete data class, `@Polymorphic` on any `IJourneyNode?` properties, and register the subclass in `JourneyNodeSerializersModule`
+- Condition node numeric fields use `Double` (not `Number`) for kotlinx.serialization compatibility
 
 ## Outbound Adapters (Infrastructure)
 - Every outbound adapter (repository impl, external client, message broker, etc.) must have its own `<Name>Config` data class in its config/ subpackage

@@ -1,8 +1,12 @@
 package com.nekgambling.domain.model.journey
 
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
+
+@Serializable
 abstract class IJourneyNode(
-    open val id: Long = Long.MIN_VALUE,
-    open val next: IJourneyNode? = null,
+    @Transient open val id: Long = Long.MIN_VALUE,
+    @Transient open val next: IJourneyNode? = null,
 ) {
 
     init {

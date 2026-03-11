@@ -1,25 +1,20 @@
 package com.nekgambling.infrastructure.database.exposed.mapper.node
 
+
 import com.nekgambling.domain.model.journey.IJourneyNode
 import com.nekgambling.infrastructure.database.exposed.entity.JourneyNodeEntity
-import com.nekgambling.infrastructure.database.exposed.mapper.JourneyNodeMapper
+import com.nekgambling.infrastructure.database.exposed.mapper.IJourneyNodeMapper
 import com.nekgambling.infrastructure.journey.extractor.player.playerAge.PlayerAgeExtractor
 import kotlin.reflect.KClass
 
-object PlayerAgeExtractorNodeMapper : JourneyNodeMapper<PlayerAgeExtractor> {
-    override val type: String = "playerAgeExtractor"
+object PlayerAgeExtractorNodeMapper : IJourneyNodeMapper<PlayerAgeExtractor> {
     override val nodeType: KClass<PlayerAgeExtractor> = PlayerAgeExtractor::class
+    override val identity: String = "playerAge"
 
-    override fun toDomain(
-        entity: JourneyNodeEntity,
-        next: IJourneyNode?,
-        notMatchNode: IJourneyNode?,
-    ): PlayerAgeExtractor = PlayerAgeExtractor(
-        id = entity.id.value,
-        next = next,
-    )
-
-    override fun applyToEntity(node: PlayerAgeExtractor, entity: JourneyNodeEntity) {
-        // No additional fields
+    override fun toDomain(entity: JourneyNodeEntity, resolveNode: (JourneyNodeEntity?) -> IJourneyNode?): PlayerAgeExtractor {
+        return PlayerAgeExtractor(
+            id = entity.id.value,
+            next = resolveNode(entity.next),
+        )
     }
 }

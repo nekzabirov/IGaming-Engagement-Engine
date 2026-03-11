@@ -14,13 +14,13 @@ object IssueFixedBonusActionJourneyNodeNomenclature : ActionJourneyNodeNomenclat
     override fun outputParams(): Set<String> = emptySet()
 
     override fun toAssetsMap(node: IssueFixedBonusActionJourneyNode): Map<String, Any> = mapOf(
-        "identity" to node.identity,
+        "bonusIdentity" to node.bonusIdentity,
         "currency" to node.currency.code,
         "amount" to node.amount,
     )
 
     override fun fromAssetsMap(map: Map<String, Any>): IssueFixedBonusActionJourneyNode = IssueFixedBonusActionJourneyNode(
-        identity = map["identity"] as String,
+        bonusIdentity = map["bonusIdentity"] as String,
         currency = Currency(map["currency"] as String),
         amount = (map["amount"] as Number).toLong(),
     )
@@ -36,10 +36,10 @@ object IssueDynamicBonusActionJourneyNodeNomenclature : ActionJourneyNodeNomencl
     override fun outputParams(): Set<String> = emptySet()
 
     override fun toAssetsMap(node: IssueDynamicBonusActionJourneyNode): Map<String, Any> = mapOf(
-        "identity" to node.identity,
+        "bonusIdentity" to node.bonusIdentity,
     )
 
     override fun fromAssetsMap(map: Map<String, Any>): IssueDynamicBonusActionJourneyNode = IssueDynamicBonusActionJourneyNode(
-        identity = map["identity"] as String,
+        bonusIdentity = map["bonusIdentity"] as String,
     )
 }

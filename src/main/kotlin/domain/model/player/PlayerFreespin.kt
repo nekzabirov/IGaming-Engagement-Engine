@@ -1,5 +1,7 @@
 package com.nekgambling.domain.model.player
 
+import kotlinx.serialization.Serializable
+
 data class PlayerFreespin(
     val id: String,
 
@@ -13,6 +15,7 @@ data class PlayerFreespin(
 
     val payoutRealAmount: Long,
 ) {
+    @Serializable
     enum class Status {
         ISSUE,
         ACTIVE,

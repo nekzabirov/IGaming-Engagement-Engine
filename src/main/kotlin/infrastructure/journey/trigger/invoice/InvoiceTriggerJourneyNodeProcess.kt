@@ -32,7 +32,7 @@ class InvoiceTriggerJourneyNodeProcess : ITriggerJourneyNodeProcess<InvoiceTrigg
         val matched = type == node.invoiceType
                 && status == node.invoiceStatus
                 && (node.invoiceCurrency == null || invoiceCurrency == node.invoiceCurrency)
-                && (node.invoiceAmount == null || node.invoiceAmount.check(amount))
+                && (node.invoiceAmount == null || node.invoiceAmount.matches(amount))
 
         if (!matched) return null
 

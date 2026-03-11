@@ -41,9 +41,10 @@ globs: ["src/**/*.kt"]
 - PostgreSQL implementations: `Exposed<Entity>Repository` in `infrastructure/database/exposed/repository/`
 
 ## Journey Node Processing
-- `IJourneyNode` is an abstract class (not interface) with `open val id: Long = Long.MIN_VALUE` and `open val next` as constructor parameters, plus built-in circular dependency validation in `init`
+- `IJourneyNode` is a `@Serializable` abstract class (not interface) with `@Transient open val id: Long = Long.MIN_VALUE` and `@Transient open val next` as constructor parameters, plus built-in circular dependency validation in `init`
+- **Serialization pattern**: All abstract/sealed intermediate classes use `@Serializable` with `@Transient` on their properties to avoid duplicate serial name conflicts. Concrete leaf classes use `@Serializable` + `@SerialName` with NON-transient `override val` properties. `@Polymorphic` annotates all `IJourneyNode?` references (`next`, `matchNode`, `notMatchNode`). Polymorphic module: `JourneyNodeSerializersModule` in `domain/model/journey/JourneyNodeJson.kt`
 - `IJourneyNode` does **not** define `inputParams`/`outputParams` — param knowledge is externalized to `JourneyNodeNomenclature<N>` strategy implementations
-- `ITriggerJourneyNode` is an abstract class extending `IJourneyNode` with `override val id` and `override val next` — subclass data classes use `override val` for these params directly
+- `ITriggerJourneyNode` is a `@Serializable` abstract class extending `IJourneyNode` with `@Transient override val id` and `@Transient override val next` — subclass data classes use `override val` for these params directly
 - Each trigger node has a `companion object { const val TRIGGER_NAME = "..." }` (e.g., `"bonus"`, `"freespin"`, `"invoice"`, `"segment"`) and its process checks `payload["triggerName"]` against `TRIGGER_NAME`, returning `null` (no match) if missing or mismatched
 - `PlayerJourneyNode` evaluates `IPlayerDefinition` rules with `matchNode`/`notMatchNode` branching
 - `JourneyNodeProcess.process()` returns `JourneyNodeProcess.Response?` (contains `nextNode` + `output` map) — `null` means no match
@@ -51,18 +52,18 @@ globs: ["src/**/*.kt"]
 - `toAssetsMap(node)` serializes only child-specific properties to `Map<String, Any>`, excluding base params (`id`, `next`). For condition nodes, `matchNode`/`notMatchNode` are also excluded. Enums serialize as `name`, `Currency` as `code` string, `NumberParamValue`/`DateParamValue` as nested maps via `toMap()`/`fromMap()`
 - `fromAssetsMap(map)` reconstructs a node from the map with default `id`/`next` values. For sealed/abstract nomenclatures (conditions, push actions), a `"type"`/`"channel"` discriminator key identifies the concrete subtype
 - `Journey` exposes a `tail` property that traverses the `next` chain from `head` to return the last node
-- `IActionJourneyNode` is an abstract class extending `IJourneyNode` for side-effect action nodes
-- `IPushActionJourneyNode` is a sealed class extending `IActionJourneyNode` with `templateId` and `placeHolders` — concrete subtypes: `EMailPushActionJourneyNode`, `SmsPushActionJourneyNode`, `InAppPushActionJourneyNode`
+- `IActionJourneyNode` is a `@Serializable` abstract class extending `IJourneyNode` with `@Transient override val id` and `@Transient override val next` for side-effect action nodes
+- `IPushActionJourneyNode` is a `@Serializable` sealed class extending `IActionJourneyNode` with `@Transient` properties (`templateId`, `placeHolders`) — concrete subtypes are `@Serializable` data classes: `EMailPushActionJourneyNode`, `SmsPushActionJourneyNode`, `InAppPushActionJourneyNode`. Push subtypes use `@Contextual` on `Map<String, Any>` placeholder values
 - `IssueBonusActionJourneyNode` is a sealed class extending `IActionJourneyNode` — concrete subtypes: `IssueFixedBonusActionJourneyNode` (currency + amount), `IssueDynamicBonusActionJourneyNode`
 - `IActionJourneyNodeProcess<T>` is the abstract base for action node processors, extending `JourneyNodeProcess<T>`; `IPushActionJourneyNodeProcess` processes all push subtypes via sealed class matching
 - `JourneyInstant` tracks player progress through a journey (current node + payload)
 
 ## Condition Journey Nodes
-- `IConditionJourneyNode` is an abstract class extending `IJourneyNode` with `inputKey: String`, `matchNode: IJourneyNode?`, `notMatchNode: IJourneyNode?`, and abstract `evaluate(value: String): Boolean`
+- `IConditionJourneyNode` is a `@Serializable` abstract class extending `IJourneyNode` with `@Transient` properties (`id`, `inputKey`, `matchNode`, `notMatchNode`) and abstract `evaluate(value: Any): Boolean`
 - The `next` chain follows `matchNode` (passed to `IJourneyNode` super constructor)
 - `ConditionJourneyNodeProcess` validates that `inputKey` exists in the payload (throws if missing), calls `evaluate()`, and returns `matchNode` on true or `notMatchNode` on false with empty output
 - `ConditionJourneyNodeNomenclature` declares empty `inputParams()` and `outputParams()`
-- Concrete condition nodes (e.g., `NumberConditionNode`) extend `IConditionJourneyNode` as sealed classes
+- Concrete condition nodes (e.g., `NumberConditionJourneyNode`) extend `IConditionJourneyNode` as `@Serializable` sealed classes with `@Transient` properties. Leaf data classes use `@Serializable` + `@SerialName`, `@Polymorphic` on `matchNode`/`notMatchNode`, and `Double` (not `Number`) for numeric fields
 
 ## Extractor Journey Nodes
 - `IExtractorJourneyNode` is an abstract class extending `IJourneyNode` with a `suspend fun extract(playerId: String, inputs: Map<String, Any>): Map<String, Any>` method

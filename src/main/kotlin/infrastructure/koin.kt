@@ -39,7 +39,8 @@ import com.nekgambling.infrastructure.external.redis.RedisLockAdapter
 import com.nekgambling.infrastructure.external.redis.config.RedisConfig
 import com.nekgambling.domain.strategy.JourneyNodeNomenclature
 import com.nekgambling.domain.strategy.JourneyNodeProcess
-import com.nekgambling.infrastructure.database.exposed.mapper.JourneyNodeMapper
+import com.nekgambling.infrastructure.database.exposed.mapper.IJourneyNodeMapper
+import com.nekgambling.infrastructure.database.exposed.mapper.JourneyMapper
 import com.nekgambling.infrastructure.database.exposed.mapper.JourneyNodeMapperRegistry
 import com.nekgambling.infrastructure.database.exposed.mapper.node.*
 import com.nekgambling.infrastructure.journey.extractor.amount.AmountExtractorProcess
@@ -248,38 +249,40 @@ private fun org.koin.core.module.Module.journeyModule() {
 
     // --- Journey node DB mappers ---
 
-    single<JourneyNodeMapper<*>> { BonusTriggerNodeMapper } bind JourneyNodeMapper::class
+    single<IJourneyNodeMapper<*>> { BonusTriggerNodeMapper } bind IJourneyNodeMapper::class
 
-    single<JourneyNodeMapper<*>> { FreespinTriggerNodeMapper } bind JourneyNodeMapper::class
+    single<IJourneyNodeMapper<*>> { FreespinTriggerNodeMapper } bind IJourneyNodeMapper::class
 
-    single<JourneyNodeMapper<*>> { InvoiceTriggerNodeMapper } bind JourneyNodeMapper::class
+    single<IJourneyNodeMapper<*>> { InvoiceTriggerNodeMapper } bind IJourneyNodeMapper::class
 
-    single<JourneyNodeMapper<*>> { SegmentTriggerNodeMapper } bind JourneyNodeMapper::class
+    single<IJourneyNodeMapper<*>> { SegmentTriggerNodeMapper } bind IJourneyNodeMapper::class
 
-    single<JourneyNodeMapper<*>> { PushActionNodeMapper } bind JourneyNodeMapper::class
+    single<IJourneyNodeMapper<*>> { PushActionNodeMapper } bind IJourneyNodeMapper::class
 
-    single<JourneyNodeMapper<*>> { IssueFixedBonusActionNodeMapper } bind JourneyNodeMapper::class
+    single<IJourneyNodeMapper<*>> { IssueFixedBonusActionNodeMapper } bind IJourneyNodeMapper::class
 
-    single<JourneyNodeMapper<*>> { IssueDynamicBonusActionNodeMapper } bind JourneyNodeMapper::class
+    single<IJourneyNodeMapper<*>> { IssueDynamicBonusActionNodeMapper } bind IJourneyNodeMapper::class
 
-    single<JourneyNodeMapper<*>> { IssueFreespinActionNodeMapper } bind JourneyNodeMapper::class
+    single<IJourneyNodeMapper<*>> { IssueFreespinActionNodeMapper } bind IJourneyNodeMapper::class
 
-    single<JourneyNodeMapper<*>> { PlacePayloadActionNodeMapper } bind JourneyNodeMapper::class
+    single<IJourneyNodeMapper<*>> { PlacePayloadActionNodeMapper } bind IJourneyNodeMapper::class
 
-    single<JourneyNodeMapper<*>> { ConditionNodeMapper } bind JourneyNodeMapper::class
+    single<IJourneyNodeMapper<*>> { ConditionNodeMapper } bind IJourneyNodeMapper::class
 
-    single<JourneyNodeMapper<*>> { PlayerProfileExtractorNodeMapper } bind JourneyNodeMapper::class
+    single<IJourneyNodeMapper<*>> { PlayerProfileExtractorNodeMapper } bind IJourneyNodeMapper::class
 
-    single<JourneyNodeMapper<*>> { PlayerAgeExtractorNodeMapper } bind JourneyNodeMapper::class
+    single<IJourneyNodeMapper<*>> { PlayerAgeExtractorNodeMapper } bind IJourneyNodeMapper::class
 
-    single<JourneyNodeMapper<*>> { SpinTotalExtractorNodeMapper } bind JourneyNodeMapper::class
+    single<IJourneyNodeMapper<*>> { SpinTotalExtractorNodeMapper } bind IJourneyNodeMapper::class
 
-    single<JourneyNodeMapper<*>> { InvoiceTotalExtractorNodeMapper } bind JourneyNodeMapper::class
+    single<IJourneyNodeMapper<*>> { InvoiceTotalExtractorNodeMapper } bind IJourneyNodeMapper::class
 
-    single<JourneyNodeMapper<*>> { PlayerGgrExtractorNodeMapper } bind JourneyNodeMapper::class
+    single<IJourneyNodeMapper<*>> { PlayerGgrExtractorNodeMapper } bind IJourneyNodeMapper::class
 
-    single<JourneyNodeMapper<*>> { PercentageAmountExtractorNodeMapper } bind JourneyNodeMapper::class
+    single<IJourneyNodeMapper<*>> { PercentageAmountExtractorNodeMapper } bind IJourneyNodeMapper::class
 
     single { JourneyNodeMapperRegistry(getAll()) }
+
+    single { JourneyMapper(get()) }
 
 }

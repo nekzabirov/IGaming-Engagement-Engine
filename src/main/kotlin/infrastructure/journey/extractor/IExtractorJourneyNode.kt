@@ -1,8 +1,11 @@
 package com.nekgambling.infrastructure.journey.extractor
 
 import com.nekgambling.domain.model.journey.IJourneyNode
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
+@Serializable
 abstract class IExtractorJourneyNode(
-    override val id: Long = Long.MIN_VALUE,
-    override val next: IJourneyNode? = null,
+    @Transient override val id: Long = Long.MIN_VALUE,
+    @Transient override val next: IJourneyNode? = null,
 ) : IJourneyNode(id = id, next = next)

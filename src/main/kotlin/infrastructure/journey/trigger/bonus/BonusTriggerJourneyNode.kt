@@ -4,7 +4,12 @@ import com.nekgambling.domain.model.journey.IJourneyNode
 import com.nekgambling.domain.model.player.PlayerBonus
 import com.nekgambling.domain.asset.NumberParamValue
 import com.nekgambling.infrastructure.journey.trigger.ITriggerJourneyNode
+import kotlinx.serialization.Polymorphic
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
+@SerialName("bonusTrigger")
 data class BonusTriggerJourneyNode(
     override val id: Long = Long.MIN_VALUE,
     val bonusId: String? = null,
@@ -12,7 +17,7 @@ data class BonusTriggerJourneyNode(
     val bonusStatus: PlayerBonus.Status? = null,
     val bonusPayoutAmount: NumberParamValue? = null,
 
-    override val next: IJourneyNode? = null,
+    @Polymorphic override val next: IJourneyNode? = null,
 ) : ITriggerJourneyNode(id = id, next = next) {
     companion object {
         const val TRIGGER_NAME = "bonus"

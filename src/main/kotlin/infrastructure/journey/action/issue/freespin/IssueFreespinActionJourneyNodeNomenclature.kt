@@ -13,10 +13,10 @@ object IssueFreespinActionJourneyNodeNomenclature : ActionJourneyNodeNomenclatur
     override fun outputParams(): Set<String> = emptySet()
 
     override fun toAssetsMap(node: IssueFreespinActionJourneyNode): Map<String, Any> = mapOf(
-        "identity" to node.identity,
+        "freespinIdentity" to node.freespinIdentity,
     )
 
     override fun fromAssetsMap(map: Map<String, Any>): IssueFreespinActionJourneyNode = IssueFreespinActionJourneyNode(
-        identity = map["identity"] as String,
+        freespinIdentity = map["freespinIdentity"] as String,
     )
 }

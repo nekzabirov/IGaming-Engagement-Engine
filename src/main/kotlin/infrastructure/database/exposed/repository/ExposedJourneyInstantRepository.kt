@@ -89,9 +89,7 @@ class ExposedJourneyInstantRepository(
             if (entityId == null) return null
             resolved[entityId]?.let { return it }
             val entity = allEntities[entityId] ?: return null
-            val next = resolve(entity.next?.id?.value)
-            val notMatchNode = resolve(entity.notMatchNode?.id?.value)
-            val node = mapperRegistry.toDomain(entity, next, notMatchNode)
+            val node = mapperRegistry.toDomain(entity)
             resolved[entityId] = node
             return node
         }
