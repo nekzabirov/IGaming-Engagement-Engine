@@ -55,6 +55,13 @@ globs: ["src/**/*.kt"]
 - `IActionJourneyNodeProcess<T>` is the abstract base for action node processors, extending `JourneyNodeProcess<T>`; `IPushActionJourneyNodeProcess` processes all push subtypes via sealed class matching
 - `JourneyInstant` tracks player progress through a journey (current node + payload)
 
+## Condition Journey Nodes
+- `IConditionJourneyNode` is an abstract class extending `IJourneyNode` with `inputKey: String`, `matchNode: IJourneyNode?`, `notMatchNode: IJourneyNode?`, and abstract `evaluate(value: String): Boolean`
+- The `next` chain follows `matchNode` (passed to `IJourneyNode` super constructor)
+- `ConditionJourneyNodeProcess` validates that `inputKey` exists in the payload (throws if missing), calls `evaluate()`, and returns `matchNode` on true or `notMatchNode` on false with empty output
+- `ConditionJourneyNodeNomenclature` declares empty `inputParams()` and `outputParams()`
+- Concrete condition nodes (e.g., `NumberConditionNode`) extend `IConditionJourneyNode` as sealed classes
+
 ## Extractor Journey Nodes
 - `IExtractorJourneyNode` is an abstract class extending `IJourneyNode` with a `suspend fun extract(playerId: String, inputs: Map<String, Any>): Map<String, Any>` method
 - `PlayerProfileExtractor` extracts all player fields with `player:` prefix (e.g., `player:username`, `player:email`)

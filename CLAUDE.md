@@ -64,6 +64,7 @@ infrastructure/           → All adapters and implementations
   journey/action/issue/   → Issue action nodes (bonus fixed/dynamic, freespin)
   journey/action/payload/ → Payload action node (key/value placement)
   journey/extractor/      → Extractor journey nodes (player profile, percentage amount)
+  journey/condition/      → Condition journey nodes (IConditionJourneyNode base) with match/notMatch branching
 ```
 
 ## Key Patterns
@@ -85,7 +86,7 @@ Use cases in `application/usecase/player/` encapsulate business logic per aggreg
 13 use cases organized by aggregate: `bonus/` (Issue, Lost, StartWagering, Wagered), `freespin/` (Issue, Activate, Cancel, Finish), `invoice/` (Create, Update), `spin/` (Place, Settle), `player/` (Update).
 
 ### Journey Node Architecture
-`IJourneyNode` is an abstract class with `id` and `next`. Four node categories:
+`IJourneyNode` is an abstract class with `id` and `next`. Five node categories:
 - **PlayerJourneyNode**: Evaluates player definitions (`IPlayerDefinition`) with match/mismatch branching
 - **ITriggerJourneyNode**: Matches incoming event payload against node criteria (bonus, freespin, invoice, segment triggers)
 - **IActionJourneyNode**: Executes side-effect actions. Subcategories:
@@ -93,6 +94,7 @@ Use cases in `application/usecase/player/` encapsulate business logic per aggreg
   - `IssueBonusActionJourneyNode` (sealed class): `IssueFixedBonusActionJourneyNode` (currency + amount), `IssueDynamicBonusActionJourneyNode`
   - `IssueFreespinActionJourneyNode` (identity)
   - `PlacePayloadActionJourneyNode` (key/value)
+- **IConditionJourneyNode**: Evaluates a condition on a payload value (`inputKey`) with `matchNode`/`notMatchNode` branching. Process validates `inputKey` exists, calls `evaluate(value)`, routes accordingly. Empty nomenclature (no input/output params). Concrete subtypes: `NumberConditionNode` (sealed class for numeric conditions)
 - **IExtractorJourneyNode**: Extracts and enriches data from player context. Implementations:
   - `PlayerProfileExtractor`: Extracts all player fields with `player:` prefix (e.g., `player:username`, `player:email`)
   - `PercentageAmountExtractor`: Calculates amounts with percentage + optional max cap

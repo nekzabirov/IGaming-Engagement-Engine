@@ -63,6 +63,8 @@ import com.nekgambling.infrastructure.journey.action.payload.PlacePayloadActionJ
 import com.nekgambling.infrastructure.journey.action.payload.PlacePayloadActionJourneyNodeProcess
 import com.nekgambling.infrastructure.journey.action.push.PushActionJourneyNodeNomenclature
 import com.nekgambling.infrastructure.journey.action.push.PushIActionJourneyNodeProcess
+import com.nekgambling.infrastructure.journey.condition.ConditionJourneyNodeNomenclature
+import com.nekgambling.infrastructure.journey.condition.ConditionJourneyNodeProcess
 import com.nekgambling.infrastructure.journey.trigger.bonus.BonusTriggerJourneyNodeProcess
 import com.nekgambling.infrastructure.journey.trigger.freespin.FreespinTriggerJourneyNodeProcess
 import com.nekgambling.infrastructure.journey.trigger.invoice.InvoiceTriggerJourneyNodeProcess
@@ -205,6 +207,8 @@ private fun org.koin.core.module.Module.journeyModule() {
 
     single<JourneyNodeNomenclature<*>> { PlacePayloadActionJourneyNodeNomenclature } bind JourneyNodeNomenclature::class
 
+    single<JourneyNodeNomenclature<*>> { ConditionJourneyNodeNomenclature } bind JourneyNodeNomenclature::class
+
     // --- Journey node processors ---
 
     single { BonusTriggerJourneyNodeProcess() } bind JourneyNodeProcess::class
@@ -234,6 +238,8 @@ private fun org.koin.core.module.Module.journeyModule() {
     single { IssueFreespinIActionJourneyNodeProcess() } bind JourneyNodeProcess::class
 
     single { PlacePayloadActionJourneyNodeProcess() } bind JourneyNodeProcess::class
+
+    single { ConditionJourneyNodeProcess() } bind JourneyNodeProcess::class
 
     single { JourneyNodeProcessResolver(getAll()) }
 
