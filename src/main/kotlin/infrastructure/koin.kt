@@ -39,6 +39,9 @@ import com.nekgambling.infrastructure.external.redis.RedisLockAdapter
 import com.nekgambling.infrastructure.external.redis.config.RedisConfig
 import com.nekgambling.domain.strategy.JourneyNodeNomenclature
 import com.nekgambling.domain.strategy.JourneyNodeProcess
+import com.nekgambling.infrastructure.database.exposed.mapper.JourneyNodeMapper
+import com.nekgambling.infrastructure.database.exposed.mapper.JourneyNodeMapperRegistry
+import com.nekgambling.infrastructure.database.exposed.mapper.node.*
 import com.nekgambling.infrastructure.journey.extractor.amount.AmountExtractorProcess
 import com.nekgambling.infrastructure.journey.extractor.amount.PercentageAmountExtractorParams
 import com.nekgambling.infrastructure.journey.extractor.player.invoiceTotal.InvoiceTotalExtractorNomenclature
@@ -144,9 +147,9 @@ val infrastructureModule = module {
 
     single { ClickHousePlayerSpinRepository(get()) } bind IPlayerSpinRepository::class
 
-    single { ExposedJourneyRepository(get()) } bind IJourneyRepository::class
+    single { ExposedJourneyRepository(get(), get()) } bind IJourneyRepository::class
 
-    single { ExposedJourneyInstantRepository(get()) } bind IJourneyInstantRepository::class
+    single { ExposedJourneyInstantRepository(get(), get()) } bind IJourneyInstantRepository::class
 
     // --- Query handlers ---
 
@@ -242,5 +245,41 @@ private fun org.koin.core.module.Module.journeyModule() {
     single { ConditionJourneyNodeProcess() } bind JourneyNodeProcess::class
 
     single { JourneyNodeProcessResolver(getAll()) }
+
+    // --- Journey node DB mappers ---
+
+    single<JourneyNodeMapper<*>> { BonusTriggerNodeMapper } bind JourneyNodeMapper::class
+
+    single<JourneyNodeMapper<*>> { FreespinTriggerNodeMapper } bind JourneyNodeMapper::class
+
+    single<JourneyNodeMapper<*>> { InvoiceTriggerNodeMapper } bind JourneyNodeMapper::class
+
+    single<JourneyNodeMapper<*>> { SegmentTriggerNodeMapper } bind JourneyNodeMapper::class
+
+    single<JourneyNodeMapper<*>> { PushActionNodeMapper } bind JourneyNodeMapper::class
+
+    single<JourneyNodeMapper<*>> { IssueFixedBonusActionNodeMapper } bind JourneyNodeMapper::class
+
+    single<JourneyNodeMapper<*>> { IssueDynamicBonusActionNodeMapper } bind JourneyNodeMapper::class
+
+    single<JourneyNodeMapper<*>> { IssueFreespinActionNodeMapper } bind JourneyNodeMapper::class
+
+    single<JourneyNodeMapper<*>> { PlacePayloadActionNodeMapper } bind JourneyNodeMapper::class
+
+    single<JourneyNodeMapper<*>> { ConditionNodeMapper } bind JourneyNodeMapper::class
+
+    single<JourneyNodeMapper<*>> { PlayerProfileExtractorNodeMapper } bind JourneyNodeMapper::class
+
+    single<JourneyNodeMapper<*>> { PlayerAgeExtractorNodeMapper } bind JourneyNodeMapper::class
+
+    single<JourneyNodeMapper<*>> { SpinTotalExtractorNodeMapper } bind JourneyNodeMapper::class
+
+    single<JourneyNodeMapper<*>> { InvoiceTotalExtractorNodeMapper } bind JourneyNodeMapper::class
+
+    single<JourneyNodeMapper<*>> { PlayerGgrExtractorNodeMapper } bind JourneyNodeMapper::class
+
+    single<JourneyNodeMapper<*>> { PercentageAmountExtractorNodeMapper } bind JourneyNodeMapper::class
+
+    single { JourneyNodeMapperRegistry(getAll()) }
 
 }

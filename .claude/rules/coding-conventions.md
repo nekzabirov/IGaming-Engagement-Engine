@@ -52,7 +52,10 @@ globs: ["src/**/*.kt"]
 - Use Exposed ORM for all PostgreSQL access
 - Tables defined in `infrastructure/database/exposed/table/`
 - Repositories in `infrastructure/database/exposed/repository/`
-- Journey persistence: `JourneyNodesTable` (minimal: `id`, `type`, `journeyId`, `next`) and `JourneysTable` (references head node). Node-specific columns and domain mapping are pending rebuild — repositories are currently stubbed with `TODO`
+- Journey persistence: `JourneyNodesTable` (single-table inheritance with `type` discriminator + `sub_type` for sealed class variants) and `JourneysTable` (references head node). All node-specific properties stored as nullable columns. `JourneyNodeEntity` mirrors all columns
+- Journey node DB mappers: `JourneyNodeMapper<N>` interface in `infrastructure/database/exposed/mapper/` with `type`, `nodeType`, `toDomain()`, `applyToEntity()`. One mapper object per node type in `mapper/node/` package. `JourneyNodeMapperRegistry` dispatches by type string or KClass. Registered in Koin with `bind JourneyNodeMapper::class` + `getAll()` pattern
+- Complex value types (`NumberParamValue`, `DateParamValue`) stored as JSON text using `kotlinx.serialization`. `Map<String, Any>` fields use `serializePayload`/`deserializePayload` from `JourneyInstantEntity.kt`
+- Condition nodes use `next` column for `matchNode` and `not_match_node_id` column for `notMatchNode`
 
 ## Serialization
 - Use `kotlinx.serialization` — not Jackson or Gson
